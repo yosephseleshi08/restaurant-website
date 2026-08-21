@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 2rem;">Business Dashboard</h1>
+<div class="grid grid-4">
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2.5rem; color: var(--primary); font-weight: 700;">${{ "{:,.0f}".format(analytics.monthly_revenue|sum) }}</div>
+        <div>Total Revenue</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2.5rem; color: var(--secondary); font-weight: 700;">{{ analytics.total_reservations }}</div>
+        <div>Reservations</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2.5rem; color: var(--accent); font-weight: 700;">{{ analytics.customer_satisfaction }}</div>
+        <div>Customer Rating</div>
+    </div>
+    <div class="card" style="text-align: center;">
+        <div style="font-size: 2.5rem; color: var(--primary); font-weight: 700;">{{ analytics.daily_sales|sum }}</div>
+        <div>Weekly Sales</div>
+    </div>
+</div>
+<div class="grid grid-2">
+    <div class="card"><div id="salesChart" style="height: 400px;"></div></div>
+    <div class="card"><div id="revenueChart" style="height: 400px;"></div></div>
+</div>
+<div class="card"><div id="popularityChart" style="height: 400px;"></div></div>
+<script>
+    const salesData = {{ sales_chart | safe }};
+    Plotly.newPlot('salesChart', salesData.data, salesData.layout);
+    const revenueData = {{ revenue_chart | safe }};
+    Plotly.newPlot('revenueChart', revenueData.data, revenueData.layout);
+    const popularityData = {{ popularity_chart | safe }};
+    Plotly.newPlot('popularityChart', popularityData.data, popularityData.layout);
+</script>
+{% endblock %}

@@ -1,0 +1,69 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 2rem;">Make a Reservation</h1>
+{% if success %}
+<div class="alert-success">Your reservation was successful!</div>
+{% endif %}
+<div class="grid grid-2">
+    <div class="card">
+        <h2>Information</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li style="padding: 0.5rem 0;">We hold reservations for 15 minutes</li>
+            <li style="padding: 0.5rem 0;">Parties of 8+ call directly</li>
+            <li style="padding: 0.5rem 0;">Call: <strong>{{ restaurant.phone }}</strong></li>
+        </ul>
+    </div>
+    <div class="card">
+        <h2>Book Online</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Phone *</label>
+                <input type="tel" name="phone" required>
+            </div>
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Time *</label>
+                    <select name="time" required>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Guests *</label>
+                <select name="guests" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8+</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Special Requests</label>
+                <textarea name="special_requests" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn" style="width:100%;">Make Reservation</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,260 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 2rem;">Visual Editor</h1>
+
+<div class="card">
+    <h2>Theme Colors</h2>
+    <div class="grid grid-4">
+        <div class="form-group">
+            <label>Primary</label>
+            <input type="color" id="primaryColor" value="{{ theme.primary_color }}" onchange="updateTheme('primary_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Secondary</label>
+            <input type="color" id="secondaryColor" value="{{ theme.secondary_color }}" onchange="updateTheme('secondary_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Background</label>
+            <input type="color" id="bgColor" value="{{ theme.background_color }}" onchange="updateTheme('background_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Text</label>
+            <input type="color" id="textColor" value="{{ theme.text_color }}" onchange="updateTheme('text_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Card BG</label>
+            <input type="color" id="cardBg" value="{{ theme.card_bg }}" onchange="updateTheme('card_bg', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Accent</label>
+            <input type="color" id="accentColor" value="{{ theme.accent_color }}" onchange="updateTheme('accent_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Font</label>
+            <select id="fontFamily" onchange="updateTheme('font_family', this.value)">
+                <option value="'Georgia', serif" {% if theme.font_family == "'Georgia', serif" %}selected{% endif %}>Georgia</option>
+                <option value="Arial, sans-serif" {% if theme.font_family == "Arial, sans-serif" %}selected{% endif %}>Arial</option>
+                <option value="'Times New Roman', serif" {% if theme.font_family == "'Times New Roman', serif" %}selected{% endif %}>Times New Roman</option>
+                <option value="'Inter', sans-serif" {% if theme.font_family == "'Inter', sans-serif" %}selected{% endif %}>Inter</option>
+            </select>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+            <button class="btn" onclick="resetData()" style="background: #dc3545; width:100%;">Reset</button>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Restaurant Info</h2>
+    <div class="grid grid-2">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="restaurantName" value="{{ restaurant.name }}" onchange="updateRestaurant('name', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" id="tagline" value="{{ restaurant.tagline }}" onchange="updateRestaurant('tagline', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="address" value="{{ restaurant.address }}" onchange="updateRestaurant('address', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="phone" value="{{ restaurant.phone }}" onchange="updateRestaurant('phone', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" value="{{ restaurant.email }}" onchange="updateRestaurant('email', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Instagram</label>
+            <input type="text" id="instagram" value="{{ restaurant.social.instagram }}" onchange="updateSocial('instagram', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Facebook</label>
+            <input type="text" id="facebook" value="{{ restaurant.social.facebook }}" onchange="updateSocial('facebook', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Twitter</label>
+            <input type="text" id="twitter" value="{{ restaurant.social.twitter }}" onchange="updateSocial('twitter', this.value)">
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Hours</h2>
+    <div class="grid grid-2">
+        {% for day, hours in restaurant.hours.items() %}
+        <div class="form-group">
+            <label>{{ day|capitalize }}</label>
+            <input type="text" value="{{ hours }}" onchange="updateHours('{{ day }}', this.value)">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Menu</h2>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+        <h4>Add Item</h4>
+        <div class="grid grid-4">
+            <input type="text" id="newItemName" placeholder="Name">
+            <input type="text" id="newItemDesc" placeholder="Description">
+            <input type="number" id="newItemPrice" placeholder="Price" step="0.01">
+            <select id="newItemCategory">
+                <option value="appetizers">Appetizers</option>
+                <option value="mains">Mains</option>
+                <option value="desserts">Desserts</option>
+                <option value="beverages">Beverages</option>
+            </select>
+        </div>
+        <button class="btn" onclick="addMenuItem()" style="margin-top:10px;">Add Item</button>
+    </div>
+    {% for category, items in menu.items() %}
+    <div style="margin-top:1rem;">
+        <h3>{{ category|capitalize }}</h3>
+        {% for item in items %}
+        <div class="menu-item" id="item-{{ category }}-{{ loop.index0 }}">
+            <div style="flex:1;">
+                <input type="text" value="{{ item.name }}" onchange="updateMenuItem('{{ category }}', {{ loop.index0 }}, 'name', this.value)" style="border:1px solid #ddd;padding:4px 8px;border-radius:4px;width:150px;">
+                <input type="text" value="{{ item.description }}" onchange="updateMenuItem('{{ category }}', {{ loop.index0 }}, 'description', this.value)" style="border:1px solid #ddd;padding:4px 8px;border-radius:4px;width:250px;">
+                <input type="number" value="{{ item.price }}" step="0.01" onchange="updateMenuItem('{{ category }}', {{ loop.index0 }}, 'price', this.value)" style="border:1px solid #ddd;padding:4px 8px;border-radius:4px;width:80px;">
+                <label><input type="checkbox" {% if item.popular %}checked{% endif %} onchange="updateMenuItem('{{ category }}', {{ loop.index0 }}, 'popular', this.checked)"> Popular</label>
+            </div>
+            <button onclick="deleteMenuItem('{{ category }}', {{ loop.index0 }})" style="background:#dc3545;color:white;border:none;padding:4px 12px;border-radius:4px;cursor:pointer;">X</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <h2>Sales Data (7 Days)</h2>
+    <div class="grid grid-7">
+        {% for i in range(7) %}
+        <div class="form-group">
+            <label>{{ ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i] }}</label>
+            <input type="number" value="{{ analytics.daily_sales[i] }}" onchange="updateSales({{ i }}, this.value)">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2>Revenue Data (6 Months)</h2>
+    <div class="grid grid-6">
+        {% for i in range(6) %}
+        <div class="form-group">
+            <label>{{ ['Jan','Feb','Mar','Apr','May','Jun'][i] }}</label>
+            <input type="number" value="{{ analytics.monthly_revenue[i] }}" onchange="updateRevenue({{ i }}, this.value)">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="text-align:center;margin:2rem 0;">
+    <a href="/" class="btn" style="font-size:1.2rem;padding:1rem 3rem;">View Website</a>
+</div>
+
+<script>
+function updateTheme(key, value) {
+    fetch('/api/update_theme', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function updateRestaurant(key, value) {
+    fetch('/api/update_restaurant', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function updateHours(day, value) {
+    fetch('/api/update_hours', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[day]: value})
+    });
+}
+
+function updateSocial(key, value) {
+    fetch('/api/update_social', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function addMenuItem() {
+    const name = document.getElementById('newItemName').value;
+    const description = document.getElementById('newItemDesc').value;
+    const price = document.getElementById('newItemPrice').value;
+    const category = document.getElementById('newItemCategory').value;
+    if (!name || !price) { alert('Name and price required!'); return; }
+    fetch('/api/menu/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category, name, description, price, popular: false})
+    }).then(() => location.reload());
+}
+
+function updateMenuItem(category, index, key, value) {
+    const itemDiv = document.getElementById('item-' + category + '-' + index);
+    const inputs = itemDiv.querySelectorAll('input');
+    const item = {
+        name: inputs[0].value,
+        description: inputs[1].value,
+        price: parseFloat(inputs[2].value),
+        popular: inputs[3].checked
+    };
+    fetch('/api/menu/update', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category, index, item})
+    });
+}
+
+function deleteMenuItem(category, index) {
+    if (!confirm('Delete?')) return;
+    fetch('/api/menu/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category, index})
+    }).then(() => location.reload());
+}
+
+function updateSales(index, value) {
+    const inputs = document.querySelectorAll('.grid-7 input');
+    const sales = Array.from(inputs).map(i => parseInt(i.value) || 0);
+    fetch('/api/update_sales', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sales})
+    });
+}
+
+function updateRevenue(index, value) {
+    const inputs = document.querySelectorAll('.grid-6 input');
+    const revenue = Array.from(inputs).map(i => parseInt(i.value) || 0);
+    fetch('/api/update_revenue', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({revenue})
+    });
+}
+
+function resetData() {
+    if (!confirm('Reset all data?')) return;
+    fetch('/api/reset_data', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}

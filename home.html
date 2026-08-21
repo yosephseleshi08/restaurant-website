@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+    <h1>Welcome to {{ restaurant.name }}</h1>
+    <p>{{ restaurant.tagline }}</p>
+    <br>
+    <a href="/menu" class="btn">View Menu</a>
+    <a href="/reservations" class="btn btn-secondary">Book a Table</a>
+</div>
+<div class="grid grid-2">
+    <div class="card">
+        <h2>Hours</h2>
+        {% for day, hours in restaurant.hours.items() %}
+        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee;">
+            <span>{{ day|capitalize }}</span>
+            <span>{{ hours }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="card">
+        <h2>Featured</h2>
+        {% for item in menu.appetizers[:2] %}
+        <div class="menu-item">
+            <div>
+                <strong>{{ item.name }}</strong>
+                {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
+                <p style="font-size: 0.9rem;">{{ item.description }}</p>
+            </div>
+            <span class="price">${{ "%.2f"|format(item.price) }}</span>
+        </div>
+        {% endfor %}
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="/menu" class="btn">Full Menu</a>
+        </div>
+    </div>
+</div>
+<div class="card" style="text-align: center;">
+    <h2>Make a Reservation</h2>
+    <p style="margin: 1rem 0;">Call: <strong>{{ restaurant.phone }}</strong></p>
+    <a href="/reservations" class="btn">Book Online</a>
+</div>
+{% endblock %}
