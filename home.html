@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurant.name }} — {{ restaurant.tagline }}{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section style="position: relative; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; margin: -2rem -1.5rem 3rem; min-height: 85vh; display: flex; align-items: center; justify-content: center;">
+    <div style="position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&h=1080&fit=crop') center/cover no-repeat;"></div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(45,27,18,0.85), rgba(232,93,58,0.7));"></div>
+    <div style="position: relative; z-index: 2; text-align: center; color: white; padding: 2rem; max-width: 800px;">
+        <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 1.5rem; opacity: 0.9;">Est. 2010 — Foodville, FD</p>
+        <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1.5rem; line-height: 1.1; font-weight: 700;">{{ restaurant.name }}</h1>
+        <p style="font-size: clamp(1.1rem, 2.5vw, 1.4rem); opacity: 0.9; margin-bottom: 2.5rem; font-weight: 300; max-width: 600px; margin-left: auto; margin-right: auto;">{{ restaurant.tagline }}</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/menu" class="btn btn-lg"><i class="fas fa-utensils"></i> View Menu</a>
+            <a href="/reservations" class="btn btn-outline btn-lg"><i class="fas fa-calendar-check"></i> Book a Table</a>
+        </div>
+        <div style="margin-top: 3rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; font-size: 0.85rem; opacity: 0.8;">
+            <span><i class="fas fa-star" style="color: #ffc107;"></i> 4.8 Rating</span>
+            <span><i class="fas fa-award" style="color: #ffc107;"></i> Best of Foodville 2024</span>
+            <span><i class="fas fa-leaf" style="color: #81c784;"></i> Fresh Daily</span>
+        </div>
+    </div>
+    <div style="position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: white; opacity: 0.6; animation: bounce 2s infinite;">
+        <i class="fas fa-chevron-down" style="font-size: 1.5rem;"></i>
+    </div>
+</section>
+<style>@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(10px); } }</style>
+
+<!-- Featured Dishes -->
+<section class="container" style="margin-bottom: 4rem;">
+    <div class="section-title fade-in">
+        <h2>Chef's Selections</h2>
+        <p>Hand-picked favorites from our kitchen, crafted with imported Italian ingredients</p>
+        <div class="line"></div>
+    </div>
+    <div class="grid grid-3" style="margin-top: 2rem;">
+        {% set featured = [menu.mains[0], menu.mains[2], menu.appetizers[2]] %}
+        {% for item in featured %}
+        <div class="card fade-in delay-{{ loop.index }}" style="padding: 0; overflow: hidden;">
+            <div style="height: 220px; overflow: hidden;">
+                <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+            </div>
+            <div style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <h3 style="font-size: 1.2rem;">{{ item.name }}</h3>
+                    <span style="color: var(--primary); font-weight: 700; font-family: var(--font-heading); font-size: 1.1rem;">${{ "%.2f"|format(item.price) }}</span>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; line-height: 1.5; margin-bottom: 0.75rem;">{{ item.description }}</p>
+                <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+                    {% for tag in item.dietary %}
+                    <span class="dietary-badge {{ tag }}"><i class="fas fa-leaf" style="font-size:0.6rem;"></i> {{ tag }}</span>
+                    {% endfor %}
+                    {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="/menu" class="btn btn-secondary"><i class="fas fa-book-open"></i> See Full Menu</a>
+    </div>
+</section>
+
+<!-- Info Grid -->
+<section style="background: linear-gradient(135deg, rgba(232,93,58,0.05), rgba(244,162,97,0.05)); padding: 4rem 0; margin: 0 -1.5rem;">
+    <div class="container">
+        <div class="grid grid-2">
+            <!-- Hours -->
+            <div class="card fade-in">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                    <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 style="font-size: 1.4rem;">Opening Hours</h3>
+                </div>
+                {% for day, hours in restaurant.hours.items() %}
+                <div style="display: flex; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); align-items: center;">
+                    <span style="font-weight: 500; text-transform: capitalize; font-size: 0.95rem;">{{ day }}</span>
+                    <span style="color: #666; font-size: 0.95rem;">{{ hours }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Quick Info + CTA -->
+            <div class="fade-in delay-1">
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), #4db6ac); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem;">Call to Reserve</h3>
+                            <a href="tel:{{ restaurant.phone_link }}" style="color: var(--primary); font-weight: 700; font-size: 1.2rem; text-decoration: none; font-family: var(--font-heading);">{{ restaurant.phone }}</a>
+                        </div>
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.25rem;">We hold reservations for 15 minutes. Parties of 8+ please call directly.</p>
+                    <a href="/reservations" class="btn" style="width: 100%; justify-content: center;"><i class="fas fa-calendar-check"></i> Book Online</a>
+                </div>
+                <div class="card">
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                        <div style="width: 48px; height: 48px; border-radius: 12px; background: linear-gradient(135deg, #8e44ad, #9b59b6); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem;">Find Us</h3>
+                            <p style="color: #666; font-size: 0.9rem;">{{ restaurant.address }}</p>
+                        </div>
+                    </div>
+                    <a href="/contact" class="btn btn-secondary" style="width: 100%; justify-content: center;"><i class="fas fa-directions"></i> Get Directions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container" style="margin-top: 4rem; margin-bottom: 4rem;">
+    <div class="section-title fade-in">
+        <h2>What Our Guests Say</h2>
+        <p>Real reviews from real diners who keep coming back</p>
+        <div class="line"></div>
+    </div>
+    <div class="grid grid-3">
+        {% for t in testimonials[:3] %}
+        <div class="card fade-in delay-{{ loop.index }}" style="position: relative;">
+            <div style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 3rem; color: rgba(232,93,58,0.1); font-family: var(--font-heading);">"</div>
+            <div class="stars" style="margin-bottom: 1rem;">
+                {% for i in range(t.rating) %}<i class="fas fa-star"></i>{% endfor %}
+                {% for i in range(5 - t.rating) %}<i class="far fa-star" style="color: #ddd;"></i>{% endfor %}
+            </div>
+            <p style="font-style: italic; color: #555; line-height: 1.7; margin-bottom: 1.25rem; font-size: 1rem;">"{{ t.text }}"</p>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.85rem;">
+                    {{ t.name.split()[0][0] }}{{ t.name.split()[-1][0] if t.name.split()|length > 1 else '' }}
+                </div>
+                <div>
+                    <p style="font-weight: 600; font-size: 0.95rem;">{{ t.name }}</p>
+                    <p style="font-size: 0.8rem; color: #999;">Verified Diner</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- CTA Banner -->
+<section style="background: linear-gradient(135deg, var(--primary), var(--secondary)); margin: 0 -1.5rem; padding: 4rem 1.5rem; text-align: center; color: white;">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h2 style="font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 1rem; color: white;">Ready to Experience Authentic Italy?</h2>
+        <p style="opacity: 0.9; margin-bottom: 2rem; font-size: 1.1rem;">Reserve your table today and let us take care of the rest. Walk-ins welcome, but reservations recommended for dinner.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/reservations" class="btn" style="background: white; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);"><i class="fas fa-calendar-check"></i> Reserve Now</a>
+            <a href="tel:{{ restaurant.phone_link }}" class="btn btn-outline"><i class="fas fa-phone-alt"></i> {{ restaurant.phone }}</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+{% block title %}Editor — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section style="text-align: center; padding: 2rem 0 1rem;">
+    <h1 style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 0.75rem;">Visual Editor</h1>
+    <p style="color: #777; font-size: 1.1rem;">Customize your restaurant website in real-time</p>
+    <div class="line" style="width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); margin: 1.5rem auto 0; border-radius: 3px;"></div>
+</section>
+
+<div style="max-width: 1000px; margin: 0 auto;">
+
+<!-- Theme Colors -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-palette" style="color: var(--primary); margin-right: 0.5rem;"></i>Theme Colors</h3>
+    <div class="grid grid-4">
+        <div class="form-group">
+            <label>Primary</label>
+            <input type="color" id="primaryColor" value="{{ theme.primary_color }}" onchange="updateTheme('primary_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Secondary</label>
+            <input type="color" id="secondaryColor" value="{{ theme.secondary_color }}" onchange="updateTheme('secondary_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Background</label>
+            <input type="color" id="bgColor" value="{{ theme.background_color }}" onchange="updateTheme('background_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Text</label>
+            <input type="color" id="textColor" value="{{ theme.text_color }}" onchange="updateTheme('text_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Card BG</label>
+            <input type="color" id="cardBg" value="{{ theme.card_bg }}" onchange="updateTheme('card_bg', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Accent</label>
+            <input type="color" id="accentColor" value="{{ theme.accent_color }}" onchange="updateTheme('accent_color', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Font</label>
+            <select id="fontFamily" onchange="updateTheme('font_family', this.value)">
+                <option value="'Inter', sans-serif" {% if theme.font_family == "'Inter', sans-serif" %}selected{% endif %}>Inter (Modern)</option>
+                <option value="'Georgia', serif" {% if theme.font_family == "'Georgia', serif" %}selected{% endif %}>Georgia (Classic)</option>
+                <option value="Arial, sans-serif" {% if theme.font_family == "Arial, sans-serif" %}selected{% endif %}>Arial</option>
+                <option value="'Times New Roman', serif" {% if theme.font_family == "'Times New Roman', serif" %}selected{% endif %}>Times New Roman</option>
+            </select>
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+            <button class="btn" onclick="resetData()" style="background: #dc3545; width:100%;"><i class="fas fa-undo"></i> Reset All</button>
+        </div>
+    </div>
+</div>
+
+<!-- Restaurant Info -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-store" style="color: var(--primary); margin-right: 0.5rem;"></i>Restaurant Info</h3>
+    <div class="grid grid-2">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="restaurantName" value="{{ restaurant.name }}" onchange="updateRestaurant('name', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" id="tagline" value="{{ restaurant.tagline }}" onchange="updateRestaurant('tagline', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="address" value="{{ restaurant.address }}" onchange="updateRestaurant('address', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Phone (display)</label>
+            <input type="text" id="phone" value="{{ restaurant.phone }}" onchange="updateRestaurant('phone', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Phone (link, no spaces/symbols)</label>
+            <input type="text" id="phoneLink" value="{{ restaurant.phone_link }}" onchange="updateRestaurant('phone_link', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" value="{{ restaurant.email }}" onchange="updateRestaurant('email', this.value)">
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Google Maps Embed URL</label>
+            <input type="text" id="mapsEmbed" value="{{ restaurant.google_maps_embed }}" onchange="updateRestaurant('google_maps_embed', this.value)" placeholder="Paste iframe src URL">
+            <p style="font-size: 0.8rem; color: #888; margin-top: 0.3rem;">Go to Google Maps → Share → Embed a map → copy the src URL from the iframe code</p>
+        </div>
+    </div>
+</div>
+
+<!-- Social Media -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-share-alt" style="color: var(--primary); margin-right: 0.5rem;"></i>Social Media (usernames only)</h3>
+    <div class="grid grid-2">
+        <div class="form-group">
+            <label>Instagram</label>
+            <input type="text" id="instagram" value="{{ restaurant.social.instagram }}" onchange="updateSocial('instagram', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Facebook</label>
+            <input type="text" id="facebook" value="{{ restaurant.social.facebook }}" onchange="updateSocial('facebook', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Twitter / X</label>
+            <input type="text" id="twitter" value="{{ restaurant.social.twitter }}" onchange="updateSocial('twitter', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Yelp (biz slug)</label>
+            <input type="text" id="yelp" value="{{ restaurant.social.yelp }}" onchange="updateSocial('yelp', this.value)">
+        </div>
+    </div>
+</div>
+
+<!-- Hours -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-clock" style="color: var(--primary); margin-right: 0.5rem;"></i>Opening Hours</h3>
+    <div class="grid grid-2">
+        {% for day, hours in restaurant.hours.items() %}
+        <div class="form-group">
+            <label>{{ day|capitalize }}</label>
+            <input type="text" value="{{ hours }}" onchange="updateHours('{{ day }}', this.value)">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- About Section -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-info-circle" style="color: var(--primary); margin-right: 0.5rem;"></i>About Page Content</h3>
+    <div class="grid grid-2">
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Restaurant Story</label>
+            <textarea rows="3" onchange="updateAbout('story', this.value)">{{ about.story }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Chef Name</label>
+            <input type="text" value="{{ about.chef_name }}" onchange="updateAbout('chef_name', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Chef Photo URL</label>
+            <input type="text" value="{{ about.chef_image }}" onchange="updateAbout('chef_image', this.value)">
+        </div>
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Chef Bio</label>
+            <textarea rows="3" onchange="updateAbout('chef_bio', this.value)">{{ about.chef_bio }}</textarea>
+        </div>
+        <div class="form-group">
+            <label>Interior Photo URL</label>
+            <input type="text" value="{{ about.interior_image }}" onchange="updateAbout('interior_image', this.value)">
+        </div>
+        <div class="form-group">
+            <label>Food Photo URL</label>
+            <input type="text" value="{{ about.food_image }}" onchange="updateAbout('food_image', this.value)">
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-comment-dots" style="color: var(--primary); margin-right: 0.5rem;"></i>Testimonials</h3>
+    <div id="testimonialsList">
+        {% for t in testimonials %}
+        <div class="testimonial-item" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;">
+            <div class="grid grid-3" style="gap: 0.75rem;">
+                <input type="text" class="t-name" value="{{ t.name }}" placeholder="Name" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+                <input type="number" class="t-rating" value="{{ t.rating }}" min="1" max="5" placeholder="Rating 1-5" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+                <button onclick="this.closest('.testimonial-item').remove(); saveTestimonials();" style="background: #dc3545; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;"><i class="fas fa-trash"></i> Remove</button>
+            </div>
+            <textarea class="t-text" rows="2" placeholder="Review text" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; margin-top: 0.5rem; font-family: var(--font-body);">{{ t.text }}</textarea>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-secondary" onclick="addTestimonial()" style="margin-top: 0.5rem;"><i class="fas fa-plus"></i> Add Testimonial</button>
+</div>
+
+<!-- Menu -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-utensils" style="color: var(--primary); margin-right: 0.5rem;"></i>Menu Items</h3>
+
+    <div style="background: #f8f9fa; padding: 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+        <h4 style="margin-bottom: 1rem; font-size: 1rem;"><i class="fas fa-plus-circle" style="color: var(--primary); margin-right: 0.4rem;"></i>Add New Item</h4>
+        <div class="grid grid-2" style="gap: 0.75rem;">
+            <input type="text" id="newItemName" placeholder="Item name" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body);">
+            <input type="text" id="newItemDesc" placeholder="Description" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body);">
+            <input type="number" id="newItemPrice" placeholder="Price" step="0.01" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body);">
+            <input type="text" id="newItemImage" placeholder="Image URL (Unsplash or your own)" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body);">
+            <select id="newItemCategory" style="padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; font-family: var(--font-body);">
+                <option value="appetizers">Appetizers</option>
+                <option value="mains">Mains</option>
+                <option value="desserts">Desserts</option>
+                <option value="beverages">Beverages</option>
+            </select>
+            <div style="display: flex; gap: 1rem; align-items: center; padding: 0.6rem;">
+                <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;"><input type="checkbox" id="newItemPopular"> Popular</label>
+                <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;"><input type="checkbox" id="newItemVeg" value="vegetarian"> Veg</label>
+                <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;"><input type="checkbox" id="newItemGF" value="gluten-free"> GF</label>
+                <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; cursor: pointer;"><input type="checkbox" id="newItemSpicy" value="spicy"> Spicy</label>
+            </div>
+        </div>
+        <button class="btn" onclick="addMenuItem()" style="margin-top: 0.75rem;"><i class="fas fa-plus"></i> Add Item</button>
+    </div>
+
+    {% for category, items in menu.items() %}
+    <div style="margin-top: 1.5rem;">
+        <h4 style="text-transform: capitalize; margin-bottom: 0.75rem; color: var(--primary);">{{ category }}</h4>
+        {% for item in items %}
+        <div class="menu-item" id="item-{{ category }}-{{ loop.index0 }}" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; border-bottom: none;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 80px 1fr auto; gap: 0.5rem; align-items: center;">
+                <input type="text" class="item-name" value="{{ item.name }}" placeholder="Name" style="padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-family: var(--font-body);">
+                <input type="text" class="item-desc" value="{{ item.description }}" placeholder="Description" style="padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-family: var(--font-body);">
+                <input type="number" class="item-price" value="{{ item.price }}" step="0.01" placeholder="Price" style="padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-family: var(--font-body);">
+                <input type="text" class="item-image" value="{{ item.image }}" placeholder="Image URL" style="padding: 0.4rem; border: 1px solid #ddd; border-radius: 4px; font-family: var(--font-body); font-size: 0.8rem;">
+                <div style="display: flex; gap: 0.3rem; align-items: center;">
+                    <label style="font-size: 0.75rem; cursor: pointer;"><input type="checkbox" class="item-pop" {% if item.popular %}checked{% endif %}> Pop</label>
+                    <button onclick="deleteMenuItem('{{ category }}', {{ loop.index0 }})" style="background:#dc3545;color:white;border:none;padding:0.3rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.75rem;"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.4rem; flex-wrap: wrap;">
+                <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.2rem;"><input type="checkbox" class="item-diet-veg" {% if 'vegetarian' in item.dietary %}checked{% endif %}> Vegetarian</label>
+                <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.2rem;"><input type="checkbox" class="item-diet-gf" {% if 'gluten-free' in item.dietary %}checked{% endif %}> Gluten-Free</label>
+                <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.2rem;"><input type="checkbox" class="item-diet-spicy" {% if 'spicy' in item.dietary %}checked{% endif %}> Spicy</label>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+    <button class="btn" onclick="saveAllMenuItems()" style="margin-top: 1.5rem; width: 100%;"><i class="fas fa-save"></i> Save All Menu Changes</button>
+</div>
+
+<!-- Sales Data -->
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-chart-bar" style="color: var(--primary); margin-right: 0.5rem;"></i>Sales Data (7 Days)</h3>
+    <div class="grid grid-7">
+        {% for i in range(7) %}
+        <div class="form-group">
+            <label>{{ ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i] }}</label>
+            <input type="number" value="{{ analytics.daily_sales[i] }}" onchange="updateSales({{ i }}, this.value)" style="padding: 0.5rem;">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;"><i class="fas fa-chart-line" style="color: var(--primary); margin-right: 0.5rem;"></i>Revenue Data (6 Months)</h3>
+    <div class="grid grid-6">
+        {% for i in range(6) %}
+        <div class="form-group">
+            <label>{{ ['Jan','Feb','Mar','Apr','May','Jun'][i] }}</label>
+            <input type="number" value="{{ analytics.monthly_revenue[i] }}" onchange="updateRevenue({{ i }}, this.value)" style="padding: 0.5rem;">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="text-align: center; margin: 3rem 0;">
+    <a href="/" class="btn" style="font-size: 1.1rem; padding: 1rem 2.5rem;"><i class="fas fa-eye"></i> Preview Website</a>
+    <a href="/dashboard" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1rem 2.5rem; margin-left: 1rem;"><i class="fas fa-chart-pie"></i> View Dashboard</a>
+</div>
+
+</div>
+
+<script>
+function updateTheme(key, value) {
+    fetch('/api/update_theme', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function updateRestaurant(key, value) {
+    fetch('/api/update_restaurant', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function updateHours(day, value) {
+    fetch('/api/update_hours', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[day]: value})
+    });
+}
+
+function updateSocial(key, value) {
+    fetch('/api/update_social', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function updateAbout(key, value) {
+    fetch('/api/update_about', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({[key]: value})
+    });
+}
+
+function addTestimonial() {
+    const div = document.createElement('div');
+    div.className = 'testimonial-item';
+    div.style.cssText = 'background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem;';
+    div.innerHTML = `
+        <div class="grid grid-3" style="gap: 0.75rem;">
+            <input type="text" class="t-name" placeholder="Name" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+            <input type="number" class="t-rating" value="5" min="1" max="5" placeholder="Rating 1-5" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px;">
+            <button onclick="this.closest('.testimonial-item').remove(); saveTestimonials();" style="background: #dc3545; color: white; border: none; padding: 0.5rem; border-radius: 6px; cursor: pointer;"><i class="fas fa-trash"></i> Remove</button>
+        </div>
+        <textarea class="t-text" rows="2" placeholder="Review text" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; margin-top: 0.5rem; font-family: var(--font-body);"></textarea>
+    `;
+    document.getElementById('testimonialsList').appendChild(div);
+    saveTestimonials();
+}
+
+function saveTestimonials() {
+    const items = document.querySelectorAll('.testimonial-item');
+    const testimonials = Array.from(items).map(item => ({
+        name: item.querySelector('.t-name').value,
+        text: item.querySelector('.t-text').value,
+        rating: parseInt(item.querySelector('.t-rating').value) || 5
+    })).filter(t => t.name && t.text);
+    fetch('/api/update_testimonials', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({testimonials})
+    });
+}
+
+function addMenuItem() {
+    const name = document.getElementById('newItemName').value;
+    const description = document.getElementById('newItemDesc').value;
+    const price = document.getElementById('newItemPrice').value;
+    const category = document.getElementById('newItemCategory').value;
+    const image = document.getElementById('newItemImage').value;
+    const popular = document.getElementById('newItemPopular').checked;
+    const dietary = [];
+    if (document.getElementById('newItemVeg').checked) dietary.push('vegetarian');
+    if (document.getElementById('newItemGF').checked) dietary.push('gluten-free');
+    if (document.getElementById('newItemSpicy').checked) dietary.push('spicy');
+    if (!name || !price) { alert('Name and price are required!'); return; }
+    fetch('/api/menu/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category, name, description, price, popular, image, dietary})
+    }).then(() => location.reload());
+}
+
+function saveAllMenuItems() {
+    document.querySelectorAll('.menu-item').forEach(itemDiv => {
+        const id = itemDiv.id;
+        const parts = id.replace('item-', '').split('-');
+        const category = parts.slice(0, -1).join('-');
+        const index = parseInt(parts[parts.length - 1]);
+
+        const dietary = [];
+        if (itemDiv.querySelector('.item-diet-veg').checked) dietary.push('vegetarian');
+        if (itemDiv.querySelector('.item-diet-gf').checked) dietary.push('gluten-free');
+        if (itemDiv.querySelector('.item-diet-spicy').checked) dietary.push('spicy');
+
+        const item = {
+            name: itemDiv.querySelector('.item-name').value,
+            description: itemDiv.querySelector('.item-desc').value,
+            price: parseFloat(itemDiv.querySelector('.item-price').value),
+            popular: itemDiv.querySelector('.item-pop').checked,
+            image: itemDiv.querySelector('.item-image').value,
+            dietary: dietary
+        };
+
+        fetch('/api/menu/update', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({category, index, item})
+        });
+    });
+    alert('Menu saved!');
+}
+
+function deleteMenuItem(category, index) {
+    if (!confirm('Delete this item?')) return;
+    fetch('/api/menu/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({category, index})
+    }).then(() => location.reload());
+}
+
+function updateSales(index, value) {
+    const inputs = document.querySelectorAll('.grid-7 input');
+    const sales = Array.from(inputs).map(i => parseInt(i.value) || 0);
+    fetch('/api/update_sales', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({sales})
+    });
+}
+
+function updateRevenue(index, value) {
+    const inputs = document.querySelectorAll('.grid-6 input');
+    const revenue = Array.from(inputs).map(i => parseInt(i.value) || 0);
+    fetch('/api/update_revenue', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({revenue})
+    });
+}
+
+function resetData() {
+    if (!confirm('WARNING: This will reset ALL data to defaults. Are you sure?')) return;
+    fetch('/api/reset_data', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+    }).then(() => location.reload());
+}
+</script>
+
+{% endblock %}
