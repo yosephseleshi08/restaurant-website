@@ -1,3 +1,4 @@
+# Latest version - Aug 22, 2026
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash, send_file
 from flask_talisman import Talisman
 from flask_limiter import Limiter
