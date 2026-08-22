@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Gallery — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section class="section-header">
+    <h1>{{ gallery.page_title }}</h1>
+    <p>{{ gallery.page_subtitle }}</p>
+    <div class="line"></div>
+</section>
+
+<!-- Category Filters -->
+<div class="tab-bar">
+    <button class="tab-btn active" onclick="filterGallery('all', this)">All</button>
+    <button class="tab-btn" onclick="filterGallery('food', this)">Food</button>
+    <button class="tab-btn" onclick="filterGallery('interior', this)">Interior</button>
+    <button class="tab-btn" onclick="filterGallery('drinks', this)">Drinks</button>
+</div>
+
+<div class="grid grid-3" id="galleryGrid" style="gap: 1rem;">
+    {% for photo in gallery.photos %}
+    <div class="gallery-item" data-category="{{ photo.category }}" onclick="openLightbox('{{ photo.url }}', '{{ photo.caption }}')">
+        <img src="{{ photo.url }}" alt="{{ photo.caption }}">
+        <div class="gallery-caption">
+            <p>{{ photo.caption }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div id="lightbox" onclick="this.classList.remove('active')">
+    <button class="close-btn" onclick="document.getElementById('lightbox').classList.remove('active')">&times;</button>
+    <img id="lightbox-img" src="" alt="">
+    <p id="lightbox-caption"></p>
+</div>
+
+<script>
+function filterGallery(category, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.style.display = (category === 'all' || item.dataset.category === category) ? 'block' : 'none';
+    });
+}
+function openLightbox(url, caption) {
+    document.getElementById('lightbox-img').src = url;
+    document.getElementById('lightbox-caption').textContent = caption;
+    document.getElementById('lightbox').classList.add('active');
+}
+document.addEventListener('keydown', e => { if(e.key === 'Escape') document.getElementById('lightbox').classList.remove('active'); });
+</script>
+
+{% endblock %}
