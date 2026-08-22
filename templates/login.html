@@ -23,7 +23,7 @@
         {% endwith %}
 
         <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <!-- REMOVED CSRF TOKEN -->
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" name="username" placeholder="admin" required autofocus>
@@ -36,7 +36,7 @@
                 <i class="fas fa-sign-in-alt"></i> Login
             </button>
         </form>
-        <p class="login-hint">Check console for credentials on first run</p>
+        <p class="login-hint">Username: admin / Password: admin123</p>
     </div>
 </div>
 
