@@ -458,6 +458,44 @@ def update_hours():
     save_data(data)
     return jsonify({'success': True})
 
+@app.route('/api/export/reservations')
+@admin_required
+def export_reservations():
+    try:
+        rows = Reservation.query.order_by(Reservation.created_at.desc()).all()
+        
+        # Create CSV in memory
+        output = io.StringIO()
+        writer = csv.writer(output)
+        
+        # Write header
+        writer.writerow(['ID', 'Name', 'Email', 'Phone', 'Date', 'Time', 'Guests', 'Special Requests', 'Created At'])
+        
+        # Write data
+        for r in rows:
+            writer.writerow([
+                r.id,
+                r.name,
+                r.email,
+                r.phone,
+                r.date,
+                r.time,
+                r.guests,
+                r.special_requests or '',
+                r.created_at.strftime('%Y-%m-%d %H:%M') if r.created_at else ''
+            ])
+        
+        output.seek(0)
+        
+        return send_file(
+            io.BytesIO(output.getvalue().encode('utf-8')),
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name=f'reservations_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+        )
+    except Exception as e:
+        return f"Error exporting: {e}", 500
+
 @app.route('/api/update_social', methods=['POST'])
 @admin_required
 def update_social():
