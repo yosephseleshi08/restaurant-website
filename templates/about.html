@@ -2,84 +2,57 @@
 {% block title %}About — {{ restaurant.name }}{% endblock %}
 {% block content %}
 
-<!-- Hero -->
-<section class="relative overflow-hidden" style="margin: -2rem -1.5rem 3rem; height: 50vh; min-height: 350px; display: flex; align-items: center; justify-content: center;">
-    <div class="absolute inset-0" style="background: url('{{ about.interior_image }}') center/cover no-repeat;"></div>
-    <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(45,27,18,0.8), rgba(232,93,58,0.6));"></div>
-    <div class="relative z-2 text-center text-white" style="padding: 2rem;">
-        <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 1rem; opacity: 0.9;">Our Story</p>
-        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700;">About {{ restaurant.name }}</h1>
+<div class="container" style="padding-top: 2rem;">
+    <div class="section-title">
+        <h1 style="font-size: 3rem;">About {{ restaurant.name }}</h1>
+        <div class="line"></div>
     </div>
-</section>
 
-<!-- Story -->
-<div class="container">
-    <div class="grid grid-2" style="align-items: center; margin-bottom: 4rem;">
+    <div class="grid grid-2" style="align-items: center; margin: 3rem 0;">
         <div>
-            <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); font-weight: 700; margin-bottom: 1rem;">Since 2010</p>
-            <h2 style="font-size: 2rem; margin-bottom: 1.25rem;">A Taste of Tuscany in Every Bite</h2>
-            <p style="color: #555; line-height: 1.8; font-size: 1.05rem; margin-bottom: 1.25rem;">{{ about.story }}</p>
-            <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">Our wood-fired oven was imported directly from Naples and bakes pizzas at 900°F for that perfect charred crust. Every morning, our kitchen team prepares fresh pasta dough, sauces, and desserts from scratch — just as Nonna taught us.</p>
+            <h2>Our Story</h2>
+            <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">{{ about.story }}</p>
+            <br>
+            <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">Our wood-fired oven was imported directly from Naples and bakes pizzas at 900°F for that perfect charred crust.</p>
         </div>
-        <div class="rounded overflow-hidden shadow-lg">
-            <img src="{{ about.food_image }}" alt="Our food" class="img-cover">
+        <div style="border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.12);">
+            <img src="{{ about.food_image }}" alt="Our food" style="width: 100%; height: 300px; object-fit: cover;">
         </div>
     </div>
 
-    <!-- Values -->
-    <div class="section-title mb-3">
+    <div class="section-title" style="margin: 3rem 0;">
         <h2>Our Values</h2>
         <p>The principles that guide everything we do</p>
         <div class="line"></div>
     </div>
-    <div class="grid grid-3 mb-4">
+    <div class="grid grid-3" style="margin-bottom: 3rem;">
         {% for value in about.values %}
-        <div class="card value-card">
-            <div class="value-icon">
-                {% if loop.index == 1 %}<i class="fas fa-leaf"></i>
-                {% elif loop.index == 2 %}<i class="fas fa-heart"></i>
-                {% else %}<i class="fas fa-hand-holding-heart"></i>{% endif %}
+        <div class="card" style="text-align: center;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1.25rem;">
+                <i class="fas fa-{% if loop.index == 1 %}leaf{% elif loop.index == 2 %}heart{% else %}hand-holding-heart{% endif %}"></i>
             </div>
-            <h3 class="value-title">{{ value.title }}</h3>
-            <p class="value-desc">{{ value.description }}</p>
+            <h3 style="font-size: 1.2rem; margin-bottom: 0.75rem;">{{ value.title }}</h3>
+            <p style="color: #666; line-height: 1.6; font-size: 0.95rem;">{{ value.description }}</p>
         </div>
         {% endfor %}
     </div>
 
-    <!-- Chef -->
-    <div class="bg-gradient-light py-4" style="margin: 0 -1.5rem;">
-        <div class="container container-sm">
-            <div class="grid grid-2" style="align-items: center; gap: 3rem;">
-                <div class="text-center">
-                    <div class="mx-auto shadow-lg" style="width: 280px; height: 280px; border-radius: 50%; overflow: hidden; border: 5px solid white;">
-                        <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" class="img-cover">
-                    </div>
+    <div style="background: linear-gradient(135deg, rgba(232,93,58,0.05), rgba(244,162,97,0.05)); padding: 3rem; border-radius: 16px; margin: 2rem 0;">
+        <div class="grid grid-2" style="align-items: center; gap: 3rem;">
+            <div style="text-align: center;">
+                <div style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; margin: 0 auto; border: 5px solid white; box-shadow: 0 10px 40px rgba(0,0,0,0.12);">
+                    <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-                <div>
-                    <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); font-weight: 700; margin-bottom: 0.75rem;">Executive Chef</p>
-                    <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{ about.chef_name }}</h2>
-                    <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">{{ about.chef_bio }}</p>
-                    <div class="flex gap-3 flex-wrap mt-2">
-                        <div class="text-center">
-                            <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary); font-family: var(--font-heading);">20+</div>
-                            <div style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px;">Years Experience</div>
-                        </div>
-                        <div class="text-center">
-                            <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary); font-family: var(--font-heading);">3</div>
-                            <div style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px;">Michelin Stars</div>
-                        </div>
-                        <div class="text-center">
-                            <div style="font-size: 1.8rem; font-weight: 700; color: var(--primary); font-family: var(--font-heading);">150+</div>
-                            <div style="font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px;">Signature Dishes</div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+            <div>
+                <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); font-weight: 700;">Executive Chef</p>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">{{ about.chef_name }}</h2>
+                <p style="color: #555; line-height: 1.8; font-size: 1.05rem;">{{ about.chef_bio }}</p>
             </div>
         </div>
     </div>
 
-    <!-- CTA -->
-    <div class="text-center py-4">
+    <div style="text-align: center; padding: 3rem 0;">
         <h2 style="font-size: 2rem; margin-bottom: 1rem;">Come Dine With Us</h2>
         <p style="color: #666; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">Experience the warmth of Italian hospitality and the flavors of Tuscany. Your table is waiting.</p>
         <a href="/reservations" class="btn" style="font-size: 1.05rem;"><i class="fas fa-calendar-check"></i> Reserve a Table</a>
