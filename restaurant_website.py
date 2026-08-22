@@ -771,6 +771,12 @@ def update_testimonials():
     save_data(data)
     return jsonify({'success': True})
 
+@app.route('/init_db')
+def init_db():
+    from restaurant_website import db
+    db.create_all()
+    return "✅ Database tables created successfully! <a href='/'>Go Home</a>"
+
 @app.route('/api/menu/add', methods=['POST'])
 @admin_required
 def add_menu_item():
@@ -880,6 +886,7 @@ def reset_password():
 if __name__ == '__main__':
     with app.app_context():
         init_db()
+    app.run(debug=False, host='0.0.0.0', port=5000)
     print("=" * 60)
     print("  RESTAURANT WEBSITE — PRODUCTION READY v2")
     print("=" * 60)
