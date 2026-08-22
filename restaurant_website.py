@@ -854,7 +854,18 @@ def not_found(e):
         theme=data['theme'], restaurant=data['restaurant'],
         menu=data['menu'], testimonials=data['testimonials'],
         online_ordering=data['online_ordering'], featured=get_featured_items()), 404
-
+    
+@app.route('/reset_password')
+def reset_password():
+    from werkzeug.security import generate_password_hash
+    from restaurant_website import User, db
+    
+    admin = User.query.filter_by(username='admin').first()
+    if admin:
+        admin.password_hash = generate_password_hash('admin123')
+        db.session.commit()
+        return "✅ Password reset to: <strong>admin123</strong><br><a href='/login'>Go to Login</a>"
+    return "❌ Admin user not found!"
 # ========================================
 # MAIN
 # ========================================
