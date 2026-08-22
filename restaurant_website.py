@@ -605,17 +605,24 @@ def debug_users():
 @app.route('/dashboard')
 @admin_required
 def dashboard():
-    rows = Reservation.query.order_by(Reservation.created_at.desc()).limit(10).all()
-    total_reservations = Reservation.query.count()
-    total_messages = ContactMessage.query.count()
-    analytics = data['analytics'].copy()
-    analytics['total_reservations'] = total_reservations
-    analytics['total_messages'] = total_messages
-    return render_template('dashboard.html',
-        theme=data['theme'], restaurant=data['restaurant'],
-        analytics=analytics,
-        reservations=[{'name': r.name, 'date': r.date, 'time': r.time,
-            'guests': r.guests, 'phone': r.phone} for r in rows])
+    try:
+        # Get reservations (limit to 10)
+        rows = Reservation.query.order_by(Reservation.created_at.desc()).limit(10).all()
+        total_reservations = Reservation.query.count()
+        total_messages = ContactMessage.query.count()
+        
+        analytics = data['analytics'].copy()
+        analytics['total_reservations'] = total_reservations
+        analytics['total_messages'] = total_messages
+        
+        return render_template('dashboard.html',
+            theme=data['theme'], 
+            restaurant=data['restaurant'],
+            analytics=analytics,
+            reservations=[{'name': r.name, 'date': r.date, 'time': r.time,
+                'guests': r.guests, 'phone': r.phone} for r in rows])
+    except Exception as e:
+        return f"<h1>Dashboard Error</h1><p>{e}</p><a href='/'>Go Home</a>"
 
 @app.route('/editor')
 @admin_required
@@ -863,6 +870,25 @@ def reset_data():
     data = DEFAULT_DATA.copy()
     save_data(data)
     return jsonify({'success': True})
+
+@app.route('/test_reservation')
+def test_reservation():
+    from restaurant_website import Reservation, db
+    from datetime import datetime
+    
+    # Create a test reservation
+    test = Reservation(
+        name='Test User',
+        email='test@example.com',
+        phone='555-123-4567',
+        date=datetime.now().strftime('%Y-%m-%d'),
+        time='19:00',
+        guests='2',
+        special_requests='Test entry'
+    )
+    db.session.add(test)
+    db.session.commit()
+    return "✅ Test reservation created! <a href='/dashboard'>Go to Dashboard</a>"
 
 # ========================================
 # ERROR HANDLERS
