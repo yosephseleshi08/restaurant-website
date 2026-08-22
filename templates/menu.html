@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Menu — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section class="section-header" style="padding: 3rem 0 2rem;">
+    <h1>Our Menu</h1>
+    <p>Every dish is prepared fresh to order using imported Italian ingredients and time-honored family recipes</p>
+    <div class="line"></div>
+</section>
+
+<!-- Category Tabs -->
+<div class="tab-bar">
+    <button class="tab-btn active" onclick="filterMenu('all', this)">All</button>
+    {% for category in menu.keys() %}
+    <button class="tab-btn" onclick="filterMenu('{{ category }}', this)">{{ category|capitalize }}</button>
+    {% endfor %}
+</div>
+
+<div class="grid grid-2" id="menuGrid">
+    {% for category, items in menu.items() %}
+    <div class="menu-category" data-category="{{ category }}">
+        <div class="card" style="height: 100%;">
+            <div class="flex items-center gap-1 mb-2">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+                    {% if category == 'appetizers' %}<i class="fas fa-bread-slice"></i>
+                    {% elif category == 'mains' %}<i class="fas fa-drumstick-bite"></i>
+                    {% elif category == 'desserts' %}<i class="fas fa-ice-cream"></i>
+                    {% else %}<i class="fas fa-wine-glass-alt"></i>{% endif %}
+                </div>
+                <h2 style="font-size: 1.5rem; text-transform: capitalize;">{{ category }}</h2>
+            </div>
+            {% for item in items %}
+            <div class="menu-item">
+                <div class="menu-item-info">
+                    <div class="menu-item-name">
+                        {{ item.name }}
+                        {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
+                    </div>
+                    <div class="dietary-tags">
+                        {% for tag in item.dietary %}
+                        <span class="dietary-badge {{ tag }}">
+                            {% if tag == 'vegetarian' %}<i class="fas fa-leaf" style="font-size:0.55rem;"></i>
+                            {% elif tag == 'gluten-free' %}<i class="fas fa-wheat-awn-circle-exclamation" style="font-size:0.55rem;"></i>
+                            {% elif tag == 'spicy' %}<i class="fas fa-pepper-hot" style="font-size:0.55rem;"></i>
+                            {% endif %} {{ tag }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    <p class="menu-item-desc">{{ item.description }}</p>
+                </div>
+                <span class="price">${{ "%.2f"|format(item.price) }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function filterMenu(category, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.menu-category').forEach(cat => {
+        cat.style.display = (category === 'all' || cat.dataset.category === category) ? 'block' : 'none';
+    });
+}
+</script>
+
+{% endblock %}

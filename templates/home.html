@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurant.name }} — {{ restaurant.tagline }}{% endblock %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-subtitle">Est. 2010 — Foodville, FD</p>
+        <h1 class="hero-title">{{ restaurant.name }}</h1>
+        <p class="hero-text">{{ restaurant.tagline }}</p>
+        <div class="hero-actions">
+            <a href="/menu" class="btn btn-lg"><i class="fas fa-utensils"></i> View Menu</a>
+            <a href="/reservations" class="btn btn-outline btn-lg"><i class="fas fa-calendar-check"></i> Book a Table</a>
+        </div>
+        <div class="hero-badges">
+            <span><i class="fas fa-star" style="color: #ffc107;"></i> 4.8 Rating</span>
+            <span><i class="fas fa-award" style="color: #ffc107;"></i> Best of Foodville 2024</span>
+            <span><i class="fas fa-leaf" style="color: #81c784;"></i> Fresh Daily</span>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <i class="fas fa-chevron-down" style="font-size: 1.5rem;"></i>
+    </div>
+</section>
+
+<!-- Featured Dishes -->
+<section class="container mb-4">
+    <div class="section-title fade-in">
+        <h2>Chef's Selections</h2>
+        <p>Hand-picked favorites from our kitchen, crafted with imported Italian ingredients</p>
+        <div class="line"></div>
+    </div>
+    <div class="grid grid-3 mt-2">
+        {% for item in featured %}
+        <div class="card featured-card fade-in delay-{{ loop.index }}">
+            <div class="featured-img-wrap">
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+            </div>
+            <div class="featured-body">
+                <div class="featured-header">
+                    <h3>{{ item.name }}</h3>
+                    <span class="featured-price">${{ "%.2f"|format(item.price) }}</span>
+                </div>
+                <p class="featured-desc">{{ item.description }}</p>
+                <div class="dietary-tags">
+                    {% for tag in item.dietary %}
+                    <span class="dietary-badge {{ tag }}"><i class="fas fa-leaf" style="font-size:0.6rem;"></i> {{ tag }}</span>
+                    {% endfor %}
+                    {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-3">
+        <a href="/menu" class="btn btn-secondary"><i class="fas fa-book-open"></i> See Full Menu</a>
+    </div>
+</section>
+
+<!-- Info Grid -->
+<section class="bg-gradient-light py-4" style="margin: 0 -1.5rem;">
+    <div class="container">
+        <div class="grid grid-2">
+            <!-- Hours -->
+            <div class="card fade-in">
+                <div class="flex items-center gap-1 mb-2">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 style="font-size: 1.4rem;">Opening Hours</h3>
+                </div>
+                {% for day, hours in restaurant.hours.items() %}
+                <div class="hours-row">
+                    <span class="hours-day">{{ day }}</span>
+                    <span class="hours-time">{{ hours }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Quick Info + CTA -->
+            <div class="fade-in delay-1">
+                <div class="card mb-2">
+                    <div class="flex items-center gap-1 mb-1">
+                        <div class="contact-icon" style="background: linear-gradient(135deg, var(--accent), #4db6ac);">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem;">Call to Reserve</h3>
+                            <a href="tel:{{ restaurant.phone_link }}" class="text-primary" style="font-weight: 700; font-size: 1.2rem; text-decoration: none; font-family: var(--font-heading);">{{ restaurant.phone }}</a>
+                        </div>
+                    </div>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.25rem;">We hold reservations for 15 minutes. Parties of 8+ please call directly.</p>
+                    <a href="/reservations" class="btn btn-block"><i class="fas fa-calendar-check"></i> Book Online</a>
+                </div>
+                <div class="card">
+                    <div class="flex items-center gap-1 mb-1">
+                        <div class="contact-icon" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.1rem;">Find Us</h3>
+                            <p style="color: #666; font-size: 0.9rem;">{{ restaurant.address }}</p>
+                        </div>
+                    </div>
+                    <a href="/contact" class="btn btn-secondary btn-block"><i class="fas fa-directions"></i> Get Directions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="container mt-4 mb-4">
+    <div class="section-title fade-in">
+        <h2>What Our Guests Say</h2>
+        <p>Real reviews from real diners who keep coming back</p>
+        <div class="line"></div>
+    </div>
+    <div class="grid grid-3">
+        {% for t in testimonials[:3] %}
+        <div class="card testimonial-card fade-in delay-{{ loop.index }}">
+            <div class="testimonial-quote">"</div>
+            <div class="stars mb-1">
+                {% for i in range(t.rating) %}<i class="fas fa-star"></i>{% endfor %}
+                {% for i in range(5 - t.rating) %}<i class="far fa-star" style="color: #ddd;"></i>{% endfor %}
+            </div>
+            <p class="testimonial-text">"{{ t.text }}"</p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">
+                    {{ t.name.split()[0][0] }}{{ t.name.split()[-1][0] if t.name.split()|length > 1 else '' }}
+                </div>
+                <div>
+                    <p style="font-weight: 600; font-size: 0.95rem;">{{ t.name }}</p>
+                    <p style="font-size: 0.8rem; color: #999;">Verified Diner</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="cta-banner">
+    <div style="max-width: 700px; margin: 0 auto;">
+        <h2>Ready to Experience Authentic Italy?</h2>
+        <p>Reserve your table today and let us take care of the rest. Walk-ins welcome, but reservations recommended for dinner.</p>
+        <div class="cta-actions">
+            <a href="/reservations" class="btn" style="background: white; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);"><i class="fas fa-calendar-check"></i> Reserve Now</a>
+            <a href="tel:{{ restaurant.phone_link }}" class="btn btn-outline"><i class="fas fa-phone-alt"></i> {{ restaurant.phone }}</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
