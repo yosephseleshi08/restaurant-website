@@ -579,7 +579,7 @@ def login():
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
         
-        # Simple hardcoded admin check (temporary)
+        # Simple hardcoded login for testing
         if username == 'admin' and password == 'admin123':
             session['user_id'] = 1
             session['username'] = 'admin'
