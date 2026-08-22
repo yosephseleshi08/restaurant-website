@@ -1072,36 +1072,6 @@
             .service-icon { margin: 0 auto; }
         }
     </style>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "name": "{{ restaurant.name }}",
-        "description": "{{ restaurant.tagline }}",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "{{ restaurant.address.split(',')[0] }}",
-            "addressLocality": "{{ restaurant.address.split(',')[1].strip().split()[0] if ',' in restaurant.address else '' }}",
-            "addressRegion": "{{ restaurant.address.split(',')[1].strip().split()[1] if ',' in restaurant.address and len(restaurant.address.split(',')) > 1 else '' }}",
-            "postalCode": "{{ restaurant.address.split()[-1] if restaurant.address.split()[-1].isdigit() else '' }}",
-            "addressCountry": "US"
-        },
-        "telephone": "{{ restaurant.phone_link }}",
-        "email": "{{ restaurant.email }}",
-        "url": "https://yourdomain.com",
-        "servesCuisine": "Italian",
-        "priceRange": "$$",
-        "openingHours": [
-            "Mo {{ restaurant.hours.monday }}",
-            "Tu {{ restaurant.hours.tuesday }}",
-            "We {{ restaurant.hours.wednesday }}",
-            "Th {{ restaurant.hours.thursday }}",
-            "Fr {{ restaurant.hours.friday }}",
-            "Sa {{ restaurant.hours.saturday }}",
-            "Su {{ restaurant.hours.sunday }}"
-        ]
-    }
-    </script>
     {% block head %}{% endblock %}
 </head>
 <body>
