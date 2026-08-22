@@ -45,7 +45,7 @@
         /* Hero */
         .hero {
             height: 60vh;
-            background: linear-gradient(rgba(45,27,18,0.6), rgba(45,27,18,0.6)), url('{{ about.interior_image }}');
+            background: linear-gradient(rgba(45,27,18,0.6), rgba(45,27,18,0.6)), url('{{ about["interior_image"] }}');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -186,24 +186,24 @@
         <h2 class="section-title">The Heart of <span>{{ restaurant.name }}</span></h2>
         <div class="story-grid">
             <div class="story-text">
-                <p>{{ about.story }}</p>
+                <p>{{ about["story"] }}</p>
                 <p>Every dish we serve carries the warmth of tradition and the passion of our kitchen. From hand-rolled pasta to wood-fired pizzas, we believe that great food brings people together.</p>
                 <p>Located in the heart of {{ restaurant.address }}, we welcome you to experience authentic Italian hospitality.</p>
             </div>
             <div class="story-image">
-                <img src="{{ about.interior_image }}" alt="{{ restaurant.name }} interior">
+                <img src="{{ about["interior_image"] }}" alt="{{ restaurant.name }} interior">
             </div>
         </div>
 
         <div class="chef-section">
             <div class="chef-grid">
                 <div class="chef-image">
-                    <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}">
+                    <img src="{{ about["chef_image"] }}" alt="{{ about["chef_name"] }}">
                 </div>
                 <div class="chef-info">
-                    <h2 class="chef-name">{{ about.chef_name }}</h2>
+                    <h2 class="chef-name">{{ about["chef_name"] }}</h2>
                     <p class="chef-role">Executive Chef & Founder</p>
-                    <p class="chef-bio">{{ about.chef_bio }}</p>
+                    <p class="chef-bio">{{ about["chef_bio"] }}</p>
                 </div>
             </div>
         </div>
@@ -213,13 +213,13 @@
         <div style="max-width: 1200px; margin: 0 auto;">
             <h2 class="section-title">Our <span>Values</span></h2>
             <div class="values-grid">
-                {% for value in about.values %}
+                {% for value in about["values"] %}
                 <div class="value-card">
                     <div class="value-icon">
                         {% if loop.index == 1 %}<i class="fas fa-leaf"></i>{% elif loop.index == 2 %}<i class="fas fa-book-open"></i>{% else %}<i class="fas fa-heart"></i>{% endif %}
                     </div>
-                    <h3>{{ value.title }}</h3>
-                    <p>{{ value.description }}</p>
+                    <h3>{{ value["title"] }}</h3>
+                    <p>{{ value["description"] }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -228,7 +228,7 @@
 
     <section class="section">
         <div class="food-showcase">
-            <img src="{{ about.food_image }}" alt="Our cuisine">
+            <img src="{{ about["food_image"] }}" alt="Our cuisine">
             <div class="food-overlay">
                 <h3>Authentic Italian Cuisine</h3>
                 <p>Every plate tells a story of tradition, passion, and the finest ingredients.</p>
