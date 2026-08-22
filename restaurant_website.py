@@ -602,15 +602,6 @@ def debug_users():
         result.append(f"ID: {u.id}, Username: {u.username}")
     return "<br>".join(result) if result else "No users found!"
 
-@app.route('/create_tables')
-def create_tables():
-    from restaurant_website import db
-    try:
-        db.create_all()
-        return "✅ Database tables created successfully! <a href='/dashboard'>Go to Dashboard</a>"
-    except Exception as e:
-        return f"❌ Error: {e}"
-
 @app.route('/dashboard')
 @admin_required
 def dashboard():
@@ -900,7 +891,6 @@ def reset_password():
 # ========================================
 # MAIN
 # ========================================
-
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # This creates tables on startup
