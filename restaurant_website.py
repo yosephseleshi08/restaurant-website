@@ -285,15 +285,6 @@ def admin_required(f):
     return decorated
 
 
-@app.context_processor
-def inject_globals():
-    return {
-        'restaurant': data['restaurant'],
-        'theme': data['theme'],
-        'current_year': datetime.now().year
-    }
-
-
 # ========================================
 # PUBLIC ROUTES
 # ========================================
@@ -572,13 +563,20 @@ def reset_data():
 # MAIN - THIS IS THE FIX!
 # ========================================
 
+# ========================================
+# INITIALIZE DATABASE ON STARTUP (REQUIRED FOR RENDER/GUNICORN)
+# ========================================
+with app.app_context():
+    init_db()  # Creates tables and admin user even when not run as __main__
+
+# ========================================
+# MAIN
+# ========================================
+
 if __name__ == '__main__':
-    with app.app_context():
-        init_db()  # This creates tables and admin user
     print("=" * 60)
     print("  RESTAURANT WEBSITE — PERFECT EDITION")
     print("=" * 60)
-    print("  Website:  https://yoseph-restaurant.onrender.com")
     print("  Login:    admin / admin123")
     print("=" * 60)
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
