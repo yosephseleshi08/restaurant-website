@@ -433,6 +433,28 @@ def create_admin():
     return "✅ Admin already exists!"
 
 
+@app.route('/change_password', methods=['GET', 'POST'])
+@admin_required
+def change_password():
+    if request.method == 'POST':
+        current = request.form.get('current_password', '')
+        new_pass = request.form.get('new_password', '')
+        confirm = request.form.get('confirm_password', '')
+        user = User.query.get(session['user_id'])
+        if not check_password_hash(user.password_hash, current):
+            flash('Current password is incorrect', 'error')
+        elif len(new_pass) < 6:
+            flash('New password must be at least 6 characters', 'error')
+        elif new_pass != confirm:
+            flash('New passwords do not match', 'error')
+        else:
+            user.password_hash = generate_password_hash(new_pass)
+            db.session.commit()
+            flash('Password changed successfully! Please log in again.', 'success')
+            session.clear()
+            return redirect(url_for('login'))
+    return render_template('change_password.html', theme=data['theme'], restaurant=data['restaurant'])
+
 # ========================================
 # API ROUTES
 # ========================================
