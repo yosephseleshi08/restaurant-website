@@ -740,6 +740,15 @@ def update_restaurant():
     save_data(data)
     return jsonify({'success': True})
 
+@app.route('/create_tables')
+def create_tables():
+    from restaurant_website import db
+    try:
+        db.create_all()
+        return "✅ Database tables created successfully! <a href='/dashboard'>Go to Dashboard</a>"
+    except Exception as e:
+        return f"❌ Error: {e}"
+
 @app.route('/api/update_hours', methods=['POST'])
 @admin_required
 def update_hours():
@@ -883,9 +892,10 @@ def reset_password():
 # MAIN
 # ========================================
 
+# At the bottom of your file, make sure this is there:
 if __name__ == '__main__':
     with app.app_context():
-        init_db()
+        db.create_all()  # This creates tables if they don't exist
     app.run(debug=False, host='0.0.0.0', port=5000)
     print("=" * 60)
     print("  RESTAURANT WEBSITE — PRODUCTION READY v2")
