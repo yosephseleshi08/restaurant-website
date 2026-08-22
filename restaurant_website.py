@@ -18,7 +18,9 @@ app = Flask(__name__)
 # ─── Security Configuration ──────────────────────────────────────────
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-app.config['WTF_CSRF_ENABLED'] = False  # Simplified for now
+# Disable CSRF for simplicity
+app.config['WTF_CSRF_ENABLED'] = False
+app.config['WTF_CSRF_TIME_LIMIT'] = None
 
 # ─── Database ─────────────────────────────────────────────────────────
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -410,6 +412,15 @@ def dashboard():
     return render_template('dashboard.html',
         theme=data['theme'], restaurant=data['restaurant'],
         analytics=analytics, reservations=reservations)
+
+@app.context_processor
+def inject_globals():
+    return {
+        'restaurant': data['restaurant'],
+        'theme': data['theme'],
+        'current_year': datetime.now().year,
+        'csrf_token': lambda: ''  # Empty CSRF token
+    }
 
 @app.route('/editor')
 @admin_required
