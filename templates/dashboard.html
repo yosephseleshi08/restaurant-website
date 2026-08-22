@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — {{ restaurant.name }}{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+{% endblock %}
+{% block content %}
+
+<section class="section-header">
+    <h1>Business Dashboard</h1>
+    <p>Track your restaurant's performance at a glance</p>
+    <div class="line"></div>
+</section>
+
+<!-- Stats Cards -->
+<div class="grid grid-4 mb-2">
+    <div class="card stat-card" style="border-top-color: var(--primary);">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" style="color: var(--primary);">${{ "{:,.0f}".format(analytics.monthly_revenue|sum) }}</div>
+        <div class="stat-change"><i class="fas fa-arrow-up"></i> 12% vs last month</div>
+    </div>
+    <div class="card stat-card" style="border-top-color: var(--secondary);">
+        <div class="stat-label">Reservations</div>
+        <div class="stat-value" style="color: var(--secondary);">{{ analytics.total_reservations }}</div>
+        <div class="stat-change"><i class="fas fa-arrow-up"></i> 8% vs last week</div>
+    </div>
+    <div class="card stat-card" style="border-top-color: var(--accent);">
+        <div class="stat-label">Customer Rating</div>
+        <div class="stat-value" style="color: var(--accent);">{{ analytics.customer_satisfaction }}</div>
+        <div class="stat-change" style="color: #666;"><i class="fas fa-star" style="color: #ffc107;"></i> out of 5.0</div>
+    </div>
+    <div class="card stat-card" style="border-top-color: #8e44ad;">
+        <div class="stat-label">Weekly Sales</div>
+        <div class="stat-value" style="color: #8e44ad;">{{ "{:,}".format(analytics.daily_sales|sum) }}</div>
+        <div class="stat-change"><i class="fas fa-arrow-up"></i> 5% vs last week</div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="grid grid-2 mb-2">
+    <div class="card">
+        <h3 class="mb-2" style="font-size: 1.1rem;"><i class="fas fa-chart-bar text-primary" style="margin-right: 0.5rem;"></i>Weekly Sales</h3>
+        <canvas id="salesChart" height="300"></canvas>
+    </div>
+    <div class="card">
+        <h3 class="mb-2" style="font-size: 1.1rem;"><i class="fas fa-chart-line text-primary" style="margin-right: 0.5rem;"></i>Monthly Revenue</h3>
+        <canvas id="revenueChart" height="300"></canvas>
+    </div>
+</div>
+<div class="card container-sm mx-auto mb-2">
+    <h3 class="mb-2 text-center" style="font-size: 1.1rem;"><i class="fas fa-chart-pie text-primary" style="margin-right: 0.5rem;"></i>Popular Items</h3>
+    <canvas id="popularityChart" height="250"></canvas>
+</div>
+
+<!-- Recent Reservations -->
+<div class="card">
+    <div class="flex items-center justify-between mb-2 flex-wrap gap-1">
+        <h3 style="font-size: 1.1rem;"><i class="fas fa-list text-primary" style="margin-right: 0.5rem;"></i>Recent Reservations</h3>
+        <a href="/api/export/reservations" class="btn btn-sm btn-secondary"><i class="fas fa-file-csv"></i> Export CSV</a>
+    </div>
+    {% if reservations|length > 0 %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+            <thead>
+                <tr style="border-bottom: 2px solid #eee;">
+                    <th style="text-align: left; padding: 0.75rem;">Name</th>
+                    <th style="text-align: left; padding: 0.75rem;">Date</th>
+                    <th style="text-align: left; padding: 0.75rem;">Time</th>
+                    <th style="text-align: left; padding: 0.75rem;">Guests</th>
+                    <th style="text-align: left; padding: 0.75rem;">Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 0.75rem; font-weight: 500;">{{ r.name }}</td>
+                    <td style="padding: 0.75rem;">{{ r.date }}</td>
+                    <td style="padding: 0.75rem;">{{ r.time }}</td>
+                    <td style="padding: 0.75rem;">{{ r.guests }}</td>
+                    <td style="padding: 0.75rem;">{{ r.phone }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="color: #888; text-align: center; padding: 2rem;">No reservations yet.</p>
+    {% endif %}
+</div>
+
+<script>
+const primaryColor = '{{ theme.primary_color }}';
+const secondaryColor = '{{ theme.secondary_color }}';
+const accentColor = '{{ theme.accent_color }}';
+
+new Chart(document.getElementById('salesChart'), {
+    type: 'bar',
+    data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+            label: 'Sales ($)',
+            data: {{ analytics.daily_sales }},
+            backgroundColor: primaryColor,
+            borderRadius: 8,
+            barThickness: 30
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+new Chart(document.getElementById('revenueChart'), {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+            label: 'Revenue ($)',
+            data: {{ analytics.monthly_revenue }},
+            borderColor: primaryColor,
+            backgroundColor: primaryColor + '20',
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: secondaryColor,
+            pointBorderColor: primaryColor,
+            pointRadius: 5,
+            pointHoverRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+            x: { grid: { display: false } }
+        }
+    }
+});
+
+new Chart(document.getElementById('popularityChart'), {
+    type: 'doughnut',
+    data: {
+        labels: {{ analytics.popular_items | tojson }},
+        datasets: [{
+            data: [35, 28, 22],
+            backgroundColor: [primaryColor, secondaryColor, accentColor],
+            borderWidth: 0,
+            hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '65%',
+        plugins: {
+            legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+        }
+    }
+});
+</script>
+
+{% endblock %}

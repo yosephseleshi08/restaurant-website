@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Order Online — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section class="section-header">
+    <h1>{{ online_ordering.page_title }}</h1>
+    <p>{{ online_ordering.page_subtitle }}</p>
+    <div class="line"></div>
+</section>
+
+<div class="container container-sm">
+    <div class="grid grid-2">
+        {% for platform in online_ordering.platforms %}
+        {% if platform.active %}
+        <a href="{{ platform.url }}" target="_blank" class="card platform-card">
+            <div class="platform-icon" style="background: {{ platform.color }}; box-shadow: 0 4px 15px {{ platform.color }}40;">
+                <i class="fas {{ platform.icon }}"></i>
+            </div>
+            <h3 class="platform-name">{{ platform.name }}</h3>
+            <p class="platform-desc">Click to order through {{ platform.name }}</p>
+            <span class="btn btn-sm" style="margin-top: 1.25rem; background: {{ platform.color }};"><i class="fas fa-external-link-alt"></i> Order on {{ platform.name }}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    <div class="card card-gradient mt-3 text-center">
+        <h3 class="mb-1"><i class="fas fa-phone-alt text-primary" style="margin-right: 0.5rem;"></i>Prefer to Call?</h3>
+        <p style="color: #666; margin-bottom: 1.25rem;">Place your order directly by phone for pickup. We'll have it ready when you arrive.</p>
+        <a href="tel:{{ restaurant.phone_link }}" class="btn" style="font-size: 1.1rem;"><i class="fas fa-phone"></i> {{ restaurant.phone }}</a>
+    </div>
+</div>
+
+{% endblock %}
