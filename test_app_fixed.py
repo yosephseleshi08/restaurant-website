@@ -1,0 +1,242 @@
+import pytest
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+os.environ['SECRET_KEY'] = 'test-secret-key-12345'
+os.environ['WTF_CSRF_ENABLED'] = 'False'
+
+from restaurant_website_pro import create_app, db, User, Reservation, ContactMessage, SiteSetting, init_db
+
+@pytest.fixture
+def app():
+    app = create_app('testing')
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['WTF_CSRF_ENABLED'] = False
+    with app.app_context():
+        db.create_all()
+        init_db()
+        yield app
+        db.drop_all()
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
+
+@pytest.fixture
+def admin_client(client, app):
+    with app.app_context():
+        client.post('/login', data={'username': 'admin', 'password': 'admin123'}, follow_redirects=True)
+    return client
+
+# ─── PUBLIC PAGES ────────────────────────────────────────────────────
+
+def test_home_page(client):
+    rv = client.get('/')
+    assert rv.status_code == 200
+    assert b'La Bella Cucina' in rv.data
+
+def test_menu_page(client):
+    rv = client.get('/menu')
+    assert rv.status_code == 200
+    assert b'Our Menu' in rv.data or b'menu' in rv.data.lower()
+
+def test_about_page(client):
+    rv = client.get('/about')
+    assert rv.status_code == 200
+    assert b'Our Story' in rv.data or b'Story' in rv.data
+
+def test_contact_page_get(client):
+    rv = client.get('/contact')
+    assert rv.status_code == 200
+    assert b'Get in Touch' in rv.data or b'Contact' in rv.data
+
+def test_reservations_page_get(client):
+    rv = client.get('/reservations')
+    assert rv.status_code == 200
+    assert b'Reservation' in rv.data
+
+def test_gallery_page(client):
+    rv = client.get('/gallery')
+    assert rv.status_code in (200, 302)
+
+def test_events_page(client):
+    rv = client.get('/events')
+    assert rv.status_code in (200, 302)
+
+def test_order_page(client):
+    rv = client.get('/order')
+    assert rv.status_code in (200, 302)
+
+# ─── FORMS ───────────────────────────────────────────────────────────
+
+def test_contact_form_submission(client):
+    rv = client.post('/contact', data={
+        'name': 'Test User',
+        'email': 'test@example.com',
+        'subject': 'general',
+        'message': 'This is a test message for the contact form.'
+    }, follow_redirects=True)
+    assert rv.status_code == 200
+    with client.application.app_context():
+        msg = ContactMessage.query.filter_by(email='test@example.com').first()
+        assert msg is not None
+        assert msg.name == 'Test User'
+
+def test_contact_form_invalid_email(client):
+    rv = client.post('/contact', data={
+        'name': 'Test User',
+        'email': 'not-an-email',
+        'subject': 'general',
+        'message': 'Test message'
+    }, follow_redirects=True)
+    assert rv.status_code == 200
+
+def test_reservation_form_submission(client):
+    rv = client.post('/reservations', data={
+        'name': 'John Doe',
+        'email': 'john@example.com',
+        'phone': '(555) 123-4567',
+        'date': '2025-12-31',
+        'time': '19:00',
+        'guests': '4',
+        'special_requests': 'Window seat please'
+    }, follow_redirects=True)
+    assert rv.status_code == 200
+    with client.application.app_context():
+        res = Reservation.query.filter_by(email='john@example.com').first()
+        assert res is not None
+        assert res.name == 'John Doe'
+        assert res.guests == '4'
+
+def test_reservation_form_invalid_email(client):
+    rv = client.post('/reservations', data={
+        'name': 'John Doe',
+        'email': 'bad-email',
+        'phone': '(555) 123-4567',
+        'date': '2025-12-31',
+        'time': '19:00',
+        'guests': '4'
+    }, follow_redirects=True)
+    assert rv.status_code == 200
+
+def test_reservation_over_capacity(client, app):
+    with app.app_context():
+        for i in range(10):
+            db.session.add(Reservation(
+                name=f'Person {i}', email=f'p{i}@test.com',
+                phone='5550000000', date='2025-12-25',
+                time='19:00', guests='3'
+            ))
+        db.session.commit()
+    rv = client.post('/reservations', data={
+        'name': 'Late Booker',
+        'email': 'late@test.com',
+        'phone': '(555) 999-9999',
+        'date': '2025-12-25',
+        'time': '19:00',
+        'guests': '4'
+    }, follow_redirects=True)
+    assert rv.status_code == 200
+    assert b'seats remaining' in rv.data or b'only' in rv.data or b'Sorry' in rv.data
+
+# ─── AUTH ─────────────────────────────────────────────────────────────
+
+def test_login_page_get(client):
+    rv = client.get('/login')
+    assert rv.status_code == 200
+    assert b'Login' in rv.data or b'login' in rv.data.lower()
+
+def test_login_success(client):
+    rv = client.post('/login', data={'username': 'admin', 'password': 'admin123'}, follow_redirects=True)
+    assert rv.status_code == 200
+    assert b'dashboard' in rv.data.lower() or b'Dashboard' in rv.data
+
+def test_admin_routes_redirect_when_not_logged_in(client):
+    rv = client.get('/dashboard', follow_redirects=True)
+    assert rv.status_code == 200
+    assert b'Login' in rv.data or b'login' in rv.data.lower()
+
+def test_logout(client):
+    rv = client.get('/logout', follow_redirects=True)
+    assert rv.status_code == 200
+
+# ─── API (PROTECTED) ─────────────────────────────────────────────────
+
+def test_api_requires_auth(client):
+    rv = client.post('/api/update_theme', json={'primary_color': '#000000'})
+    assert rv.status_code in (302, 401, 403)
+
+def test_api_menu_add_requires_auth(client):
+    rv = client.post('/api/menu/add', json={
+        'category': 'appetizers',
+        'name': 'Test Item',
+        'description': 'Test desc',
+        'price': 9.99
+    })
+    assert rv.status_code in (302, 401, 403)
+
+# ─── EXPORTS ─────────────────────────────────────────────────────────
+
+def test_export_reservations_requires_auth(client):
+    rv = client.get('/api/export/reservations')
+    assert rv.status_code in (302, 401, 403)
+
+def test_export_messages_requires_auth(client):
+    rv = client.get('/api/export/messages')
+    assert rv.status_code in (302, 401, 403)
+
+# ─── VALIDATION ──────────────────────────────────────────────────────
+
+def test_sanitize_input(app):
+    with app.app_context():
+        from restaurant_website_pro import sanitize_input
+        assert sanitize_input('  hello  ') == 'hello'
+        assert sanitize_input('a' * 1000, 100) == 'a' * 100
+        assert sanitize_input(None) == ''
+        assert sanitize_input('<script>alert(1)</script>') == 'alert(1)'
+
+def test_validate_email(app):
+    with app.app_context():
+        from restaurant_website_pro import validate_email
+        assert validate_email('test@example.com') == 'test@example.com'
+        assert validate_email('not-an-email') is None
+        assert validate_email('@example.com') is None
+
+def test_validate_phone(app):
+    with app.app_context():
+        from restaurant_website_pro import validate_phone
+        assert validate_phone('(555) 123-4567') is True
+        assert validate_phone('5551234567') is True
+        assert validate_phone('123') is False
+        assert validate_phone('') is False
+
+# ─── DATA HELPERS ───────────────────────────────────────────────────
+
+def test_deep_merge(app):
+    with app.app_context():
+        from restaurant_website_pro import deep_merge
+        default = {'a': 1, 'b': {'c': 2, 'd': 3}}
+        current = {'b': {'c': 99}}
+        result = deep_merge(default, current)
+        assert result['a'] == 1
+        assert result['b']['c'] == 99
+        assert result['b']['d'] == 3
+
+def test_get_featured_items(app):
+    with app.app_context():
+        from restaurant_website_pro import get_featured_items
+        featured = get_featured_items()
+        assert len(featured) <= 3
+        assert len(featured) > 0
+
+# ─── HEALTH CHECK ────────────────────────────────────────────────────
+
+def test_health_check(client):
+    rv = client.get('/health')
+    assert rv.status_code == 200
+    data = rv.get_json()
+    assert data['status'] == 'healthy'
+    assert data['version'] == '2.0.0-pro'

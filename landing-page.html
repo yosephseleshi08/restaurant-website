@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant OS Pro — Own Your Digital Presence. 0% Commission.</title>
+    <meta name="description" content="White-label restaurant management platform with online ordering, reservations, kitchen display, CRM, loyalty, and gift cards. One-time fee. No monthly rent.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #E85D3A;
+            --primary-dark: #c94a2a;
+            --secondary: #F4A261;
+            --accent: #2A9D8F;
+            --dark: #1a1a2e;
+            --text: #2D1B12;
+            --gray: #666;
+            --light-gray: #f8f9fa;
+            --radius: 16px;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        .navbar { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+        .logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); text-decoration: none; }
+        .logo span { color: var(--text); }
+        .nav-links { display: flex; gap: 2rem; align-items: center; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-cta { background: var(--primary); color: white !important; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; }
+        .nav-cta:hover { background: var(--primary-dark); }
+        .hamburger { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; }
+        .hero { padding: 10rem 0 6rem; background: linear-gradient(135deg, #FFF8F0 0%, #fff 50%, #f0f7ff 100%); position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(232,93,58,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(42,157,143,0.06) 0%, transparent 70%); border-radius: 50%; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(232,93,58,0.1); color: var(--primary); padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem; }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero h1 span { color: var(--primary); }
+        .hero-subtitle { font-size: 1.15rem; color: var(--gray); margin-bottom: 2rem; max-width: 500px; }
+        .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+        .btn-primary { background: var(--primary); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(232,93,58,0.3); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(232,93,58,0.4); }
+        .btn-secondary { background: white; color: var(--text); padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 0.5rem; border: 2px solid #e8e8e8; transition: all 0.2s; }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        .hero-stats { display: flex; gap: 2rem; }
+        .hero-stat { text-align: center; }
+        .hero-stat-value { font-size: 1.8rem; font-weight: 800; color: var(--primary); }
+        .hero-stat-label { font-size: 0.8rem; color: var(--gray); }
+        .hero-image { position: relative; }
+        .hero-image img { width: 100%; border-radius: 24px; box-shadow: var(--shadow-lg); }
+        .floating-card { position: absolute; background: white; padding: 1rem 1.25rem; border-radius: 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 0.75rem; }
+        .floating-card-1 { top: -20px; right: -20px; }
+        .floating-card-2 { bottom: 40px; left: -30px; }
+        .floating-card-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; }
+        .floating-card-text { font-size: 0.85rem; font-weight: 600; }
+        .floating-card-sub { font-size: 0.75rem; color: var(--gray); }
+        .trust-bar { background: var(--dark); color: white; padding: 3rem 0; }
+        .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center; }
+        .trust-item i { font-size: 2rem; color: var(--secondary); margin-bottom: 0.75rem; }
+        .trust-item h4 { font-size: 1.1rem; margin-bottom: 0.25rem; }
+        .trust-item p { font-size: 0.85rem; opacity: 0.7; }
+        .problem { padding: 6rem 0; background: var(--light-gray); }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; margin-bottom: 1rem; }
+        .section-header p { color: var(--gray); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .problem-card { background: white; padding: 2.5rem; border-radius: var(--radius); text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .problem-icon { width: 70px; height: 70px; border-radius: 50%; background: #fde8e8; color: #c0392b; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin: 0 auto 1.5rem; }
+        .problem-card h3 { font-size: 1.2rem; margin-bottom: 0.75rem; }
+        .problem-card p { color: var(--gray); font-size: 0.95rem; }
+        .problem-cost { display: inline-block; background: #fde8e8; color: #c0392b; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; margin-top: 1rem; }
+        .solution { padding: 6rem 0; }
+        .solution-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .solution-list { list-style: none; }
+        .solution-list li { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid #f0f0f0; }
+        .solution-list li:last-child { border-bottom: none; }
+        .check-icon { width: 28px; height: 28px; border-radius: 50%; background: #e8f5e9; color: #27ae60; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; margin-top: 2px; }
+        .solution-list h4 { font-size: 1.05rem; margin-bottom: 0.25rem; }
+        .solution-list p { font-size: 0.9rem; color: var(--gray); }
+        .features { padding: 6rem 0; background: var(--light-gray); }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .feature-card { background: white; padding: 2rem; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.04); transition: transform 0.3s, box-shadow 0.3s; }
+        .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .feature-icon { width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; margin-bottom: 1.25rem; }
+        .feature-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 0.9rem; color: var(--gray); }
+        .pricing { padding: 6rem 0; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: white; border: 2px solid #f0f0f0; border-radius: var(--radius); padding: 2.5rem; text-align: center; transition: all 0.3s; position: relative; }
+        .pricing-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: var(--shadow); }
+        .pricing-card.featured { border-color: var(--primary); box-shadow: 0 4px 30px rgba(232,93,58,0.15); }
+        .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .pricing-card h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .pricing-card .price { font-size: 3rem; font-weight: 800; color: var(--text); }
+        .pricing-card .price span { font-size: 1rem; font-weight: 400; color: var(--gray); }
+        .pricing-card .desc { color: var(--gray); font-size: 0.9rem; margin: 1rem 0 1.5rem; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 2rem; }
+        .pricing-features li { padding: 0.5rem 0; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
+        .pricing-features li i { color: var(--accent); font-size: 0.8rem; }
+        .comparison { padding: 6rem 0; background: var(--dark); color: white; }
+        .comparison h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        .comparison-table { max-width: 800px; margin: 0 auto; }
+        .comp-row { display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); align-items: center; }
+        .comp-row.header { font-weight: 700; opacity: 0.5; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .comp-row .check { color: var(--accent); font-weight: 700; }
+        .comp-row .cross { color: #e74c3c; opacity: 0.5; }
+        .comp-row .highlight { color: var(--secondary); font-weight: 700; }
+        .faq { padding: 6rem 0; background: var(--light-gray); }
+        .faq-grid { max-width: 800px; margin: 0 auto; }
+        .faq-item { background: white; border-radius: 12px; margin-bottom: 1rem; overflow: hidden; }
+        .faq-question { padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; }
+        .faq-question i { transition: transform 0.3s; }
+        .faq-item.active .faq-question i { transform: rotate(180deg); }
+        .faq-answer { padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.3s, padding 0.3s; color: var(--gray); font-size: 0.95rem; }
+        .faq-item.active .faq-answer { padding: 0 1.5rem 1.25rem; max-height: 200px; }
+        .cta-section { padding: 6rem 0; text-align: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+        .cta-section h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1rem; }
+        .cta-section p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2rem; }
+        .cta-section .btn-white { background: white; color: var(--primary); padding: 1rem 2.5rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+        .cta-section .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .footer { background: var(--dark); color: rgba(255,255,255,0.6); padding: 3rem 0; text-align: center; font-size: 0.9rem; }
+        .footer a { color: var(--secondary); text-decoration: none; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hamburger { display: block; }
+            .hero-grid, .solution-grid, .problem-grid, .features-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .trust-grid { grid-template-columns: repeat(2, 1fr); }
+            .comp-row { grid-template-columns: 1.5fr 1fr 1fr; font-size: 0.85rem; }
+            .floating-card { display: none; }
+            .hero { padding: 7rem 0 4rem; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-inner">
+        <a href="#" class="logo">Restaurant<span>OS</span></a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#buy" class="nav-cta">Get Started</a></li>
+        </ul>
+        <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('active')">☰</button>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container">
+        <div class="hero-grid">
+            <div>
+                <div class="hero-badge"><i class="fas fa-fire"></i> Now Available — v2.0</div>
+                <h1>Stop Paying <span>30%</span> to Delivery Apps. Own Your Restaurant's Digital Future.</h1>
+                <p class="hero-subtitle">The complete white-label restaurant operating system. Online ordering, reservations, kitchen display, CRM, loyalty, and gift cards — all in one platform. One-time fee. Zero commission. Forever.</p>
+                <div class="hero-cta">
+                    <a href="#pricing" class="btn-primary"><i class="fas fa-rocket"></i> Buy Now — $999</a>
+                    <a href="#demo" class="btn-secondary"><i class="fas fa-play-circle"></i> Watch Demo</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat"><div class="hero-stat-value">0%</div><div class="hero-stat-label">Commission</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value">$999</div><div class="hero-stat-label">One-Time</div></div>
+                    <div class="hero-stat"><div class="hero-stat-value">12+</div><div class="hero-stat-label">Modules</div></div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop" alt="Restaurant Dashboard">
+                <div class="floating-card floating-card-1">
+                    <div class="floating-card-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <div><div class="floating-card-text">New Order #42</div><div class="floating-card-sub">$87.50 · Preparing</div></div>
+                </div>
+                <div class="floating-card floating-card-2">
+                    <div class="floating-card-icon" style="background: linear-gradient(135deg, var(--accent), #4db6ac);"><i class="fas fa-chart-line"></i></div>
+                    <div><div class="floating-card-text">+$2,450 today</div><div class="floating-card-sub">Direct orders</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="trust-bar">
+    <div class="container">
+        <div class="trust-grid">
+            <div class="trust-item"><i class="fas fa-shield-alt"></i><h4>Secure by Default</h4><p>XSS, CSRF, bcrypt, rate limiting</p></div>
+            <div class="trust-item"><i class="fas fa-mobile-alt"></i><h4>Mobile-First</h4><p>70% of orders come from phones</p></div>
+            <div class="trust-item"><i class="fas fa-bolt"></i><h4>Live in 48 Hours</h4><p>Upload menu, pick colors, deploy</p></div>
+            <div class="trust-item"><i class="fas fa-code"></i><h4>Full Source Code</h4><p>You own it. Customize anything.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="problem">
+    <div class="container">
+        <div class="section-header">
+            <h2>The Problem With Running a Restaurant Online</h2>
+            <p>You are not in the software business. But you are paying like you are.</p>
+        </div>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon"><i class="fas fa-percentage"></i></div>
+                <h3>Delivery Apps Take 15-30%</h3>
+                <p>On a $30 order, DoorDash keeps $9. On 100 orders a month, that is $900 gone.</p>
+                <span class="problem-cost">$900/mo lost</span>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon"><i class="fas fa-receipt"></i></div>
+                <h3>Software Stack Creep</h3>
+                <p>Website builder + reservation tool + loyalty app + gift cards + KDS = 5 logins, 5 bills.</p>
+                <span class="problem-cost">$400+/mo in tools</span>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon"><i class="fas fa-user-slash"></i></div>
+                <h3>You Do Not Own Your Customers</h3>
+                <p>Delivery apps own the data. You cannot email, retarget, or reward your own diners.</p>
+                <span class="problem-cost">$0 customer data</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="solution">
+    <div class="container">
+        <div class="solution-grid">
+            <div>
+                <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 1rem;">One Platform. Every Tool. Zero Rent.</h2>
+                <p style="color: var(--gray); margin-bottom: 2rem;">Restaurant OS Pro replaces your entire digital stack with a single, beautiful platform that you own and control.</p>
+                <ul class="solution-list">
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div><div><h4>Direct Online Ordering</h4><p>Customers order from your website. You keep 100% of the revenue. No app fees, no middleman.</p></div></li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div><div><h4>Smart Reservations</h4><p>Capacity management prevents overbooking. Auto-confirmation emails. Guest notes and preferences.</p></div></li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div><div><h4>Real-Time Kitchen Display</h4><p>No lost tickets. Auto-refreshing order board. Status workflow from pending to preparing to ready.</p></div></li>
+                    <li><div class="check-icon"><i class="fas fa-check"></i></div><div><h4>Built-In CRM & Loyalty</h4><p>Know your regulars by name, allergy, and favorite dish. Points, rewards, gift cards — all included.</p></div></li>
+                </ul>
+            </div>
+            <div>
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=700&h=900&fit=crop" alt="Dashboard Preview" style="width: 100%; border-radius: 24px; box-shadow: var(--shadow-lg);">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-header">
+            <h2>Everything Included</h2>
+            <p>No plugins. No integrations. No monthly fees for premium features.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-globe"></i></div><h3>Beautiful Website</h3><p>Mobile-first, SEO-optimized, PWA-ready. Custom themes, dark mode, and real-time visual editor.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-utensils"></i></div><h3>Online Menu & Ordering</h3><p>Dietary filters, featured items, cart, checkout. Direct to your kitchen. 0% commission.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-calendar-check"></i></div><h3>Reservations</h3><p>Time slots, capacity guard, auto-confirmations, special requests. Never overbook again.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-fire"></i></div><h3>Kitchen Display System</h3><p>Live order feed, status updates, notes. Auto-refresh every 15 seconds. Dark theme for kitchen use.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-chair"></i></div><h3>Table Management</h3><p>Drag-and-drop floor plan. Status tracking. QR code ordering from each table.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-gift"></i></div><h3>Gift Cards</h3><p>Digital gift cards sent via email. Balance tracking. Custom amounts. Never expires.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-star"></i></div><h3>Loyalty Program</h3><p>1 point per $1 spent. 100 points = $10 reward. Birthday bonuses. Enrollment in 30 seconds.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-bell"></i></div><h3>Smart Waitlist</h3><p>SMS notifications when tables are ready. Queue management. Turn no tables into we will text you.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-users"></i></div><h3>Customer CRM</h3><p>Full profiles: lifetime spend, visits, allergies, preferences, order history, reservations.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-pie"></i></div><h3>Analytics Dashboard</h3><p>Revenue, reservations, popular items, page views. Chart.js visualizations. CSV exports.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-paint-brush"></i></div><h3>Visual Editor</h3><p>Change colors, fonts, menu items, hours, testimonials in real-time. No coding required.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-shield-alt"></i></div><h3>Enterprise Security</h3><p>XSS/CSRF protection, bcrypt hashing, rate limiting, audit logs, role-based access control.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="comparison">
+    <div class="container">
+        <h2>Restaurant OS Pro vs. The Stack You Are Paying For</h2>
+        <div class="comparison-table">
+            <div class="comp-row header"><div>Feature</div><div>Typical Stack</div><div class="highlight">Restaurant OS</div></div>
+            <div class="comp-row"><div>Website Builder</div><div class="cross">$50/mo</div><div class="check highlight">Included</div></div>
+            <div class="comp-row"><div>Online Ordering</div><div class="cross">15-30% / order</div><div class="check highlight">0% commission</div></div>
+            <div class="comp-row"><div>Reservations</div><div class="cross">$200/mo</div><div class="check highlight">Included</div></div>
+            <div class="comp-row"><div>Kitchen Display</div><div class="cross">$50/mo</div><div class="check highlight">Included</div></div>
+            <div class="comp-row"><div>Loyalty Program</div><div class="cross">$100/mo</div><div class="check highlight">Included</div></div>
+            <div class="comp-row"><div>Gift Cards</div><div class="cross">5% fee</div><div class="check highlight">0% fee</div></div>
+            <div class="comp-row"><div>CRM / Analytics</div><div class="cross">$150/mo</div><div class="check highlight">Included</div></div>
+            <div class="comp-row" style="border-bottom: none; font-weight: 700; font-size: 1.1rem;"><div>Total Monthly Cost</div><div class="cross">$550+ /mo + 15-30%</div><div class="check highlight">$0 /mo after purchase</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="container">
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>One-time fee. No monthly rent. No hidden costs. You own the software.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>Solo Restaurant</h3>
+                <div class="price">$999<span>one-time</span></div>
+                <p class="desc">Perfect for independent restaurants ready to own their digital presence.</p>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Full source code</li>
+                    <li><i class="fas fa-check"></i> All 12 modules</li>
+                    <li><i class="fas fa-check"></i> Self-hosted deployment</li>
+                    <li><i class="fas fa-check"></i> 30 days email support</li>
+                    <li><i class="fas fa-check"></i> Documentation & README</li>
+                    <li><i class="fas fa-check"></i> Lifetime updates</li>
+                </ul>
+                <a href="#buy" class="btn-secondary" style="width: 100%; justify-content: center;">Get Started</a>
+            </div>
+            <div class="pricing-card featured">
+                <div class="pricing-badge">Most Popular</div>
+                <h3>Agency License</h3>
+                <div class="price">$1,999<span>one-time</span></div>
+                <p class="desc">For web designers and marketers who want to resell to their clients.</p>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in Solo</li>
+                    <li><i class="fas fa-check"></i> Unlimited client deployments</li>
+                    <li><i class="fas fa-check"></i> White-label rights</li>
+                    <li><i class="fas fa-check"></i> Priority email support</li>
+                    <li><i class="fas fa-check"></i> Resale rights included</li>
+                    <li><i class="fas fa-check"></i> Private Discord access</li>
+                </ul>
+                <a href="#buy" class="btn-primary" style="width: 100%; justify-content: center;">Buy Agency License</a>
+            </div>
+            <div class="pricing-card">
+                <h3>Setup + Deploy</h3>
+                <div class="price">$499<span>add-on</span></div>
+                <p class="desc">We handle everything. You send your menu and logo. We make it live.</p>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Domain configuration</li>
+                    <li><i class="fas fa-check"></i> Menu upload & formatting</li>
+                    <li><i class="fas fa-check"></i> Theme customization</li>
+                    <li><i class="fas fa-check"></i> Email/SMS setup</li>
+                    <li><i class="fas fa-check"></i> 1-hour training call</li>
+                    <li><i class="fas fa-check"></i> Go-live in 48 hours</li>
+                </ul>
+                <a href="#buy" class="btn-secondary" style="width: 100%; justify-content: center;">Add Setup</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="faq" id="faq">
+    <div class="container">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know before buying.</p>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item active">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    Do I need to know how to code?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    No. The platform includes a visual editor where you can change colors, fonts, menu items, hours, and content without touching any code. If you want to customize deeper, the source code is fully documented and uses standard Python/Flask.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    Where is it hosted?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    You host it. We provide a Docker setup that works on any VPS (DigitalOcean, Linode, AWS), shared hosting with Python support, or platforms like Render, Railway, and Fly.io. You own the deployment and the data.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    Is there a monthly fee?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    No. This is a one-time purchase. You pay $999 (or $1,999 for agencies) once and own the software forever. Your only ongoing cost is your server hosting, which starts at $5-10/month on most VPS providers.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    Can I resell this to my clients?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes — with the Agency License ($1,999). You can deploy it for unlimited clients, white-label it with your branding, and charge whatever you want. You keep 100% of what your clients pay you.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What about updates?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    All buyers receive lifetime access to updates. When we release v2.1, v3.0, etc., you get the new version at no extra cost. Updates are delivered as a new ZIP file with migration instructions.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">
+                    What payment methods do you accept?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We accept PayPal, Stripe (credit/debit cards), and bank transfer. After payment, you receive an instant download link to the full source code ZIP file.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section" id="buy">
+    <div class="container">
+        <h2>Ready to Own Your Restaurant's Future?</h2>
+        <p>Stop renting your digital presence from delivery apps and SaaS platforms. Buy Restaurant OS Pro once. Own it forever. Keep every dollar your customers spend.</p>
+        <a href="mailto:youremail@example.com?subject=Buy Restaurant OS Pro" class="btn-white"><i class="fas fa-envelope"></i> Get Started — $999</a>
+        <p style="margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.8;">Questions? <a href="mailto:youremail@example.com" style="color: white; text-decoration: underline;">Email us</a> — we reply within 24 hours.</p>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p>Restaurant OS Pro v2.0 — Built for restaurants that refuse to settle.</p>
+        <p style="margin-top: 0.5rem;">© 2026 Restaurant OS. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+});
+</script>
+</body>
+</html>

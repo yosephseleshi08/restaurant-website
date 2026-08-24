@@ -1,0 +1,219 @@
+# DM Outreach Scripts — Restaurant OS Pro
+# Use these to start conversations with restaurant owners and web agencies.
+# Copy-paste ready. Replace [Name] and [Restaurant] before sending.
+
+================================================================================
+SCRIPT 1: RESTAURANT OWNER — DOORDASH ANGLE (Cold DM)
+================================================================================
+
+Hey [Name], I noticed [Restaurant] takes orders through DoorDash. 
+
+I built a direct online ordering system that lets restaurants keep 100% of order revenue instead of paying 30% to apps. It also includes reservations, kitchen display, loyalty, and gift cards — all in one platform.
+
+One-time fee: $999. No monthly commission. You own the software.
+
+I can have a demo running with your menu in 10 minutes. Worth a quick look?
+
+---
+
+================================================================================
+SCRIPT 2: RESTAURANT OWNER — COST SAVINGS ANGLE (Cold DM)
+================================================================================
+
+Hi [Name],
+
+Quick question: How much is [Restaurant] paying per month between DoorDash, OpenTable, your website builder, and loyalty tools?
+
+I built an all-in-one restaurant operating system that replaces all of those with a single platform you own. One-time $999. No monthly fees to me.
+
+For a restaurant doing $3K/month in online orders, the break-even is under 2 weeks.
+
+Want me to send you a 2-minute demo video?
+
+---
+
+================================================================================
+SCRIPT 3: RESTAURANT OWNER — FOLLOW-UP (After no reply, 3 days later)
+================================================================================
+
+Hey [Name], following up on my message about the direct ordering system.
+
+I just helped another [city] restaurant go live last week. They were paying $1,200/month in DoorDash fees. Now they keep every dollar.
+
+Happy to show you exactly what it looks like with your menu loaded. No commitment — just a demo.
+
+---
+
+================================================================================
+SCRIPT 4: WEB AGENCY — WHITE-LABEL ANGLE (Cold DM)
+================================================================================
+
+Hey [Name],
+
+I noticed your agency works with restaurant clients. I built a white-label restaurant CMS you can resell — online ordering, reservations, kitchen display, CRM, loyalty, gift cards, and analytics.
+
+You charge your clients $2,000-3,000 setup + $200/month. You pay $1,999 once for unlimited deployments. You keep the margin and the client relationship.
+
+Agency license includes full source code, white-label rights, and priority support.
+
+Worth a 5-minute call to see the demo?
+
+---
+
+================================================================================
+SCRIPT 5: WEB AGENCY — VALUE FIRST (Cold DM)
+================================================================================
+
+Hi [Name],
+
+I saw you build websites for restaurants. Question: do your clients ever ask for online ordering, reservations, or loyalty programs?
+
+I built a complete restaurant operating system that agencies white-label and resell. One platform replaces DoorDash, OpenTable, Toast, and Square — with 0% commission.
+
+Your clients save $500+/month. You earn $2,000+ per deployment. Win-win.
+
+Agency license is $1,999 one-time, unlimited clients. Want to see it?
+
+---
+
+================================================================================
+SCRIPT 6: RESTAURANT GROUP / CHAIN (Cold Email)
+================================================================================
+
+Subject: Cut $10K+/year in software fees across your [N] locations
+
+Hi [Name],
+
+[Restaurant Group] is running [N] locations, which means you are likely paying:
+- DoorDash/UberEats: 15-30% per order
+- OpenTable or Resy: $200+/mo per location
+- Loyalty platform: $100+/mo per location
+- Website builder: $50+/mo per location
+
+That is $500-800/month PER LOCATION in software and commission costs.
+
+I built Restaurant OS Pro — a complete white-label restaurant operating system with direct ordering (0% commission), reservations, kitchen display, loyalty, gift cards, and CRM.
+
+One-time license. You host it. You own the data. You keep the revenue.
+
+Multi-location pricing available. Can we schedule a 15-minute demo this week?
+
+Best,
+[Your Name]
+
+---
+
+================================================================================
+SCRIPT 7: WARM INTRO / REFERRAL
+================================================================================
+
+Hey [Name], [Mutual Contact] mentioned you own [Restaurant] and are looking to improve your online ordering setup.
+
+I built a platform that replaces DoorDash commission with direct ordering on your own website. It also handles reservations, kitchen tickets, loyalty, and gift cards.
+
+$999 one-time. No monthly fees. You own everything.
+
+[Mutual Contact] thought it might be a good fit. Want me to send over a quick demo?
+
+---
+
+================================================================================
+SCRIPT 8: LINKEDIN CONNECTION REQUEST + DM
+================================================================================
+
+Connection request note:
+"Hey [Name], I build restaurant tech that cuts DoorDash fees to 0%. Would love to connect."
+
+DM after they accept:
+"Thanks for connecting! I noticed [Restaurant] takes online orders. I built a direct ordering platform that lets you keep 100% of revenue + includes reservations, KDS, and loyalty. One-time $999. Happy to show you a demo — worth 2 minutes?"
+
+---
+
+================================================================================
+SCRIPT 9: INSTAGRAM DM (To restaurants with "Order on DoorDash" in bio)
+================================================================================
+
+Hey [Name], love the food at [Restaurant]! 
+
+I build direct online ordering systems for restaurants — no 30% DoorDash cut, no monthly SaaS fees. $999 one-time, you own the platform.
+
+Also includes reservations, kitchen display, loyalty, and gift cards.
+
+I can load your menu and show you a live demo in 10 minutes. Interested?
+
+---
+
+================================================================================
+SCRIPT 10: OBJECTION HANDLER — "I already have a website"
+================================================================================
+
+Totally get it — a website is just the starting point. The question is: does your current site let customers order directly, book tables, earn loyalty points, and buy gift cards?
+
+Most restaurant websites are just digital brochures. This turns your site into a revenue engine that replaces $500-1,000/month in third-party fees.
+
+Happy to show you the difference side-by-side. 5 minutes, no pitch — just a demo.
+
+---
+
+================================================================================
+SCRIPT 11: OBJECTION HANDLER — "$999 is too expensive"
+================================================================================
+
+I hear you. Let me put it this way: if you do just $3,000/month in online orders, DoorDash is taking $900 of that every single month. This pays for itself in 5 weeks — then you save $900/month forever.
+
+It is not a cost. It is an investment that starts returning immediately.
+
+Want to see the math for your specific volume? I can run the numbers.
+
+---
+
+================================================================================
+SCRIPT 12: OBJECTION HANDLER — "I need to think about it"
+================================================================================
+
+Of course — no rush. Here is what I will do: I will send you a 2-minute demo video and a link to try the live demo with a sample restaurant. No signup, no call needed.
+
+If it makes sense after you see it, we talk. If not, no hard feelings.
+
+Sound fair?
+
+---
+
+================================================================================
+TIPS FOR SENDING DMs
+================================================================================
+
+1. PERSONALIZE EVERY MESSAGE
+   - Use their actual name
+   - Mention their actual restaurant name
+   - Reference something specific (a dish, a recent post, their location)
+
+2. SEND AT THE RIGHT TIME
+   - Restaurant owners: 10-11 AM or 2-4 PM (between rushes)
+   - Agencies: 9-11 AM on weekdays
+   - Avoid Friday afternoons and weekends
+
+3. FOLLOW UP ONCE
+   - Day 1: Initial DM
+   - Day 4: Follow-up (Script 3)
+   - Day 10: Final check-in with demo link
+   - Then move on. Do not spam.
+
+4. HAVE A DEMO READY
+   - Deploy your platform on Render/Railway (free tier)
+   - Load it with Italian demo data
+   - Send the link immediately when they say "yes"
+
+5. TRACK YOUR NUMBERS
+   - 50 DMs sent
+   - 10 replies (20%)
+   - 5 demos (10%)
+   - 1-2 sales (2-4%)
+   - Target: 1 sale per 25-50 DMs
+
+6. DO NOT SELL IN THE FIRST MESSAGE
+   - Lead with value (save money, keep revenue)
+   - Ask a question (worth a look?)
+   - Offer a demo (low commitment)
+
+================================================================================
