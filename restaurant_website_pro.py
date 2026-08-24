@@ -86,7 +86,7 @@ limiter = Limiter(
     strategy="fixed-window"  # ← CHANGE TO THIS
 )
 
-    db = SQLAlchemy(app)
+db = SQLAlchemy(app)
 
     # Thread-safe data file operations
     DATA_FILE = 'restaurant_data.json'
