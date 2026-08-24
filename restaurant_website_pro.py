@@ -393,6 +393,20 @@ def create_app(config_name="production"):
             'user_role': session.get('role', None)
         }
 
+    @app.route('/menu')
+    def menu_page():
+        data = load_data()
+        return render_template('menu.html',
+            theme=data['theme'],
+            restaurant=data['restaurant'],
+            menu=data['menu'],
+            seo=data['seo'],
+            settings=data['settings'])
+
+
+
+
+
     # ─── Routes ────────────────────────────────────────────────────────
 
     @app.route('/health')
