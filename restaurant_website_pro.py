@@ -90,9 +90,9 @@ db = SQLAlchemy(app)
 
     # Thread-safe data file operations
 DATA_FILE = 'restaurant_data.json'
-    _data_lock = threading.Lock()
+_data_lock = threading.Lock()
 
-    DEFAULT_DATA = {
+DEFAULT_DATA = {
         'theme': {
             'primary_color': '#E85D3A',
             'secondary_color': '#F4A261',
