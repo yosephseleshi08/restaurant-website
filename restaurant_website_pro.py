@@ -377,6 +377,22 @@ def create_app(config_name="production"):
             return email.strip().lower()
         return None
 
+    # ─── Context Processors ────────────────────────────────────────────
+
+    @app.context_processor
+    def inject_globals():
+        data = load_data()
+        return {
+            'restaurant': data['restaurant'],
+            'theme': data['theme'],
+            'seo': data['seo'],
+            'settings': data.get('settings', {}),
+            'current_year': datetime.now().year,
+            'csrf_token': lambda: session.get('_csrf_token', ''),
+            'cart_count': len(session.get('cart', [])),
+            'user_role': session.get('role', None)
+        }
+
     # ─── Routes ────────────────────────────────────────────────────────
 
     @app.route('/health')
