@@ -89,7 +89,7 @@ limiter = Limiter(
 db = SQLAlchemy(app)
 
     # Thread-safe data file operations
-    DATA_FILE = 'restaurant_data.json'
+DATA_FILE = 'restaurant_data.json'
     _data_lock = threading.Lock()
 
     DEFAULT_DATA = {
