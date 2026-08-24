@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Rewards Program — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>🌟 Rewards Program</h1>
+    <p>Earn points with every order. 100 points = $10 reward.</p>
+    <div class="line"></div>
+</section>
+
+<div class="container container-sm">
+    <div class="card" style="background: linear-gradient(135deg, #f39c12, #e67e22); color: white; text-align: center; padding: 3rem;">
+        <h2 style="color: white; font-size: 2.5rem; margin-bottom: 0.5rem;">🌟 Join for Free</h2>
+        <p style="opacity: 0.95; font-size: 1.1rem;">Get 50 bonus points just for signing up. Earn 1 point per $1 spent.</p>
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-user-plus text-primary"></i> Enroll Now</h3>
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="loyaltyName" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="loyaltyEmail" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="tel" id="loyaltyPhone" placeholder="(555) 123-4567">
+            </div>
+            <div class="form-group">
+                <label>Birthday (for a free dessert!)</label>
+                <input type="date" id="loyaltyBirthday">
+            </div>
+        </div>
+        <button class="btn btn-block btn-lg" onclick="enroll()" style="margin-top: 1rem;">
+            <i class="fas fa-star"></i> Join & Get 50 Points
+        </button>
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1rem;"><i class="fas fa-search text-primary"></i> Check Your Points</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="email" id="checkEmail" placeholder="Enter your email" style="flex: 1; padding: 0.85rem; border: 2px solid #e8e8e8; border-radius: var(--radius-sm);">
+            <button class="btn" onclick="checkPoints()"><i class="fas fa-search"></i> Check</button>
+        </div>
+        <div id="pointsResult" style="margin-top: 1rem; display: none;"></div>
+    </div>
+
+    <div class="card mt-3" style="text-align: center;">
+        <h3 style="margin-bottom: 1.5rem;">How It Works</h3>
+        <div class="grid grid-3">
+            <div>
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;"><i class="fas fa-utensils"></i></div>
+                <h4 style="font-size: 1rem;">1. Dine With Us</h4>
+                <p style="color: #666; font-size: 0.9rem;">Order online or in-person</p>
+            </div>
+            <div>
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;"><i class="fas fa-coins"></i></div>
+                <h4 style="font-size: 1rem;">2. Earn Points</h4>
+                <p style="color: #666; font-size: 0.9rem;">1 point per $1 spent</p>
+            </div>
+            <div>
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;"><i class="fas fa-gift"></i></div>
+                <h4 style="font-size: 1rem;">3. Get Rewards</h4>
+                <p style="color: #666; font-size: 0.9rem;">100 points = $10 off</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function enroll() {
+    const payload = {
+        name: document.getElementById('loyaltyName').value,
+        email: document.getElementById('loyaltyEmail').value,
+        phone: document.getElementById('loyaltyPhone').value,
+        birthday: document.getElementById('loyaltyBirthday').value
+    };
+    fetch('/api/loyalty/enroll', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+    }).then(r => r.json()).then(data => {
+        alert(data.message);
+    });
+}
+function checkPoints() {
+    const email = document.getElementById('checkEmail').value;
+    fetch('/api/loyalty/check', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email})
+    }).then(r => r.json()).then(data => {
+        const result = document.getElementById('pointsResult');
+        result.style.display = 'block';
+        if (data.success) {
+            result.innerHTML = '<div class="alert alert-success"><i class="fas fa-star"></i> <div><strong>' + data.name + '</strong><br>Points: <strong>' + data.points + '</strong> | Lifetime Spend: $' + data.lifetime_spend + ' | Visits: ' + data.visits + '</div></div>';
+        } else {
+            result.innerHTML = '<div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Waitlist — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Waitlist</h1>
+    <p>Manage the queue and notify guests</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div class="card">
+        <table class="dashboard-table">
+            <thead>
+                <tr><th>#</th><th>Name</th><th>Phone</th><th>Guests</th><th>Wait Time</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td><strong>{{ entry.name }}</strong></td>
+                    <td>{{ entry.phone }}</td>
+                    <td>{{ entry.guests }}</td>
+                    <td>{{ ((datetime.utcnow() - entry.created_at).total_seconds() // 60)|int }} min</td>
+                    <td>
+                        {% if entry.notified %}<span class="status-badge" style="background:#d4edda;color:#155724;">Notified</span>
+                        {% else %}<span class="status-badge" style="background:#fff3cd;color:#856404;">Waiting</span>{% endif %}
+                    </td>
+                    <td>
+                        {% if not entry.notified %}
+                        <form method="POST" action="/admin/waitlist/{{ entry.id }}/notify" style="display:inline;">
+                            <button type="submit" class="btn btn-sm"><i class="fas fa-bell"></i> Notify</button>
+                        </form>
+                        {% endif %}
+                        <form method="POST" action="/admin/waitlist/{{ entry.id }}/seat" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-secondary"><i class="fas fa-chair"></i> Seated</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" style="text-align:center;padding:3rem;color:#888;"><i class="fas fa-check-circle" style="font-size:2rem;margin-bottom:1rem;display:block;"></i>No one on the waitlist</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

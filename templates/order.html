@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Order Online — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section class="section-header">
+    <h1>{{ online_ordering.page_title or 'Order Online' }}</h1>
+    <p>{{ online_ordering.page_subtitle or 'Enjoy our authentic Italian cuisine from the comfort of your home.' }}</p>
+    <div class="line"></div>
+</section>
+
+<div class="container container-sm mx-auto">
+    <!-- Direct Order CTA -->
+    <div class="card" style="text-align: center; padding: 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; margin-bottom: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🍝</div>
+        <h2 style="color: white; font-size: 2rem; margin-bottom: 0.5rem;">Order Directly From Us</h2>
+        <p style="opacity: 0.95; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Skip the 30% delivery app fees. Every dollar goes straight to the restaurant. Support local.
+        </p>
+        <a href="/order/menu" class="btn btn-lg" style="background: white; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <i class="fas fa-utensils"></i> Browse Full Menu & Order
+        </a>
+    </div>
+
+    <!-- Why Order Direct -->
+    <div class="grid grid-3 mb-3">
+        <div class="card" style="text-align: center; padding: 2rem;">
+            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+                <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">0% Commission</h4>
+            <p style="color: #666; font-size: 0.9rem;">No hidden fees. The price you see is what you pay.</p>
+        </div>
+        <div class="card" style="text-align: center; padding: 2rem;">
+            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Faster Service</h4>
+            <p style="color: #666; font-size: 0.9rem;">Your order goes straight to our kitchen. No middleman.</p>
+        </div>
+        <div class="card" style="text-align: center; padding: 2rem;">
+            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+                <i class="fas fa-heart"></i>
+            </div>
+            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Support Local</h4>
+            <p style="color: #666; font-size: 0.9rem;">Every order helps us keep the lights on and staff paid.</p>
+        </div>
+    </div>
+
+    <!-- Third Party Platforms -->
+    {% if online_ordering.platforms %}
+    <div class="card" style="text-align: center;">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #888;">Also available on your favorite apps</h3>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            {% for platform in online_ordering.platforms %}
+            {% if platform.active %}
+            <a href="{{ platform.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                <i class="fas {{ platform.icon }}"></i> {{ platform.name }}
+            </a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

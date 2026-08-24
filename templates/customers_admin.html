@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Customer CRM — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Customer Database</h1>
+    <p>Know your best customers. Build relationships.</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div class="grid grid-4 mb-3">
+        <div class="card stat-card" style="border-top: 4px solid var(--primary);">
+            <div class="stat-label">Total Members</div>
+            <div class="stat-value" style="color: var(--primary);">{{ members|length }}</div>
+        </div>
+        <div class="card stat-card" style="border-top: 4px solid var(--secondary);">
+            <div class="stat-label">Avg Lifetime</div>
+            <div class="stat-value" style="color: var(--secondary);">
+                {% set total = namespace(value=0) %}
+                {% for m in members %}{% set total.value = total.value + m.lifetime_spend %}{% endfor %}
+                ${{ "%.0f"|format(total.value / members|length) if members|length > 0 else 0 }}
+            </div>
+        </div>
+        <div class="card stat-card" style="border-top: 4px solid var(--accent);">
+            <div class="stat-label">Total Points</div>
+            <div class="stat-value" style="color: var(--accent);">
+                {% set pts = namespace(value=0) %}
+                {% for m in members %}{% set pts.value = pts.value + m.points %}{% endfor %}
+                {{ pts.value }}
+            </div>
+        </div>
+        <div class="card stat-card" style="border-top: 4px solid #8e44ad;">
+            <div class="stat-label">Total Visits</div>
+            <div class="stat-value" style="color: #8e44ad;">
+                {% set vis = namespace(value=0) %}
+                {% for m in members %}{% set vis.value = vis.value + m.visits %}{% endfor %}
+                {{ vis.value }}
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="dashboard-table">
+            <thead>
+                <tr><th>Customer</th><th>Points</th><th>Lifetime</th><th>Visits</th><th>Last Visit</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for m in members %}
+                <tr>
+                    <td>
+                        <strong>{{ m.name }}</strong><br>
+                        <small style="color:#888;">{{ m.email }}</small><br>
+                        <small style="color:#888;">{{ m.phone or 'No phone' }}</small>
+                    </td>
+                    <td><span style="color: var(--primary); font-weight: 700; font-size: 1.2rem;">{{ m.points }}</span></td>
+                    <td>${{ "%.2f"|format(m.lifetime_spend) }}</td>
+                    <td>{{ m.visits }}</td>
+                    <td>{{ m.last_visit.strftime('%Y-%m-%d') if m.last_visit else 'Never' }}</td>
+                    <td><a href="/admin/customers/{{ m.id }}" class="btn btn-sm">View Profile</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

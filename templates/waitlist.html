@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Waitlist — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Join the Waitlist</h1>
+    <p>We'll text you when your table is ready. No app needed.</p>
+    <div class="line"></div>
+</section>
+
+<div class="container container-sm">
+    {% if success %}
+    <div class="alert alert-success mb-3">
+        <i class="fas fa-check-circle"></i>
+        <div><strong>You're on the list!</strong><br>We'll text you when your table is ready.</div>
+    </div>
+    {% endif %}
+
+    <div class="card mb-3" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center;">
+        <h2 style="color: white;">Current Wait Time</h2>
+        <p style="font-size: 3rem; font-weight: 700; margin: 0.5rem 0;">~{{ wait_estimate }} min</p>
+        <p style="opacity: 0.9;">Based on current queue</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-list-ol text-primary"></i> Add Your Name</h3>
+        <form method="POST">
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" name="name" required placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Phone *</label>
+                    <input type="tel" name="phone" required placeholder="(555) 123-4567">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Party Size *</label>
+                <select name="guests" required>
+                    <option value="">Select</option>
+                    <option value="1">1 person</option>
+                    <option value="2">2 people</option>
+                    <option value="3">3 people</option>
+                    <option value="4">4 people</option>
+                    <option value="5">5 people</option>
+                    <option value="6">6 people</option>
+                    <option value="7+">7+ people</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-block btn-lg">
+                <i class="fas fa-bell"></i> Join Waitlist
+            </button>
+        </form>
+        <p style="color: #888; font-size: 0.85rem; text-align: center; margin-top: 1rem;">
+            <i class="fas fa-mobile-alt"></i> You'll receive an SMS when your table is ready. No app download needed.
+        </p>
+    </div>
+</div>
+{% endblock %}

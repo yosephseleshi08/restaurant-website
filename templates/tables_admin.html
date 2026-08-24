@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Table Management — {{ restaurant.name }}{% endblock %}
+{% block head %}
+<style>
+.floor-plan {
+    position: relative;
+    width: 100%; height: 600px;
+    background: #f8f9fa; border-radius: var(--radius);
+    border: 2px dashed #ddd; overflow: hidden;
+}
+.table-node {
+    position: absolute; width: 80px; height: 80px;
+    border-radius: 50%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-weight: 700; cursor: grab; user-select: none;
+    transition: all 0.2s; box-shadow: var(--shadow-md);
+}
+.table-node.available { background: #d4edda; color: #155724; border: 3px solid #28a745; }
+.table-node.occupied { background: #f8d7da; color: #721c24; border: 3px solid #dc3545; }
+.table-node.reserved { background: #fff3cd; color: #856404; border: 3px solid #ffc107; }
+.table-node.cleaning { background: #e2e3e5; color: #383d41; border: 3px solid #6c757d; }
+.table-node:hover { transform: scale(1.1); z-index: 10; }
+.table-number { font-size: 1.2rem; }
+.table-capacity { font-size: 0.7rem; opacity: 0.8; }
+.table-guests { font-size: 0.65rem; margin-top: 2px; }
+.legend { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.legend-dot { width: 16px; height: 16px; border-radius: 50%; }
+</style>
+{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Table Management</h1>
+    <p>Drag tables to rearrange. Click to edit status.</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background: #d4edda; border: 2px solid #28a745;"></div> Available</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #f8d7da; border: 2px solid #dc3545;"></div> Occupied</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #fff3cd; border: 2px solid #ffc107;"></div> Reserved</div>
+        <div class="legend-item"><div class="legend-dot" style="background: #e2e3e5; border: 2px solid #6c757d;"></div> Cleaning</div>
+    </div>
+
+    <div class="floor-plan" id="floorPlan">
+        {% for table in tables %}
+        <div class="table-node {{ table.status }}" id="table-{{ table.number }}"
+            style="left: {{ table.x_pos }}px; top: {{ table.y_pos }}px;"
+            data-number="{{ table.number }}" data-capacity="{{ table.capacity }}"
+            draggable="true" ondragstart="dragStart(event)" onclick="editTable('{{ table.number }}')">
+            <span class="table-number">{{ table.number }}</span>
+            <span class="table-capacity">{{ table.capacity }} seats</span>
+            {% if table.current_guests > 0 %}
+            <span class="table-guests">{{ table.current_guests }} guests</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1rem;"><i class="fas fa-plus-circle text-primary"></i> Add Table</h3>
+        <div class="grid grid-3">
+            <div class="form-group">
+                <label>Table Number</label>
+                <input type="text" id="newTableNum" placeholder="T-5">
+            </div>
+            <div class="form-group">
+                <label>Capacity</label>
+                <input type="number" id="newTableCap" value="4" min="1">
+            </div>
+            <div style="display: flex; align-items: flex-end;">
+                <button class="btn" onclick="addTable()"><i class="fas fa-plus"></i> Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="tableModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div class="card" style="max-width:400px; width:90%;">
+        <h3 style="margin-bottom:1rem;">Edit Table <span id="editNum"></span></h3>
+        <div class="form-group">
+            <label>Status</label>
+            <select id="editStatus">
+                <option value="available">Available</option>
+                <option value="occupied">Occupied</option>
+                <option value="reserved">Reserved</option>
+                <option value="cleaning">Cleaning</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Current Guests</label>
+            <input type="number" id="editGuests" value="0" min="0">
+        </div>
+        <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-block" onclick="saveTable()"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-block btn-danger" onclick="deleteTable()"><i class="fas fa-trash"></i> Delete</button>
+        </div>
+        <button onclick="document.getElementById('tableModal').style.display='none'" style="margin-top:0.5rem; background:none; border:none; color:#888; cursor:pointer; width:100%;">Cancel</button>
+    </div>
+</div>
+
+<script>
+let draggedTable = null;
+let currentTableNum = null;
+
+function dragStart(e) {
+    draggedTable = e.target.dataset.number;
+}
+
+const floorPlan = document.getElementById('floorPlan');
+floorPlan.ondragover = e => e.preventDefault();
+floorPlan.ondrop = e => {
+    e.preventDefault();
+    const rect = floorPlan.getBoundingClientRect();
+    const x = e.clientX - rect.left - 40;
+    const y = e.clientY - rect.top - 40;
+    const node = document.getElementById('table-' + draggedTable);
+    if (node) {
+        node.style.left = x + 'px';
+        node.style.top = y + 'px';
+        fetch('/api/tables/update', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({number: draggedTable, x_pos: x, y_pos: y})
+        });
+    }
+};
+
+function editTable(num) {
+    currentTableNum = num;
+    document.getElementById('editNum').textContent = num;
+    document.getElementById('tableModal').style.display = 'flex';
+}
+
+function saveTable() {
+    fetch('/api/tables/update', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            number: currentTableNum,
+            status: document.getElementById('editStatus').value,
+            current_guests: parseInt(document.getElementById('editGuests').value)
+        })
+    }).then(() => location.reload());
+}
+
+function deleteTable() {
+    if (!confirm('Delete this table?')) return;
+    fetch('/api/tables/delete', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({number: currentTableNum})
+    }).then(() => location.reload());
+}
+
+function addTable() {
+    const num = document.getElementById('newTableNum').value;
+    const cap = document.getElementById('newTableCap').value;
+    if (!num) return alert('Enter a table number');
+    fetch('/api/tables/update', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({number: num, capacity: parseInt(cap), x_pos: 50, y_pos: 50, status: 'available'})
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}

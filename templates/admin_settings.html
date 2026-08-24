@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Admin Settings — {{ restaurant.name }}{% endblock %}
+{% block content %}
+
+<section class="section-header">
+    <h1>Admin Settings</h1>
+    <p>Configure email notifications and security</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} mb-2">
+            <i class="fas fa-{% if category == 'error' %}exclamation{% else %}check{% endif %}-circle"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card editor-card">
+        <h3><i class="fas fa-envelope"></i>Email Notifications (SendGrid)</h3>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>SendGrid API Key</label>
+                    <input type="password" name="sendgrid_api_key" value="{{ settings.sendgrid_api_key }}" placeholder="SG.xxxxx...">
+                    <p class="form-hint">Get one free at sendgrid.com. Leave blank for console-only mode.</p>
+                </div>
+                <div class="form-group">
+                    <label>From Email</label>
+                    <input type="email" name="from_email" value="{{ settings.from_email }}" placeholder="noreply@yourdomain.com">
+                </div>
+                <div class="form-group">
+                    <label>Notification Email (To)</label>
+                    <input type="email" name="notification_email" value="{{ settings.notification_email }}" placeholder="owner@restaurant.com">
+                </div>
+            </div>
+            <div class="flex gap-1 flex-wrap">
+                <button type="submit" class="btn"><i class="fas fa-save"></i> Save Settings</button>
+                <button type="submit" formaction="/admin/test-email" class="btn btn-secondary"><i class="fas fa-paper-plane"></i> Test Email</button>
+                <a href="/api/export/reservations" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export Reservations</a>
+                <a href="/api/export/messages" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export Messages</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card editor-card">
+        <h3><i class="fas fa-lock"></i>Change Admin Password</h3>
+        <form method="POST" action="/change_password">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" name="current_password" required>
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" name="new_password" required minlength="8">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="confirm_password" required minlength="8">
+                </div>
+            </div>
+            <button type="submit" class="btn"><i class="fas fa-key"></i> Update Password</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="/editor" class="btn btn-lg"><i class="fas fa-paint-brush"></i> Open Visual Editor</a>
+        <a href="/dashboard" class="btn btn-secondary btn-lg" style="margin-left: 0.75rem;"><i class="fas fa-chart-pie"></i> View Dashboard</a>
+    </div>
+    <div class="text-center mt-2" style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/admin/orders" class="btn btn-sm btn-secondary"><i class="fas fa-shopping-bag"></i> Orders</a>
+        <a href="/admin/reservations" class="btn btn-sm btn-secondary"><i class="fas fa-calendar-check"></i> Reservations</a>
+        <a href="/kitchen" class="btn btn-sm btn-secondary"><i class="fas fa-fire"></i> Kitchen</a>
+        <a href="/admin/tables" class="btn btn-sm btn-secondary"><i class="fas fa-chair"></i> Tables</a>
+        <a href="/admin/waitlist" class="btn btn-sm btn-secondary"><i class="fas fa-list-ol"></i> Waitlist</a>
+        <a href="/admin/customers" class="btn btn-sm btn-secondary"><i class="fas fa-users"></i> Customers</a>
+        <a href="/admin/messages" class="btn btn-sm btn-secondary"><i class="fas fa-envelope"></i> Messages</a>
+        <a href="/admin/staff" class="btn btn-sm btn-secondary"><i class="fas fa-user-shield"></i> Staff</a>
+    </div>
+</div>
+
+{% endblock %}

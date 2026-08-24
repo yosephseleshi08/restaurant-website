@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Checkout — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Checkout</h1>
+    <p>Complete your order</p>
+    <div class="line"></div>
+</section>
+
+<div class="grid grid-2 container-md mx-auto">
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-user text-primary"></i> Your Details</h3>
+        <form method="POST">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="name" required placeholder="John Doe">
+            </div>
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" name="email" required placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Phone *</label>
+                    <input type="tel" name="phone" required placeholder="(555) 123-4567">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Order Type</label>
+                <select name="order_type">
+                    <option value="pickup" {% if not delivery_fee %}selected{% endif %}>Pickup</option>
+                    <option value="delivery" {% if delivery_fee %}selected{% endif %}>Delivery</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="notes" rows="2" placeholder="Allergies, special requests..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-block btn-lg"><i class="fas fa-check-circle"></i> Place Order — ${{ "%.2f"|format(grand_total) }}</button>
+        </form>
+    </div>
+    <div>
+        <div class="card mb-2">
+            <h3 style="margin-bottom: 1rem;">Order Summary</h3>
+            {% for item in cart %}
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                <span>{{ item.name }} x{{ item.quantity }}</span>
+                <span>${{ "%.2f"|format(item.price * item.quantity) }}</span>
+            </div>
+            {% endfor %}
+            <div style="border-top: 1px solid #eee; margin-top: 1rem; padding-top: 1rem;">
+                <div style="display: flex; justify-content: space-between;"><span>Subtotal</span><span>${{ "%.2f"|format(total) }}</span></div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;"><span>Tax</span><span>${{ "%.2f"|format(tax) }}</span></div>
+                {% if delivery_fee > 0 %}
+                <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;"><span>Delivery</span><span>${{ "%.2f"|format(delivery_fee) }}</span></div>
+                {% endif %}
+                <div style="display: flex; justify-content: space-between; margin-top: 1rem; font-weight: 700; font-size: 1.2rem;">
+                    <span>Total</span><span style="color: var(--primary);">${{ "%.2f"|format(grand_total) }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="background: linear-gradient(135deg, rgba(232,93,58,0.05), rgba(244,162,97,0.05));">
+            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-shield-alt text-primary"></i> Secure Checkout</h4>
+            <p style="color: #666; font-size: 0.9rem;">Your order is sent directly to our kitchen. No third-party fees. Support local business.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

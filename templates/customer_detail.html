@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ member.name }} — Customer Profile{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>{{ member.name }}</h1>
+    <p>Customer since {{ member.created_at.strftime('%B %Y') if member.created_at else 'N/A' }}</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div class="grid grid-3 mb-3">
+        <div class="card stat-card" style="border-top: 4px solid var(--primary);">
+            <div class="stat-label">Points</div>
+            <div class="stat-value" style="color: var(--primary);">{{ member.points }}</div>
+        </div>
+        <div class="card stat-card" style="border-top: 4px solid var(--secondary);">
+            <div class="stat-label">Lifetime Spend</div>
+            <div class="stat-value" style="color: var(--secondary);">${{ "%.2f"|format(member.lifetime_spend) }}</div>
+        </div>
+        <div class="card stat-card" style="border-top: 4px solid var(--accent);">
+            <div class="stat-label">Total Visits</div>
+            <div class="stat-value" style="color: var(--accent);">{{ member.visits }}</div>
+        </div>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-user text-primary"></i> Profile</h3>
+            <p><strong>Email:</strong> {{ member.email }}</p>
+            <p><strong>Phone:</strong> {{ member.phone or 'N/A' }}</p>
+            <p><strong>Birthday:</strong> {{ member.birthday or 'N/A' }}</p>
+            <p><strong>Allergies:</strong> {{ member.allergies or 'None recorded' }}</p>
+            <p><strong>Preferences:</strong> {{ member.preferences or 'None recorded' }}</p>
+            <p><strong>Last Visit:</strong> {{ member.last_visit.strftime('%Y-%m-%d') if member.last_visit else 'Never' }}</p>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;"><i class="fas fa-shopping-bag text-primary"></i> Recent Orders</h3>
+            {% for o in orders %}
+            <div style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Order #{{ o.id }}</span>
+                    <span style="color: var(--primary); font-weight: 600;">${{ "%.2f"|format(o.total) }}</span>
+                </div>
+                <p style="color: #888; font-size: 0.85rem;">{{ o.created_at.strftime('%Y-%m-%d %H:%M') if o.created_at else '' }} · {{ o.status }}</p>
+            </div>
+            {% else %}<p style="color: #888;">No orders yet</p>{% endfor %}
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1rem;"><i class="fas fa-calendar-check text-primary"></i> Reservations</h3>
+        {% for r in reservations %}
+        <div style="padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>{{ r.date }} at {{ r.time }}</span>
+                <span class="status-badge status-{{ r.status }}">{{ r.status }}</span>
+            </div>
+            <p style="color: #888; font-size: 0.85rem;">{{ r.guests }} guests · {{ r.phone }}</p>
+        </div>
+        {% else %}<p style="color: #888;">No reservations yet</p>{% endfor %}
+    </div>
+</div>
+{% endblock %}

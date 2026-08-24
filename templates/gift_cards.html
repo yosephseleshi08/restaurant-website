@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Gift Cards — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>🎁 Gift Cards</h1>
+    <p>The perfect gift for any food lover</p>
+    <div class="line"></div>
+</section>
+
+<div class="container container-sm">
+    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center; padding: 3rem;">
+        <h2 style="color: white; font-size: 2rem; margin-bottom: 0.5rem;">Digital Gift Cards</h2>
+        <p style="opacity: 0.9; font-size: 1.1rem;">Sent instantly via email. Never expires.</p>
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-gift text-primary"></i> Purchase a Gift Card</h3>
+        <div class="grid grid-4" style="margin-bottom: 1.5rem;">
+            <button class="amount-btn btn btn-block" onclick="setAmount(25)" style="padding: 1rem; font-size: 1.2rem;">$25</button>
+            <button class="amount-btn btn btn-block" onclick="setAmount(50)" style="padding: 1rem; font-size: 1.2rem;">$50</button>
+            <button class="amount-btn btn btn-block" onclick="setAmount(100)" style="padding: 1rem; font-size: 1.2rem;">$100</button>
+            <button class="amount-btn btn btn-block" onclick="setAmount(200)" style="padding: 1rem; font-size: 1.2rem;">$200</button>
+        </div>
+        <div class="form-group">
+            <label>Custom Amount</label>
+            <input type="number" id="giftAmount" value="50" min="10" step="5" style="padding: 1rem; font-size: 1.1rem;">
+        </div>
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="purchaserName" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Your Email</label>
+                <input type="email" id="purchaserEmail" placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+                <label>Recipient Name</label>
+                <input type="text" id="recipientName" placeholder="Jane Doe">
+            </div>
+            <div class="form-group">
+                <label>Recipient Email</label>
+                <input type="email" id="recipientEmail" placeholder="jane@example.com">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Message (optional)</label>
+            <textarea id="giftMessage" rows="2" placeholder="Happy Birthday! Enjoy a meal on me."></textarea>
+        </div>
+        <button class="btn btn-block btn-lg" onclick="purchaseGiftCard()" style="margin-top: 1rem;">
+            <i class="fas fa-credit-card"></i> Purchase Gift Card
+        </button>
+    </div>
+
+    <div class="card mt-3">
+        <h3 style="margin-bottom: 1rem;"><i class="fas fa-search text-primary"></i> Check Balance</h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="checkCode" placeholder="Enter gift card code" style="flex: 1; padding: 0.85rem; border: 2px solid #e8e8e8; border-radius: var(--radius-sm); font-size: 1rem; text-transform: uppercase;">
+            <button class="btn" onclick="checkBalance()"><i class="fas fa-search"></i> Check</button>
+        </div>
+        <div id="balanceResult" style="margin-top: 1rem; display: none;"></div>
+    </div>
+</div>
+
+<script>
+function setAmount(amt) {
+    document.getElementById('giftAmount').value = amt;
+    document.querySelectorAll('.amount-btn').forEach(b => b.style.background = '');
+    event.target.style.background = 'var(--secondary)';
+}
+function purchaseGiftCard() {
+    const payload = {
+        amount: parseFloat(document.getElementById('giftAmount').value),
+        purchaser_name: document.getElementById('purchaserName').value,
+        purchaser_email: document.getElementById('purchaserEmail').value,
+        recipient_name: document.getElementById('recipientName').value,
+        recipient_email: document.getElementById('recipientEmail').value,
+        message: document.getElementById('giftMessage').value
+    };
+    fetch('/api/gift-card/purchase', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            alert('Gift card purchased! Code: ' + data.code);
+        } else {
+            alert(data.message);
+        }
+    });
+}
+function checkBalance() {
+    const code = document.getElementById('checkCode').value;
+    fetch('/api/gift-card/balance', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({code})
+    }).then(r => r.json()).then(data => {
+        const result = document.getElementById('balanceResult');
+        result.style.display = 'block';
+        if (data.success) {
+            result.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> <div><strong>Balance: $' + data.balance + '</strong><br><span>Status: ' + data.status + '</span></div></div>';
+        } else {
+            result.innerHTML = '<div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
+        }
+    });
+}
+</script>
+{% endblock %}

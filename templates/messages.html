@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Messages — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Message Inbox</h1>
+    <p>Manage customer inquiries</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <a href="/admin/messages?status=all" class="btn btn-sm {% if status_filter == 'all' %}btn-secondary{% endif %}">All</a>
+        <a href="/admin/messages?status=new" class="btn btn-sm {% if status_filter == 'new' %}btn-secondary{% endif %}">New</a>
+        <a href="/admin/messages?status=read" class="btn btn-sm {% if status_filter == 'read' %}btn-secondary{% endif %}">Read</a>
+        <a href="/admin/messages?status=replied" class="btn btn-sm {% if status_filter == 'replied' %}btn-secondary{% endif %}">Replied</a>
+        <a href="/admin/messages?status=archived" class="btn btn-sm {% if status_filter == 'archived' %}btn-secondary{% endif %}">Archived</a>
+        <a href="/api/export/messages" class="btn btn-sm btn-secondary" style="margin-left: auto;"><i class="fas fa-file-csv"></i> Export CSV</a>
+    </div>
+
+    {% for msg in messages %}
+    <div class="card mb-2" style="border-left: 4px solid {% if msg.status == 'new' %}var(--primary){% elif msg.status == 'replied' %}var(--accent){% else %}#ccc{% endif %};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div>
+                <h4 style="font-size: 1.1rem;">{{ msg.subject }}</h4>
+                <p style="color: #888; font-size: 0.85rem;">From: <strong>{{ msg.name }}</strong> ({{ msg.email }}) · {{ msg.created_at.strftime('%Y-%m-%d %H:%M') if msg.created_at else '' }}</p>
+            </div>
+            <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem; padding: 2px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase;
+                {% if msg.status == 'new' %}background: var(--primary); color: white;{% elif msg.status == 'replied' %}background: var(--accent); color: white;{% elif msg.status == 'archived' %}background: #e2e3e5; color: #383d41;{% else %}background: #f0f0f0; color: #555;{% endif %}">
+                {{ msg.status }}
+            </span>
+        </div>
+        <p style="margin-bottom: 1rem; line-height: 1.6;">{{ msg.message }}</p>
+        {% if msg.reply %}
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            <p style="font-size: 0.85rem; color: #888; margin-bottom: 0.5rem;"><i class="fas fa-reply"></i> Your reply:</p>
+            <p>{{ msg.reply }}</p>
+        </div>
+        {% endif %}
+        <div style="display: flex; gap: 0.5rem;">
+            <form method="POST" action="/admin/messages/{{ msg.id }}/reply" style="flex: 1; display: flex; gap: 0.5rem;">
+                <input type="text" name="reply" placeholder="Type a reply..." style="flex: 1; padding: 0.6rem; border: 2px solid #e8e8e8; border-radius: 8px;">
+                <button type="submit" class="btn btn-sm"><i class="fas fa-paper-plane"></i> Reply</button>
+            </form>
+            <form method="POST" action="/admin/messages/{{ msg.id }}/archive">
+                <button type="submit" class="btn btn-sm btn-secondary"><i class="fas fa-archive"></i></button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="card text-center" style="padding: 3rem;">
+        <i class="fas fa-inbox" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+        <h3>No messages</h3>
+        <p style="color: #888;">Your inbox is empty.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Table {{ table.number }} — {{ restaurant.name }}{% endblock %}
+{% block head %}
+<style>
+.table-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white; padding: 1.5rem; border-radius: var(--radius);
+    margin-bottom: 2rem; text-align: center;
+}
+.table-header h1 { color: white; font-size: 1.8rem; }
+.table-header p { opacity: 0.9; }
+.menu-category-title {
+    font-size: 1.5rem; text-transform: capitalize;
+    margin: 2rem 0 1rem; padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary); display: inline-block;
+}
+.menu-card {
+    display: flex; gap: 1rem; padding: 1.25rem;
+    border-radius: var(--radius-sm); background: var(--card-bg);
+    border: 1px solid rgba(0,0,0,0.06); margin-bottom: 1rem;
+    transition: all 0.2s;
+}
+.menu-card:hover { box-shadow: var(--shadow-md); }
+.menu-card img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; flex-shrink: 0; }
+.menu-card-info { flex: 1; }
+.menu-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.menu-card h3 { font-size: 1.1rem; }
+.menu-card-price { color: var(--primary); font-weight: 700; font-size: 1.2rem; }
+.menu-card-desc { color: #666; font-size: 0.85rem; margin: 0.3rem 0; }
+.add-btn {
+    background: var(--primary); color: white; border: none;
+    padding: 0.5rem 1.25rem; border-radius: 8px; font-weight: 600;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;
+}
+.add-btn:hover { background: var(--secondary); }
+.added-toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--accent); color: white; padding: 1rem 1.5rem;
+    border-radius: 12px; font-weight: 600; z-index: 9999;
+    transform: translateY(100px); opacity: 0; transition: all 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.added-toast.show { transform: translateY(0); opacity: 1; }
+.cart-fab {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    background: var(--primary); color: white; padding: 1rem 2rem;
+    border-radius: 50px; font-weight: 700; z-index: 100;
+    box-shadow: 0 10px 30px rgba(232,93,58,0.4);
+    text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="table-header">
+    <h1><i class="fas fa-utensils"></i> Table {{ table.number }}</h1>
+    <p>Order directly from your table — no app download needed</p>
+</div>
+
+<div class="container">
+    {% for category, items in menu.items() %}
+    <h2 class="menu-category-title">{{ category }}</h2>
+    {% for item in items %}
+    <div class="menu-card">
+        <img src="{{ item.image }}" alt="{{ item.name }}">
+        <div class="menu-card-info">
+            <div class="menu-card-top">
+                <h3>{{ item.name }} {% if item.popular %}<span style="background: var(--secondary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.6rem; text-transform: uppercase;">Popular</span>{% endif %}</h3>
+                <span class="menu-card-price">${{ "%.2f"|format(item.price) }}</span>
+            </div>
+            <p class="menu-card-desc">{{ item.description }}</p>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;">
+                <input type="number" id="qty-{{ loop.index }}" value="1" min="1" style="width: 50px; padding: 0.4rem; border: 1px solid #ddd; border-radius: 6px; text-align: center;">
+                <button class="add-btn" onclick="addToTableCart('{{ item.name }}', {{ item.price }}, '{{ category }}', '{{ item.image }}', 'qty-{{ loop.index }}')">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+</div>
+
+<a href="/cart" class="cart-fab">
+    <i class="fas fa-shopping-bag"></i>
+    <span id="cartCount">{{ cart_count }}</span> items — View Cart
+</a>
+
+<div class="added-toast" id="toast">✅ Added to cart!</div>
+
+<script>
+function addToTableCart(name, price, category, image, qtyId) {
+    const qty = parseInt(document.getElementById(qtyId).value) || 1;
+    fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name, price, category, image, quantity: qty})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            document.getElementById('cartCount').textContent = data.count;
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+    });
+}
+</script>
+{% endblock %}

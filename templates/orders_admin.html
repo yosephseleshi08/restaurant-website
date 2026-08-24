@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Manage Orders — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="section-header">
+    <h1>Orders</h1>
+    <p>Manage online orders and update status</p>
+    <div class="line"></div>
+</section>
+
+<div class="container-md mx-auto">
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+        <a href="/admin/orders?status=all" class="btn btn-sm {% if status_filter == 'all' %}btn-secondary{% endif %}">All</a>
+        <a href="/admin/orders?status=pending" class="btn btn-sm {% if status_filter == 'pending' %}btn-secondary{% endif %}">Pending</a>
+        <a href="/admin/orders?status=confirmed" class="btn btn-sm {% if status_filter == 'confirmed' %}btn-secondary{% endif %}">Confirmed</a>
+        <a href="/admin/orders?status=preparing" class="btn btn-sm {% if status_filter == 'preparing' %}btn-secondary{% endif %}">Preparing</a>
+        <a href="/admin/orders?status=ready" class="btn btn-sm {% if status_filter == 'ready' %}btn-secondary{% endif %}">Ready</a>
+        <a href="/admin/orders?status=completed" class="btn btn-sm {% if status_filter == 'completed' %}btn-secondary{% endif %}">Completed</a>
+        <a href="/api/export/orders" class="btn btn-sm btn-secondary" style="margin-left: auto;"><i class="fas fa-file-csv"></i> Export</a>
+    </div>
+
+    {% for order in orders %}
+    <div class="card mb-2">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+            <div>
+                <h4 style="font-size: 1.1rem;">Order #{{ order.id }} — {{ order.customer_name }}</h4>
+                <p style="color: #888; font-size: 0.85rem;">{{ order.customer_email }} · {{ order.customer_phone }} · {{ order.created_at.strftime('%Y-%m-%d %H:%M') if order.created_at else '' }}</p>
+            </div>
+            <div style="text-align: right;">
+                <span style="display: inline-flex; align-items: center; gap: 3px; font-size: 0.7rem; padding: 2px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase;
+                    {% if order.status == 'pending' %}background: #fff3cd; color: #856404;{% elif order.status == 'preparing' %}background: #e2e3e5; color: #383d41;{% elif order.status == 'ready' %}background: #d4edda; color: #155724;{% elif order.status == 'completed' %}background: var(--accent); color: white;{% elif order.status == 'cancelled' %}background: #f8d7da; color: #721c24;{% else %}background: #f0f0f0; color: #555;{% endif %}">
+                    {{ order.status }}
+                </span>
+                <p style="font-weight: 700; color: var(--primary); font-size: 1.2rem; margin-top: 0.25rem;">${{ "%.2f"|format(order.total) }}</p>
+            </div>
+        </div>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+            {% for item in order.items %}
+            <div style="display: flex; justify-content: space-between; padding: 0.25rem 0;">
+                <span>{{ item.name }} x{{ item.quantity }}</span>
+                <span>${{ "%.2f"|format(item.price * item.quantity) }}</span>
+            </div>
+            {% endfor %}
+            {% if order.notes %}<p style="margin-top: 0.5rem; font-size: 0.85rem; color: #666;"><i class="fas fa-sticky-note"></i> {{ order.notes }}</p>{% endif %}
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            {% if order.status in ['pending', 'confirmed'] %}
+            <button class="btn btn-sm" onclick="updateOrderStatus({{ order.id }}, 'preparing')">Mark Preparing</button>
+            {% endif %}
+            {% if order.status == 'preparing' %}
+            <button class="btn btn-sm" onclick="updateOrderStatus({{ order.id }}, 'ready')">Mark Ready</button>
+            {% endif %}
+            {% if order.status == 'ready' %}
+            <button class="btn btn-sm" onclick="updateOrderStatus({{ order.id }}, 'completed')">Complete</button>
+            {% endif %}
+            {% if order.status not in ['completed', 'cancelled'] %}
+            <button class="btn btn-sm btn-danger" onclick="updateOrderStatus({{ order.id }}, 'cancelled')">Cancel</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function updateOrderStatus(id, status) {
+    fetch('/admin/orders/' + id + '/status', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({status})
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}
