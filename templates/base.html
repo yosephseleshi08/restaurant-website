@@ -338,7 +338,7 @@
                 {% if settings.enable_online_ordering %}
                 <li class="cart-icon">
                     <a href="/cart" style="position:relative;"><i class="fas fa-shopping-bag"></i>
-                        {% if cart_count > 0 %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+                        {% if session.get('cart', [])|length > 0 %}<span class="cart-badge">{{ session.get('cart', [])|length }}</span>{% endif %}
                     </a>
                 </li>
                 {% endif %}
