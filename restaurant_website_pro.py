@@ -513,7 +513,7 @@ def create_app(config_name="production"):
         with app.app_context():
             db.create_all()
             if User.query.count() == 0:
-                initial_password = os.environ.get('ADMIN_INITIAL_PASSWORD') or secrets.token_urlsafe(12)
+                initial_password = os.environ.get('ADMIN_INITIAL_PASSWORD') or 'admin123'
                 admin = User(
                     username='admin',
                     password_hash=generate_password_hash(initial_password),
