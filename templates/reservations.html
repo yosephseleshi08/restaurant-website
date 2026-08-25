@@ -2,127 +2,138 @@
 {% block title %}Reservations — {{ restaurant.name }}{% endblock %}
 {% block content %}
 
-<section class="section-header">
-    <h1>Make a Reservation</h1>
-    <p>Book your table in seconds. We look forward to serving you.</p>
-    <div class="line"></div>
-</section>
-
-{% if success %}
-<div class="alert alert-success container-md mx-auto mb-3">
-    <i class="fas fa-check-circle"></i>
-    <div>
-        <strong>Reservation Confirmed!</strong><br>
-        <span style="font-size: 0.9rem;">We've received your booking. You'll receive a confirmation shortly.</span>
-    </div>
+<!-- Hero Section -->
+<div class="reservation-hero" style="text-align: center; color: white; padding: 6rem 2rem; border-radius: 24px; margin-bottom: 3rem;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 3.5rem; color: white; margin-bottom: 0.5rem;">Book a Table</h1>
+    <p style="font-size: 1.2rem; opacity: 0.9;">Experience an unforgettable evening at Aurelia.</p>
 </div>
-{% endif %}
 
-{% if error_msg %}
-<div class="alert alert-error container-md mx-auto mb-3">
-    <i class="fas fa-exclamation-circle"></i>
-    <div>
-        <strong>Unable to Book</strong><br>
-        <span style="font-size: 0.9rem;">{{ error_msg }}</span>
+<div style="max-width: 1000px; margin: 0 auto; padding: 0 2rem;">
+
+    {% if success %}
+    <div style="background: #E8F5E9; padding: 1.5rem; border-radius: 16px; color: #2E7D32; margin-bottom: 2rem; border-left: 6px solid #43A047;">
+        <i class="fas fa-check-circle" style="font-size: 1.5rem; margin-right: 1rem;"></i>
+        <strong>Reservation Confirmed!</strong> We've received your booking. You'll receive a confirmation shortly.
     </div>
-</div>
-{% endif %}
+    {% endif %}
 
-<div class="grid grid-2 container-md mx-auto">
-    <!-- Info Card -->
-    <div>
-        <div class="card mb-2">
-            <h3 class="mb-2" style="font-size: 1.3rem;"><i class="fas fa-info-circle text-primary" style="margin-right: 0.5rem;"></i>Reservation Info</h3>
-            <ul class="info-list">
-                <li>
-                    <i class="fas fa-clock"></i>
+    {% if error_msg %}
+    <div style="background: #FFEBEE; padding: 1.5rem; border-radius: 16px; color: #C62828; margin-bottom: 2rem; border-left: 6px solid #EF5350;">
+        <i class="fas fa-exclamation-circle" style="font-size: 1.5rem; margin-right: 1rem;"></i>
+        {{ error_msg }}
+    </div>
+    {% endif %}
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+        <!-- Info Card -->
+        <div style="background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem;">
+                <i class="fas fa-info-circle" style="color: #C9A87C; margin-right: 0.5rem;"></i>
+                Reservation Info
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+                    <i class="fas fa-clock" style="color: #C9A87C; width: 24px; text-align: center;"></i>
                     <span>We hold reservations for <strong>15 minutes</strong></span>
                 </li>
-                <li>
-                    <i class="fas fa-users"></i>
+                <li style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+                    <i class="fas fa-users" style="color: #C9A87C; width: 24px; text-align: center;"></i>
                     <span>Parties of <strong>8+</strong> please call directly</span>
                 </li>
-                <li>
-                    <i class="fas fa-phone-alt"></i>
-                    <span>Questions? <a href="tel:{{ restaurant.phone_link }}" class="text-primary" style="font-weight: 600; text-decoration: none;">{{ restaurant.phone }}</a></span>
+                <li style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f0f0;">
+                    <i class="fas fa-phone-alt" style="color: #C9A87C; width: 24px; text-align: center;"></i>
+                    <span>Questions? <a href="tel:{{ restaurant.phone_link }}" style="color: #1A2A3A; font-weight: 600; text-decoration: none;">{{ restaurant.phone }}</a></span>
                 </li>
-                <li>
-                    <i class="fas fa-envelope"></i>
-                    <span><a href="mailto:{{ restaurant.email }}" class="text-primary" style="text-decoration: none;">{{ restaurant.email }}</a></span>
+                <li style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0;">
+                    <i class="fas fa-envelope" style="color: #C9A87C; width: 24px; text-align: center;"></i>
+                    <span><a href="mailto:{{ restaurant.email }}" style="color: #1A2A3A; text-decoration: none;">{{ restaurant.email }}</a></span>
                 </li>
             </ul>
-        </div>
 
-        <div class="card">
-            <h3 class="mb-2" style="font-size: 1.3rem;"><i class="fas fa-map-marker-alt text-primary" style="margin-right: 0.5rem;"></i>Location</h3>
-            <p class="mb-1" style="color: #666;">{{ restaurant.address }}</p>
-            <div class="rounded-sm overflow-hidden" style="height: 200px;">
+            <div style="margin-top: 2rem; border-radius: 16px; overflow: hidden; height: 200px;">
                 <iframe src="{{ restaurant.google_maps_embed }}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
-    </div>
 
-    <!-- Form Card -->
-    <div class="card">
-        <h3 class="mb-2" style="font-size: 1.3rem;"><i class="fas fa-calendar-alt text-primary" style="margin-right: 0.5rem;"></i>Book Your Table</h3>
-        <form method="POST" id="reservationForm">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="form-group">
-                <label><i class="fas fa-user text-primary" style="margin-right: 0.4rem;"></i>Full Name *</label>
-                <input type="text" name="name" placeholder="John Doe" required>
-            </div>
-            <div class="grid grid-2">
-                <div class="form-group">
-                    <label><i class="fas fa-envelope text-primary" style="margin-right: 0.4rem;"></i>Email *</label>
-                    <input type="email" name="email" placeholder="john@example.com" required>
+        <!-- Form Card -->
+        <div style="background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem;">
+                <i class="fas fa-calendar-alt" style="color: #C9A87C; margin-right: 0.5rem;"></i>
+                Book Your Table
+            </h3>
+            <form method="POST" id="reservationForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                        <i class="fas fa-user" style="color: #C9A87C; margin-right: 0.4rem;"></i> Full Name *
+                    </label>
+                    <input type="text" name="name" placeholder="John Doe" required style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; transition: border-color 0.3s;">
                 </div>
-                <div class="form-group">
-                    <label><i class="fas fa-phone text-primary" style="margin-right: 0.4rem;"></i>Phone *</label>
-                    <input type="tel" name="phone" placeholder="(555) 123-4567" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fas fa-envelope" style="color: #C9A87C; margin-right: 0.4rem;"></i> Email *
+                        </label>
+                        <input type="email" name="email" placeholder="john@example.com" required style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; transition: border-color 0.3s;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fas fa-phone" style="color: #C9A87C; margin-right: 0.4rem;"></i> Phone *
+                        </label>
+                        <input type="tel" name="phone" placeholder="(555) 123-4567" required style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; transition: border-color 0.3s;">
+                    </div>
                 </div>
-            </div>
-            <div class="grid grid-2">
-                <div class="form-group">
-                    <label><i class="fas fa-calendar text-primary" style="margin-right: 0.4rem;"></i>Date *</label>
-                    <input type="date" name="date" required id="resDate">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fas fa-calendar" style="color: #C9A87C; margin-right: 0.4rem;"></i> Date *
+                        </label>
+                        <input type="date" name="date" required id="resDate" style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; transition: border-color 0.3s;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fas fa-clock" style="color: #C9A87C; margin-right: 0.4rem;"></i> Time *
+                        </label>
+                        <select name="time" required id="resTime" style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; background: white;">
+                            <option value="">Select time</option>
+                            {% for slot in reservations.time_slots %}
+                            <option value="{{ slot }}">{{ slot[:2]|int }}:{{ slot[3:] }} {% if slot[:2]|int >= 12 %}PM{% else %}AM{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label><i class="fas fa-clock text-primary" style="margin-right: 0.4rem;"></i>Time *</label>
-                    <select name="time" required id="resTime">
-                        <option value="">Select time</option>
-                        {% for slot in reservations.time_slots %}
-                        <option value="{{ slot }}">{{ slot[:2]|int }}:{{ slot[3:] }} {% if slot[:2]|int >= 12 %}PM{% else %}AM{% endif %}</option>
-                        {% endfor %}
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                        <i class="fas fa-users" style="color: #C9A87C; margin-right: 0.4rem;"></i> Number of Guests *
+                    </label>
+                    <select name="guests" required style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; background: white;">
+                        <option value="">Select guests</option>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5 Guests</option>
+                        <option value="6">6 Guests</option>
+                        <option value="7">7 Guests</option>
+                        <option value="8">8+ Guests (call us)</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-users text-primary" style="margin-right: 0.4rem;"></i>Number of Guests *</label>
-                <select name="guests" required>
-                    <option value="">Select guests</option>
-                    <option value="1">1 Guest</option>
-                    <option value="2">2 Guests</option>
-                    <option value="3">3 Guests</option>
-                    <option value="4">4 Guests</option>
-                    <option value="5">5 Guests</option>
-                    <option value="6">6 Guests</option>
-                    <option value="7">7 Guests</option>
-                    <option value="8">8+ Guests (call us)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label><i class="fas fa-comment text-primary" style="margin-right: 0.4rem;"></i>Special Requests</label>
-                <textarea name="special_requests" rows="3" placeholder="Allergies, special occasion, seating preference..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-block" style="font-size: 1.05rem;">
-                <i class="fas fa-calendar-check"></i> Confirm Reservation
-            </button>
-        </form>
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">
+                        <i class="fas fa-comment" style="color: #C9A87C; margin-right: 0.4rem;"></i> Special Requests
+                    </label>
+                    <textarea name="special_requests" rows="3" placeholder="Allergies, special occasion, seating preference..." style="width: 100%; padding: 0.85rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem; font-family: inherit; resize: vertical;"></textarea>
+                </div>
+                <button type="submit" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #1A2A3A, #2A3A4A); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-calendar-check"></i> Confirm Reservation
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
-    document.getElementById('resDate').min = new Date().toISOString().split('T')[0];
+document.getElementById('resDate').min = new Date().toISOString().split('T')[0];
 </script>
 
 {% endblock %}
