@@ -611,6 +611,17 @@
         .gap-1 { gap: 1rem; }
         .gap-2 { gap: 2rem; }
 
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            box-shadow: none;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+            box-shadow: 0 8px 25px rgba(220,53,69,0.25);
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
@@ -688,6 +699,17 @@
     </nav>
 
     <main style="padding-top: 70px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="container" style="padding-top: 1rem;">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                <i class="fas fa-{% if category == 'error' %}exclamation{% else %}check{% endif %}-circle"></i> {{ message }}
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 
