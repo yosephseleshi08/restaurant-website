@@ -349,15 +349,21 @@ def create_app(config_name="production"):
         return current
 
     def load_data():
-        with _data_lock:
-            if os.path.exists(DATA_FILE):
+    with _data_lock:
+        if os.path.exists(DATA_FILE):
+            try:
+                with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                    current = json.load(f)
+                return deep_merge(DEFAULT_DATA, current)
+            except (json.JSONDecodeError, IOError):
+                # File is corrupted — delete it and use default
                 try:
-                    with open(DATA_FILE, 'r', encoding='utf-8') as f:
-                        current = json.load(f)
-                    return deep_merge(DEFAULT_DATA, current)
-                except (json.JSONDecodeError, IOError):
-                    return DEFAULT_DATA.copy()
-            return DEFAULT_DATA.copy()
+                    os.remove(DATA_FILE)
+                    print(f"Removed corrupted {DATA_FILE}")
+                except:
+                    pass
+                return DEFAULT_DATA.copy()
+        return DEFAULT_DATA.copy()
 
     def save_data(data_obj):
         with _data_lock:
