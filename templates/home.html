@@ -3,25 +3,50 @@
 {% block content %}
 
 <!-- Hero Section -->
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <p class="hero-subtitle">Est. 2010 — Foodville, FD</p>
-        <h1 class="hero-title">{{ restaurant.name }}</h1>
-        <p class="hero-text">{{ restaurant.tagline }}</p>
-        <div class="hero-actions">
-            <a href="/menu" class="btn btn-lg"><i class="fas fa-utensils"></i> View Menu</a>
-            <a href="/reservations" class="btn btn-outline btn-lg"><i class="fas fa-calendar-check"></i> Book a Table</a>
+<section class="hero" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding: 4rem 2rem;">
+    <div style="max-width: 800px;">
+        <p style="font-family: 'Playfair Display', serif; font-size: 1.2rem; letter-spacing: 6px; text-transform: uppercase; opacity: 0.8; margin-bottom: 1rem;">Est. 2019 — Marina District</p>
+        <h1 style="font-size: clamp(3rem, 8vw, 5rem); font-weight: 700; font-family: 'Playfair Display', serif; margin-bottom: 1rem;">{{ restaurant.name }}</h1>
+        <p style="font-size: 1.4rem; opacity: 0.9; margin-bottom: 2rem; font-weight: 300;">{{ restaurant.tagline }}</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/menu" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem; border-radius: 50px;"><i class="fas fa-utensils"></i> View Menu</a>
+            <a href="/reservations" class="btn" style="background: transparent; color: white; border: 2px solid white; padding: 1rem 3rem; font-size: 1.1rem; border-radius: 50px;"><i class="fas fa-calendar-check"></i> Book a Table</a>
         </div>
-        <div class="hero-badges">
-            <span><i class="fas fa-star" style="color: #ffc107;"></i> 4.8 Rating</span>
-            <span><i class="fas fa-award" style="color: #ffc107;"></i> Best of Foodville 2024</span>
-            <span><i class="fas fa-leaf" style="color: #81c784;"></i> Fresh Daily</span>
+        <div style="display: flex; gap: 2rem; justify-content: center; margin-top: 3rem; flex-wrap: wrap;">
+            <span><i class="fas fa-star" style="color: #C9A87C;"></i> 4.9 Rating</span>
+            <span><i class="fas fa-award" style="color: #C9A87C;"></i> Best New Restaurant 2024</span>
+            <span><i class="fas fa-leaf" style="color: #8B6B4A;"></i> Sustainable Seafood</span>
         </div>
     </div>
-    <div class="hero-scroll">
-        <i class="fas fa-chevron-down" style="font-size: 1.5rem;"></i>
+</section>
+
+<!-- Featured Dishes -->
+<section style="padding: 5rem 2rem; max-width: 1200px; margin: 0 auto;">
+    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 0.5rem;">Chef's Selections</h2>
+    <p style="text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 3rem;">Hand-picked favorites from our kitchen, crafted with the finest Mediterranean ingredients.</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
+        {% for item in featured %}
+        <div class="featured-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+            <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 100%; height: 240px; object-fit: cover;">
+            <div style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h3 style="font-size: 1.3rem; font-family: 'Playfair Display', serif;">{{ item.name }}</h3>
+                    <span class="price">${{ "%.2f"|format(item.price) }}</span>
+                </div>
+                <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">{{ item.description }}</p>
+                {% if item.dietary %}
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    {% for tag in item.dietary %}
+                    <span style="background: rgba(201,168,124,0.1); color: #8B6B4A; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem;">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 3rem;">
+        <a href="/menu" class="btn btn-secondary" style="padding: 0.8rem 2.5rem; border-radius: 50px; border: 2px solid #1A2A3A; color: #1A2A3A; background: transparent;">See Full Menu →</a>
     </div>
 </section>
 
