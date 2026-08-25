@@ -1,73 +1,76 @@
 {% extends "base.html" %}
 {% block title %}Gift Cards — {{ restaurant.name }}{% endblock %}
 {% block content %}
-<section class="section-header">
-    <h1>🎁 Gift Cards</h1>
-    <p>The perfect gift for any food lover</p>
-    <div class="line"></div>
-</section>
 
-<div class="container container-sm">
-    <div class="card" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; text-align: center; padding: 3rem;">
-        <h2 style="color: white; font-size: 2rem; margin-bottom: 0.5rem;">Digital Gift Cards</h2>
-        <p style="opacity: 0.9; font-size: 1.1rem;">Sent instantly via email. Never expires.</p>
+<section style="padding: 4rem 2rem; max-width: 800px; margin: 0 auto;">
+    <div class="gift-card" style="text-align: center; padding: 4rem 2rem; color: white;">
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 3rem; color: white; margin-bottom: 0.5rem;">🎁 Gift Cards</h1>
+        <p style="opacity: 0.8; font-size: 1.1rem;">Give the gift of an unforgettable dining experience.</p>
     </div>
 
-    <div class="card mt-3">
-        <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-gift text-primary"></i> Purchase a Gift Card</h3>
-        <div class="grid grid-4" style="margin-bottom: 1.5rem;">
-            <button class="amount-btn btn btn-block" onclick="setAmount(25)" style="padding: 1rem; font-size: 1.2rem;">$25</button>
-            <button class="amount-btn btn btn-block" onclick="setAmount(50)" style="padding: 1rem; font-size: 1.2rem;">$50</button>
-            <button class="amount-btn btn btn-block" onclick="setAmount(100)" style="padding: 1rem; font-size: 1.2rem;">$100</button>
-            <button class="amount-btn btn btn-block" onclick="setAmount(200)" style="padding: 1rem; font-size: 1.2rem;">$200</button>
+    <div style="background: white; border-radius: 20px; padding: 2.5rem; margin-top: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem;">Purchase a Gift Card</h3>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
+            <button class="amount-btn" onclick="setAmount(25)" style="background: #F8F6F2; border: 2px solid #E8E0D8; padding: 0.75rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s;">$25</button>
+            <button class="amount-btn" onclick="setAmount(50)" style="background: #F8F6F2; border: 2px solid #E8E0D8; padding: 0.75rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s;">$50</button>
+            <button class="amount-btn" onclick="setAmount(100)" style="background: #F8F6F2; border: 2px solid #E8E0D8; padding: 0.75rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s;">$100</button>
+            <button class="amount-btn" onclick="setAmount(200)" style="background: #F8F6F2; border: 2px solid #E8E0D8; padding: 0.75rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s;">$200</button>
         </div>
-        <div class="form-group">
-            <label>Custom Amount</label>
-            <input type="number" id="giftAmount" value="50" min="10" step="5" style="padding: 1rem; font-size: 1.1rem;">
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Custom Amount</label>
+            <input type="number" id="giftAmount" value="50" min="10" step="5" style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px; font-size: 1rem;">
         </div>
-        <div class="grid grid-2">
-            <div class="form-group">
-                <label>Your Name</label>
-                <input type="text" id="purchaserName" placeholder="John Doe">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Your Name</label>
+                <input type="text" id="purchaserName" placeholder="John Doe" style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px;">
             </div>
-            <div class="form-group">
-                <label>Your Email</label>
-                <input type="email" id="purchaserEmail" placeholder="john@example.com">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Your Email</label>
+                <input type="email" id="purchaserEmail" placeholder="john@example.com" style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px;">
             </div>
-            <div class="form-group">
-                <label>Recipient Name</label>
-                <input type="text" id="recipientName" placeholder="Jane Doe">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Recipient Name</label>
+                <input type="text" id="recipientName" placeholder="Jane Doe" style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px;">
             </div>
-            <div class="form-group">
-                <label>Recipient Email</label>
-                <input type="email" id="recipientEmail" placeholder="jane@example.com">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Recipient Email</label>
+                <input type="email" id="recipientEmail" placeholder="jane@example.com" style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px;">
             </div>
         </div>
-        <div class="form-group">
-            <label>Message (optional)</label>
-            <textarea id="giftMessage" rows="2" placeholder="Happy Birthday! Enjoy a meal on me."></textarea>
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message (optional)</label>
+            <textarea id="giftMessage" rows="2" placeholder="Happy Birthday! Enjoy a meal on me." style="width: 100%; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px;"></textarea>
         </div>
-        <button class="btn btn-block btn-lg" onclick="purchaseGiftCard()" style="margin-top: 1rem;">
-            <i class="fas fa-credit-card"></i> Purchase Gift Card
+        <button onclick="purchaseGiftCard()" style="width: 100%; padding: 1rem; background: linear-gradient(135deg, #1A2A3A, #2A3A4A); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: all 0.3s;">
+            <i class="fas fa-gift"></i> Purchase Gift Card
         </button>
     </div>
 
-    <div class="card mt-3">
-        <h3 style="margin-bottom: 1rem;"><i class="fas fa-search text-primary"></i> Check Balance</h3>
+    <div style="background: white; border-radius: 20px; padding: 2.5rem; margin-top: 2rem; box-shadow: 0 10px 40px rgba(0,0,0,0.08);">
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1rem;">Check Balance</h3>
         <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="checkCode" placeholder="Enter gift card code" style="flex: 1; padding: 0.85rem; border: 2px solid #e8e8e8; border-radius: var(--radius-sm); font-size: 1rem; text-transform: uppercase;">
-            <button class="btn" onclick="checkBalance()"><i class="fas fa-search"></i> Check</button>
+            <input type="text" id="checkCode" placeholder="Enter gift card code" style="flex: 1; padding: 0.8rem; border: 2px solid #E8E0D8; border-radius: 12px; text-transform: uppercase; letter-spacing: 1px;">
+            <button onclick="checkBalance()" style="padding: 0.8rem 2rem; background: #C9A87C; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: all 0.3s;"><i class="fas fa-search"></i> Check</button>
         </div>
         <div id="balanceResult" style="margin-top: 1rem; display: none;"></div>
     </div>
-</div>
+</section>
 
 <script>
+let selectedAmount = 50;
+
 function setAmount(amt) {
+    selectedAmount = amt;
     document.getElementById('giftAmount').value = amt;
-    document.querySelectorAll('.amount-btn').forEach(b => b.style.background = '');
-    event.target.style.background = 'var(--secondary)';
+    document.querySelectorAll('.amount-btn').forEach(b => {
+        b.style.borderColor = '#E8E0D8';
+        b.style.background = '#F8F6F2';
+    });
+    event.target.style.borderColor = '#C9A87C';
+    event.target.style.background = 'rgba(201,168,124,0.1)';
 }
+
 function purchaseGiftCard() {
     const payload = {
         amount: parseFloat(document.getElementById('giftAmount').value),
@@ -83,12 +86,13 @@ function purchaseGiftCard() {
         body: JSON.stringify(payload)
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            alert('Gift card purchased! Code: ' + data.code);
+            alert('🎉 Gift card purchased! Code: ' + data.code);
         } else {
             alert(data.message);
         }
     });
 }
+
 function checkBalance() {
     const code = document.getElementById('checkCode').value;
     fetch('/api/gift-card/balance', {
@@ -99,11 +103,12 @@ function checkBalance() {
         const result = document.getElementById('balanceResult');
         result.style.display = 'block';
         if (data.success) {
-            result.innerHTML = '<div class="alert alert-success"><i class="fas fa-check-circle"></i> <div><strong>Balance: $' + data.balance + '</strong><br><span>Status: ' + data.status + '</span></div></div>';
+            result.innerHTML = '<div style="background: #E8F5E9; padding: 1rem; border-radius: 12px; color: #2E7D32;"><i class="fas fa-check-circle"></i> <div><strong>Balance: $' + data.balance + '</strong><br>Status: ' + data.status + '</div></div>';
         } else {
-            result.innerHTML = '<div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
+            result.innerHTML = '<div style="background: #FFEBEE; padding: 1rem; border-radius: 12px; color: #C62828;"><i class="fas fa-exclamation-circle"></i> ' + data.message + '</div>';
         }
     });
 }
 </script>
+
 {% endblock %}
