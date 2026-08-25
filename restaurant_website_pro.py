@@ -7,7 +7,7 @@ Premium Additions: Audit logging, webhooks, health checks, capacity management
 """
 
 from flask import (
-    Flask, render_template, request, jsonify, redirect, url_for,
+    Flask, render_template, request, jsonify, redirect, url_for, 
     session, flash, send_file, Response, abort, g
 )
 from flask_limiter import Limiter
@@ -15,7 +15,7 @@ from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from functools import wraps
 import json
 import os
@@ -33,7 +33,6 @@ import uuid
 import hashlib
 
 # ─── App Factory ────────────────────────────────────────────────────
-
 
 def create_app(config_name="production"):
     app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -85,7 +84,7 @@ def create_app(config_name="production"):
         app=app,
         default_limits=["200 per day", "50 per hour"],
         storage_uri=os.environ.get('REDIS_URL', 'memory://'),
-        strategy="fixed-window"
+        strategy="fixed-window-elastic-expiry"
     )
 
     db = SQLAlchemy(app)
@@ -507,8 +506,8 @@ def create_app(config_name="production"):
             db.create_all()
             if User.query.count() == 0:
                 admin = User(
-                    username='admin',
-                    password_hash=generate_password_hash('admin123'),
+                    username='admin', 
+                    password_hash=generate_password_hash('admin123'), 
                     role='admin'
                 )
                 db.session.add(admin)
@@ -551,7 +550,7 @@ def create_app(config_name="production"):
             db.session.rollback()
 
     def get_real_analytics():
-        today = datetime.utcnow().date()
+        today = datetime.now(timezone.utc).date()
         week_ago = today - timedelta(days=7)
         total_views = PageView.query.count()
         week_views = PageView.query.filter(PageView.created_at >= week_ago).count()
@@ -654,7 +653,7 @@ def create_app(config_name="production"):
                 ]
             }
             resp = requests.post(
-                'https://api.sendgrid.com/v3/mail/send',
+                'https://api.sendgrid.com/v3/mail/send', 
                 headers=headers, json=payload, timeout=10
             )
             return resp.status_code in (200, 201, 202)
@@ -721,7 +720,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = User.query.get(session['user_id'])
+            user = db.session.get(User, session['user_id'])
             if not user or user.role not in ('admin', 'manager', 'staff'):
                 return redirect(url_for('login'))
             return f(*args, **kwargs)
@@ -732,7 +731,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = User.query.get(session['user_id'])
+            user = db.session.get(User, session['user_id'])
             if not user or user.role not in ('admin', 'manager'):
                 flash('Manager access required', 'error')
                 return redirect(url_for('dashboard'))
@@ -744,7 +743,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = User.query.get(session['user_id'])
+            user = db.session.get(User, session['user_id'])
             if not user or user.role != 'admin':
                 flash('Admin access required', 'error')
                 return redirect(url_for('dashboard'))
@@ -774,16 +773,16 @@ def create_app(config_name="production"):
         if request.path.startswith('/api/'):
             return jsonify({'success': False, 'message': 'Not found'}), 404
         data = load_data()
-        return render_template('home.html',
-                               theme=data['theme'],
-                               restaurant=data['restaurant'],
-                               menu=data['menu'],
-                               testimonials=data['testimonials'],
-                               online_ordering=data['online_ordering'],
-                               featured=get_featured_items(),
-                               seo=data['seo'],
-                               settings=data['settings']
-                               ), 404
+        return render_template('home.html', 
+            theme=data['theme'], 
+            restaurant=data['restaurant'],
+            menu=data['menu'], 
+            testimonials=data['testimonials'],
+            online_ordering=data['online_ordering'], 
+            featured=get_featured_items(),
+            seo=data['seo'], 
+            settings=data['settings']
+        ), 404
 
     @app.errorhandler(500)
     def server_error(e):
@@ -807,7 +806,7 @@ def create_app(config_name="production"):
             db.session.execute(db.text('SELECT 1'))
             return jsonify({
                 'status': 'healthy',
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.now(timezone.utc).isoformat(),
                 'version': '2.0.0-pro',
                 'database': 'connected'
             })
@@ -815,7 +814,7 @@ def create_app(config_name="production"):
             return jsonify({
                 'status': 'unhealthy',
                 'error': str(e),
-                'timestamp': datetime.utcnow().isoformat()
+                'timestamp': datetime.now(timezone.utc).isoformat()
             }), 503
 
     # ─── Public Routes ─────────────────────────────────────────────────
@@ -825,26 +824,26 @@ def create_app(config_name="production"):
         track_page_view('home')
         data = load_data()
         return render_template('home.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               menu=data['menu'], testimonials=data['testimonials'],
-                               online_ordering=data['online_ordering'], featured=get_featured_items(),
-                               seo=data['seo'], settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            menu=data['menu'], testimonials=data['testimonials'],
+            online_ordering=data['online_ordering'], featured=get_featured_items(),
+            seo=data['seo'], settings=data['settings'])
 
     @app.route('/menu')
     def menu_page():
         track_page_view('menu')
         data = load_data()
         return render_template('menu.html',
-                               theme=data['theme'], restaurant=data['restaurant'], menu=data['menu'],
-                               seo=data['seo'], settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'], menu=data['menu'],
+            seo=data['seo'], settings=data['settings'])
 
     @app.route('/about')
     def about():
         track_page_view('about')
         data = load_data()
         return render_template('about.html',
-                               theme=data['theme'], restaurant=data['restaurant'], about=data['about'],
-                               current_year=datetime.now().year, seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'], about=data['about'],
+            current_year=datetime.now().year, seo=data['seo'])
 
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
@@ -874,8 +873,8 @@ def create_app(config_name="production"):
                     db.session.rollback()
                     error_msg = "Something went wrong. Please try again."
         return render_template('contact.html',
-                               theme=data['theme'], restaurant=data['restaurant'], success=success,
-                               error_msg=error_msg, seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'], success=success,
+            error_msg=error_msg, seo=data['seo'])
 
     @app.route('/reservations', methods=['GET', 'POST'])
     def reservations():
@@ -903,7 +902,7 @@ def create_app(config_name="production"):
                 else:
                     try:
                         res = Reservation(name=name, email=email, phone=phone,
-                                          date=date, time=time, guests=guests, special_requests=special)
+                            date=date, time=time, guests=guests, special_requests=special)
                         db.session.add(res)
                         db.session.commit()
                         success = True
@@ -913,7 +912,7 @@ def create_app(config_name="production"):
                         notification = app.config['NOTIFICATION_EMAIL']
                         if notification:
                             send_email(notification, "New Reservation",
-                                       f"<p>New reservation from {name} for {guests} on {date} at {time}</p>")
+                                f"<p>New reservation from {name} for {guests} on {date} at {time}</p>")
                         trigger_webhooks('reservation.created', {
                             'id': res.id, 'name': name, 'email': email,
                             'date': date, 'time': time, 'guests': guests
@@ -922,16 +921,17 @@ def create_app(config_name="production"):
                         db.session.rollback()
                         error_msg = "Something went wrong. Please try again."
         return render_template('reservations.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               reservations=data['reservations'], success=success, error_msg=error_msg,
-                               seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            reservations=data['reservations'], success=success, error_msg=error_msg,
+            seo=data['seo'])
+
 
     @app.route('/widget/reservation')
     def widget_reservation():
         data = load_data()
         return render_template('widget_reservation.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               reservations=data['reservations'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            reservations=data['reservations'], seo=data['seo'])
 
     @app.route('/order')
     def order_online():
@@ -941,9 +941,9 @@ def create_app(config_name="production"):
             flash('Online ordering is currently disabled.', 'error')
             return redirect(url_for('home'))
         return render_template('order.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               online_ordering=data['online_ordering'], menu=data['menu'],
-                               seo=data['seo'], settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            online_ordering=data['online_ordering'], menu=data['menu'],
+            seo=data['seo'], settings=data['settings'])
 
     @app.route('/gallery')
     def gallery():
@@ -952,8 +952,8 @@ def create_app(config_name="production"):
         if not data['settings'].get('enable_gallery', True):
             return redirect(url_for('home'))
         return render_template('gallery.html',
-                               theme=data['theme'], restaurant=data['restaurant'], gallery=data['gallery'],
-                               seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'], gallery=data['gallery'],
+            seo=data['seo'])
 
     @app.route('/events')
     def events():
@@ -962,8 +962,8 @@ def create_app(config_name="production"):
         if not data['settings'].get('enable_events', True):
             return redirect(url_for('home'))
         return render_template('events.html',
-                               theme=data['theme'], restaurant=data['restaurant'], events=data['events'],
-                               seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'], events=data['events'],
+            seo=data['seo'])
 
     # ─── Cart & Checkout ───────────────────────────────────────────────
 
@@ -975,8 +975,8 @@ def create_app(config_name="production"):
             return redirect(url_for('home'))
         track_page_view('order_menu')
         return render_template('orders.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               menu=data['menu'], settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            menu=data['menu'], settings=data['settings'], seo=data['seo'])
 
     @app.route('/cart')
     def cart():
@@ -987,9 +987,9 @@ def create_app(config_name="production"):
         delivery_fee = data['settings'].get('delivery_fee', 5.0) if session.get('order_type') == 'delivery' else 0
         grand_total = round(total + tax + delivery_fee, 2)
         return render_template('cart.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               cart=cart_items, total=total, tax=tax, delivery_fee=delivery_fee,
-                               grand_total=grand_total, settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            cart=cart_items, total=total, tax=tax, delivery_fee=delivery_fee,
+            grand_total=grand_total, settings=data['settings'], seo=data['seo'])
 
     @app.route('/api/cart/add', methods=['POST'])
     @limiter.limit("30 per minute")
@@ -1069,7 +1069,7 @@ def create_app(config_name="production"):
                     notification = app.config['NOTIFICATION_EMAIL']
                     if notification:
                         send_email(notification, f"New Order #{order.id}",
-                                   f"<p>New order from {name} for ${grand_total}</p>")
+                            f"<p>New order from {name} for ${grand_total}</p>")
                     trigger_webhooks('order.created', {
                         'id': order.id, 'customer': name, 'total': grand_total, 'type': order_type
                     })
@@ -1079,9 +1079,9 @@ def create_app(config_name="production"):
                     db.session.rollback()
                     flash('Something went wrong. Please try again.', 'error')
         return render_template('checkout.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               cart=cart_items, total=total, tax=tax, delivery_fee=delivery_fee,
-                               grand_total=grand_total, settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            cart=cart_items, total=total, tax=tax, delivery_fee=delivery_fee,
+            grand_total=grand_total, settings=data['settings'], seo=data['seo'])
 
     # ─── Newsletter ────────────────────────────────────────────────────
 
@@ -1111,7 +1111,7 @@ def create_app(config_name="production"):
                 session['user_id'] = user.id
                 session['username'] = user.username
                 session['role'] = user.role
-                user.last_login = datetime.utcnow()
+                user.last_login = datetime.now(timezone.utc)
                 db.session.commit()
                 log_audit('user_login', 'User', user.id)
                 return redirect(url_for('dashboard'))
@@ -1136,32 +1136,33 @@ def create_app(config_name="production"):
         recent_reservations = Reservation.query.order_by(Reservation.created_at.desc()).limit(10).all()
         recent_orders = Order.query.order_by(Order.created_at.desc()).limit(10).all()
         recent_messages = ContactMessage.query.filter_by(status='new').order_by(ContactMessage.created_at.desc()).limit(5).all()
-        week_ago = datetime.utcnow().date() - timedelta(days=7)
+        week_ago = datetime.now(timezone.utc).date() - timedelta(days=7)
         views_by_page = {}
         for pv in PageView.query.filter(PageView.created_at >= week_ago).all():
             views_by_page[pv.page] = views_by_page.get(pv.page, 0) + 1
         daily_views = []
         for i in range(7):
-            day = datetime.utcnow().date() - timedelta(days=6-i)
+            day = datetime.now(timezone.utc).date() - timedelta(days=6-i)
             count = PageView.query.filter(db.func.date(PageView.created_at) == day).count()
             daily_views.append(count)
         return render_template('dashboard.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               analytics=data['analytics'], real_stats=real_stats,
-                               reservations=recent_reservations, orders=recent_orders,
-                               messages=recent_messages, views_by_page=views_by_page,
-                               daily_views=daily_views, seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            analytics=data['analytics'], real_stats=real_stats,
+            reservations=recent_reservations, orders=recent_orders,
+            messages=recent_messages, views_by_page=views_by_page,
+            daily_views=daily_views, seo=data['seo'])
 
     @app.route('/editor')
     @manager_required
     def editor():
         data = load_data()
         return render_template('editor.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               about=data['about'], menu=data['menu'], testimonials=data['testimonials'],
-                               online_ordering=data['online_ordering'], gallery=data['gallery'],
-                               events=data['events'], analytics=data['analytics'],
-                               seo=data['seo'], settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            about=data['about'], menu=data['menu'], testimonials=data['testimonials'],
+            online_ordering=data['online_ordering'], gallery=data['gallery'],
+            events=data['events'], analytics=data['analytics'],
+            seo=data['seo'], settings=data['settings'])
+
 
     @app.route('/admin/test-email', methods=['POST'])
     @super_admin_required
@@ -1171,7 +1172,7 @@ def create_app(config_name="production"):
         if not to_email:
             flash('No notification email configured. Set one in Settings first.', 'error')
             return redirect(url_for('admin_settings'))
-        html = f"""<h2>Test Email from {data['restaurant']['name']}</h2><p>This is a test email to confirm your email configuration is working correctly.</p><p>Sent at: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>"""
+        html = f"""<h2>Test Email from {data['restaurant']['name']}</h2><p>This is a test email to confirm your email configuration is working correctly.</p><p>Sent at: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>"""
         if send_email(to_email, f"Test Email — {data['restaurant']['name']}", html):
             flash('Test email sent successfully! Check your inbox.', 'success')
         else:
@@ -1185,7 +1186,7 @@ def create_app(config_name="production"):
             current = request.form.get('current_password', '')
             new_pass = request.form.get('new_password', '')
             confirm = request.form.get('confirm_password', '')
-            user = User.query.get(session['user_id'])
+            user = db.session.get(User, session['user_id'])
             if not check_password_hash(user.password_hash, current):
                 flash('Current password is incorrect', 'error')
             elif len(new_pass) < 6:
@@ -1225,8 +1226,8 @@ def create_app(config_name="production"):
             log_audit('settings_updated', 'Settings', None, old_settings, data['settings'])
             flash('Settings saved successfully', 'success')
         return render_template('admin_settings.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               settings=data.get('settings', {}))
+            theme=data['theme'], restaurant=data['restaurant'],
+            settings=data.get('settings', {}))
 
     @app.route('/admin/messages')
     @admin_required
@@ -1238,8 +1239,8 @@ def create_app(config_name="production"):
         msgs = query.order_by(ContactMessage.created_at.desc()).all()
         data = load_data()
         return render_template('messages.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               messages=msgs, status_filter=status_filter)
+            theme=data['theme'], restaurant=data['restaurant'],
+            messages=msgs, status_filter=status_filter)
 
     @app.route('/admin/messages/<int:id>/reply', methods=['POST'])
     @admin_required
@@ -1279,8 +1280,8 @@ def create_app(config_name="production"):
         res = query.order_by(Reservation.date.desc(), Reservation.time.asc()).all()
         data = load_data()
         return render_template('reservations_admin.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               reservations=res, status_filter=status_filter, date_filter=date_filter)
+            theme=data['theme'], restaurant=data['restaurant'],
+            reservations=res, status_filter=status_filter, date_filter=date_filter)
 
     @app.route('/admin/reservations/<int:id>/status', methods=['POST'])
     @admin_required
@@ -1312,8 +1313,8 @@ def create_app(config_name="production"):
         orders = query.order_by(Order.created_at.desc()).all()
         data = load_data()
         return render_template('orders_admin.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               orders=orders, status_filter=status_filter, settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            orders=orders, status_filter=status_filter, settings=data['settings'])
 
     @app.route('/admin/orders/<int:id>/status', methods=['POST'])
     @admin_required
@@ -1338,8 +1339,8 @@ def create_app(config_name="production"):
         staff = User.query.all()
         data = load_data()
         return render_template('staff.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               staff=staff)
+            theme=data['theme'], restaurant=data['restaurant'],
+            staff=staff)
 
     @app.route('/admin/staff/add', methods=['POST'])
     @super_admin_required
@@ -1627,7 +1628,7 @@ def create_app(config_name="production"):
         data = load_data()
         backup = {
             'data': data,
-            'exported_at': datetime.utcnow().isoformat(),
+            'exported_at': datetime.now(timezone.utc).isoformat(),
             'db_stats': {
                 'users': User.query.count(),
                 'reservations': Reservation.query.count(),
@@ -1639,7 +1640,7 @@ def create_app(config_name="production"):
         }
         output = io.BytesIO(json.dumps(backup, indent=2, ensure_ascii=False).encode('utf-8'))
         return send_file(output, mimetype='application/json',
-                         as_attachment=True, download_name=f'backup_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json')
+            as_attachment=True, download_name=f'backup_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json')
 
     @app.route('/api/restore', methods=['POST'])
     @super_admin_required
@@ -1727,6 +1728,10 @@ def create_app(config_name="production"):
             ]
         })
 
+    @app.route('/sw.js')
+    def service_worker():
+        return send_file('static/sw.js', mimetype='application/javascript')
+
     @app.route('/api/schema')
     def schema_json():
         data = load_data()
@@ -1751,6 +1756,7 @@ def create_app(config_name="production"):
             }
         })
 
+
     # ─── Gift Cards ────────────────────────────────────────────────────
 
     @app.route('/gift-cards')
@@ -1761,8 +1767,8 @@ def create_app(config_name="production"):
             return redirect(url_for('home'))
         track_page_view('gift_cards')
         return render_template('gift_cards.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            settings=data['settings'], seo=data['seo'])
 
     @app.route('/api/gift-card/purchase', methods=['POST'])
     @limiter.limit("10 per minute")
@@ -1811,8 +1817,8 @@ def create_app(config_name="production"):
             return redirect(url_for('home'))
         track_page_view('loyalty')
         return render_template('loyalty.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            settings=data['settings'], seo=data['seo'])
 
     @app.route('/api/loyalty/enroll', methods=['POST'])
     @limiter.limit("10 per minute")
@@ -1879,9 +1885,9 @@ def create_app(config_name="production"):
         queue = WaitlistEntry.query.filter_by(seated=False).count()
         wait_estimate = max(queue * 15, 0)
         return render_template('waitlist.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               success=success, wait_estimate=wait_estimate,
-                               settings=data['settings'], seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            success=success, wait_estimate=wait_estimate,
+            settings=data['settings'], seo=data['seo'])
 
     @app.route('/admin/waitlist')
     @admin_required
@@ -1889,8 +1895,8 @@ def create_app(config_name="production"):
         entries = WaitlistEntry.query.filter_by(seated=False).order_by(WaitlistEntry.created_at.asc()).all()
         data = load_data()
         return render_template('waitlist_admin.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               entries=entries, datetime=datetime, settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            entries=entries, datetime=datetime, settings=data['settings'])
 
     @app.route('/admin/waitlist/<int:id>/notify', methods=['POST'])
     @admin_required
@@ -1921,8 +1927,8 @@ def create_app(config_name="production"):
         tables = Table.query.all()
         data = load_data()
         return render_template('tables_admin.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               tables=tables, settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            tables=tables, settings=data['settings'])
 
     @app.route('/api/tables/update', methods=['POST'])
     @admin_required
@@ -1973,8 +1979,8 @@ def create_app(config_name="production"):
             Order.status.in_(['pending', 'preparing', 'ready'])
         ).order_by(Order.created_at.asc()).all()
         return render_template('kitchen.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               orders=orders, settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            orders=orders, settings=data['settings'])
 
     @app.route('/kitchen/orders')
     @admin_required
@@ -2000,8 +2006,8 @@ def create_app(config_name="production"):
         members = LoyaltyMember.query.order_by(LoyaltyMember.created_at.desc()).all()
         data = load_data()
         return render_template('customers_admin.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               members=members, settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            members=members, settings=data['settings'])
 
     @app.route('/admin/customers/<int:id>')
     @admin_required
@@ -2011,9 +2017,9 @@ def create_app(config_name="production"):
         reservations = Reservation.query.filter_by(email=member.email).order_by(Reservation.created_at.desc()).limit(10).all()
         data = load_data()
         return render_template('customer_detail.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               member=member, orders=orders, reservations=reservations,
-                               settings=data['settings'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            member=member, orders=orders, reservations=reservations,
+            settings=data['settings'])
 
     # ─── QR Table Ordering ─────────────────────────────────────────────
 
@@ -2025,10 +2031,10 @@ def create_app(config_name="production"):
             abort(404)
         track_page_view('table_order')
         return render_template('table_order.html',
-                               theme=data['theme'], restaurant=data['restaurant'],
-                               table=table, menu=data['menu'],
-                               settings=data['settings'], cart_count=len(session.get('cart', [])),
-                               seo=data['seo'])
+            theme=data['theme'], restaurant=data['restaurant'],
+            table=table, menu=data['menu'],
+            settings=data['settings'], cart_count=len(session.get('cart', [])),
+            seo=data['seo'])
 
     # ─── Main ──────────────────────────────────────────────────────────
 
@@ -2036,7 +2042,6 @@ def create_app(config_name="production"):
         init_db()
 
     return app
-
 
 if __name__ == '__main__':
     app = create_app()
