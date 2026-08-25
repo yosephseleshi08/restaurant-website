@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} — {{ restaurant.name }}{% endblock %}
+{% block content %}
+<section class="container" style="max-width: 800px; padding: 5rem 2rem;">
+    <h1 style="font-family: 'Playfair Display', serif; font-size: 2.4rem; margin-bottom: 2rem;">{{ page_title }}</h1>
+    <div style="line-height: 1.8; color: #444;">
+        {{ page_content|safe }}
+    </div>
+    <p style="margin-top: 3rem; color: #999; font-size: 0.9rem;">Last updated {{ current_year }}. Questions? Contact us at <a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a>.</p>
+</section>
+{% endblock %}
