@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block title %}Dashboard — {{ restaurant.name }}{% endblock %}
 {% block head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 {% endblock %}
 {% block content %}
+<style>
+.chart-container { position: relative; height: 100%; width: 100%; }
+</style>
 
 <section class="section-header">
     <h1>Business Dashboard</h1>
@@ -39,16 +42,16 @@
 <div class="grid grid-2 mb-2">
     <div class="card">
         <h3 class="mb-2" style="font-size: 1.1rem;"><i class="fas fa-chart-bar text-primary" style="margin-right: 0.5rem;"></i>Weekly Sales</h3>
-        <canvas id="salesChart" height="300"></canvas>
+        <div style="position: relative; height: 300px;"><canvas id="salesChart"></canvas></div>
     </div>
     <div class="card">
         <h3 class="mb-2" style="font-size: 1.1rem;"><i class="fas fa-chart-line text-primary" style="margin-right: 0.5rem;"></i>Monthly Revenue</h3>
-        <canvas id="revenueChart" height="300"></canvas>
+        <div style="position: relative; height: 300px;"><canvas id="revenueChart"></canvas></div>
     </div>
 </div>
 <div class="card container-sm mx-auto mb-2">
     <h3 class="mb-2 text-center" style="font-size: 1.1rem;"><i class="fas fa-chart-pie text-primary" style="margin-right: 0.5rem;"></i>Popular Items</h3>
-    <canvas id="popularityChart" height="250"></canvas>
+    <div style="position: relative; height: 250px;"><canvas id="popularityChart"></canvas></div>
 </div>
 
 <!-- Recent Reservations -->
