@@ -2,58 +2,265 @@
 {% block title %}Order Online — {{ restaurant.name }}{% endblock %}
 {% block content %}
 
-<section class="section-header">
-    <h1>{{ online_ordering.page_title or 'Order Online' }}</h1>
-    <p>{{ online_ordering.page_subtitle or 'Enjoy our authentic Italian cuisine from the comfort of your home.' }}</p>
-    <div class="line"></div>
+<style>
+.order-hero {
+    position: relative;
+    padding: 5rem 2rem;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%);
+}
+.order-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=1920&h=800&fit=crop') center/cover no-repeat;
+    opacity: 0.25;
+}
+.order-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,15,25,0.85) 0%, rgba(11,15,25,0.7) 50%, rgba(11,15,25,0.9) 100%);
+}
+.order-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.order-hero .section-label {
+    color: var(--secondary);
+    border-color: rgba(201,169,110,0.3);
+    background: rgba(201,169,110,0.08);
+    margin-bottom: 1.5rem;
+}
+.order-hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+}
+.order-hero p {
+    font-size: 1.15rem;
+    opacity: 0.75;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.order-section {
+    padding: 4rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.direct-order-card {
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    margin-bottom: 3rem;
+    text-align: center;
+    color: white;
+    padding: 4rem 2rem;
+}
+.direct-order-card-bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop') center/cover no-repeat;
+}
+.direct-order-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(11,15,25,0.92) 0%, rgba(11,15,25,0.8) 50%, rgba(11,15,25,0.92) 100%);
+}
+.direct-order-card-content {
+    position: relative;
+    z-index: 2;
+    max-width: 550px;
+    margin: 0 auto;
+}
+.direct-order-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(201,169,110,0.2), rgba(201,169,110,0.1));
+    border: 2px solid rgba(201,169,110,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: var(--secondary);
+}
+.direct-order-card h2 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+.direct-order-card p {
+    opacity: 0.85;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+.benefit-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.4s ease;
+}
+.benefit-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+}
+.benefit-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, var(--primary), #1a2332);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--secondary);
+    font-size: 1.5rem;
+    margin: 0 auto 1.25rem;
+}
+.benefit-card h4 {
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+.benefit-card p {
+    color: #777;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.platforms-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.03);
+}
+.platforms-card h3 {
+    font-size: 1.1rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+.platforms-grid {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.platform-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.5rem;
+    border-radius: 50px;
+    border: 2px solid #e8e4df;
+    background: white;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+.platform-btn:hover {
+    border-color: var(--secondary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+.platform-btn i {
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .benefits-grid { grid-template-columns: 1fr; }
+    .direct-order-card { padding: 3rem 1.5rem; }
+    .platforms-grid { flex-direction: column; align-items: center; }
+    .platform-btn { width: 100%; max-width: 280px; justify-content: center; }
+}
+</style>
+
+<!-- Order Hero -->
+<section class="order-hero">
+    <div class="order-hero-overlay"></div>
+    <div class="order-hero-content fade-in">
+        <div class="section-label">At Your Doorstep</div>
+        <h1>{{ online_ordering.page_title or 'Order Online' }}</h1>
+        <p>{{ online_ordering.page_subtitle or "Enjoy Aurelia's coastal Mediterranean cuisine from the comfort of your home." }}</p>
+    </div>
 </section>
 
-<div class="container container-sm mx-auto">
+<div class="order-section">
     <!-- Direct Order CTA -->
-    <div class="card" style="text-align: center; padding: 3rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; margin-bottom: 2rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">🍝</div>
-        <h2 style="color: white; font-size: 2rem; margin-bottom: 0.5rem;">Order Directly From Us</h2>
-        <p style="opacity: 0.95; font-size: 1.1rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto;">
-            Skip the 30% delivery app fees. Every dollar goes straight to the restaurant. Support local.
-        </p>
-        <a href="/order/menu" class="btn btn-lg" style="background: white; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
-            <i class="fas fa-utensils"></i> Browse Full Menu & Order
-        </a>
+    <div class="direct-order-card fade-in">
+        <div class="direct-order-card-bg"></div>
+        <div class="direct-order-card-overlay"></div>
+        <div class="direct-order-card-content">
+            <div class="direct-order-icon">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h2>Order Directly From Us</h2>
+            <p>Skip the 30% delivery app fees. Every dollar goes straight to the restaurant. Support local, eat better.</p>
+            <a href="/order/menu" class="btn btn-lg btn-gold">
+                <i class="fas fa-book-open"></i> Browse Full Menu & Order
+            </a>
+        </div>
     </div>
 
     <!-- Why Order Direct -->
-    <div class="grid grid-3 mb-3">
-        <div class="card" style="text-align: center; padding: 2rem;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+    <div class="benefits-grid fade-in">
+        <div class="benefit-card">
+            <div class="benefit-icon">
                 <i class="fas fa-hand-holding-usd"></i>
             </div>
-            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">0% Commission</h4>
-            <p style="color: #666; font-size: 0.9rem;">No hidden fees. The price you see is what you pay.</p>
+            <h4>0% Commission</h4>
+            <p>No hidden fees. The price you see is exactly what you pay. No surprises.</p>
         </div>
-        <div class="card" style="text-align: center; padding: 2rem;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+        <div class="benefit-card">
+            <div class="benefit-icon">
                 <i class="fas fa-bolt"></i>
             </div>
-            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Faster Service</h4>
-            <p style="color: #666; font-size: 0.9rem;">Your order goes straight to our kitchen. No middleman.</p>
+            <h4>Faster Service</h4>
+            <p>Your order goes straight to our kitchen. No middleman, no delays.</p>
         </div>
-        <div class="card" style="text-align: center; padding: 2rem;">
-            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin: 0 auto 1rem;">
+        <div class="benefit-card">
+            <div class="benefit-icon">
                 <i class="fas fa-heart"></i>
             </div>
-            <h4 style="font-size: 1rem; margin-bottom: 0.5rem;">Support Local</h4>
-            <p style="color: #666; font-size: 0.9rem;">Every order helps us keep the lights on and staff paid.</p>
+            <h4>Support Local</h4>
+            <p>Every order helps us keep the lights on and our staff paid fairly.</p>
         </div>
     </div>
 
     <!-- Third Party Platforms -->
     {% if online_ordering.platforms %}
-    <div class="card" style="text-align: center;">
-        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #888;">Also available on your favorite apps</h3>
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <div class="platforms-card fade-in">
+        <h3>Also Available On</h3>
+        <div class="platforms-grid">
             {% for platform in online_ordering.platforms %}
             {% if platform.active %}
-            <a href="{{ platform.url }}" target="_blank" rel="noopener" class="btn btn-secondary btn-sm" style="display: inline-flex; align-items: center; gap: 0.5rem;">
+            <a href="{{ platform.url }}" target="_blank" rel="noopener" class="platform-btn">
                 <i class="fas {{ platform.icon }}"></i> {{ platform.name }}
             </a>
             {% endif %}
