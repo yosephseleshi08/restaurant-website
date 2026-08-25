@@ -84,7 +84,7 @@ def create_app(config_name="production"):
         app=app,
         default_limits=["200 per day", "50 per hour"],
         storage_uri=os.environ.get('REDIS_URL', 'memory://'),
-        strategy="fixed-window-elastic-expiry"
+        strategy="fixed-window"
     )
 
     db = SQLAlchemy(app)
