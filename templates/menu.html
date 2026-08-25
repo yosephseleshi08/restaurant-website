@@ -2,59 +2,42 @@
 {% block title %}Menu — {{ restaurant.name }}{% endblock %}
 {% block content %}
 
-<section class="section-header" style="padding: 3rem 0 2rem;">
-    <h1>Our Menu</h1>
-    <p>Every dish is prepared fresh to order using imported Italian ingredients and time-honored family recipes</p>
-    <div class="line"></div>
-</section>
+<section style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
+    <h1 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 0.5rem;">Our Menu</h1>
+    <p style="text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 3rem;">Every dish is prepared fresh using Mediterranean ingredients and time-honored techniques.</p>
 
-<!-- Category Tabs -->
-<div class="tab-bar">
-    <button class="tab-btn active" onclick="filterMenu('all', this)">All</button>
-    {% for category in menu.keys() %}
-    <button class="tab-btn" onclick="filterMenu('{{ category }}', this)">{{ category|capitalize }}</button>
-    {% endfor %}
-</div>
-
-<div class="grid grid-2" id="menuGrid">
-    {% for category, items in menu.items() %}
-    <div class="menu-category" data-category="{{ category }}">
-        <div class="card" style="height: 100%;">
-            <div class="flex items-center gap-1 mb-2">
-                <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
-                    {% if category == 'appetizers' %}<i class="fas fa-bread-slice"></i>
-                    {% elif category == 'mains' %}<i class="fas fa-drumstick-bite"></i>
-                    {% elif category == 'desserts' %}<i class="fas fa-ice-cream"></i>
-                    {% else %}<i class="fas fa-wine-glass-alt"></i>{% endif %}
-                </div>
-                <h2 style="font-size: 1.5rem; text-transform: capitalize;">{{ category }}</h2>
-            </div>
-            {% for item in items %}
-            <div class="menu-item">
-                <div class="menu-item-info">
-                    <div class="menu-item-name">
-                        {{ item.name }}
-                        {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
-                    </div>
-                    <div class="dietary-tags">
-                        {% for tag in item.dietary %}
-                        <span class="dietary-badge {{ tag }}">
-                            {% if tag == 'vegetarian' %}<i class="fas fa-leaf" style="font-size:0.55rem;"></i>
-                            {% elif tag == 'gluten-free' %}<i class="fas fa-wheat-awn-circle-exclamation" style="font-size:0.55rem;"></i>
-                            {% elif tag == 'spicy' %}<i class="fas fa-pepper-hot" style="font-size:0.55rem;"></i>
-                            {% endif %} {{ tag }}
-                        </span>
-                        {% endfor %}
-                    </div>
-                    <p class="menu-item-desc">{{ item.description }}</p>
-                </div>
-                <span class="price">${{ "%.2f"|format(item.price) }}</span>
-            </div>
-            {% endfor %}
-        </div>
+    <!-- Elegant Category Tabs -->
+    <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 3rem;">
+        <button class="tab-btn active" onclick="filterMenu('all', this)">All</button>
+        {% for category in menu.keys() %}
+        <button class="tab-btn" onclick="filterMenu('{{ category }}', this)">{{ category|capitalize }}</button>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+
+    <!-- Menu Grid -->
+    <div id="menuGrid">
+        {% for category, items in menu.items() %}
+        <div class="menu-category" data-category="{{ category }}" style="display: {% if loop.first %}block{% else %}none{% endif %};">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; border-bottom: 3px solid #C9A87C; padding-bottom: 0.5rem; display: inline-block;">{{ category|capitalize }}</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                {% for item in items %}
+                <div class="menu-item" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: none; padding: 0;">
+                    <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 100%; height: 200px; object-fit: cover;">
+                    <div style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <h3 style="font-size: 1.2rem; font-family: 'Playfair Display', serif;">{{ item.name }}</h3>
+                            <span class="price">${{ "%.2f"|format(item.price) }}</span>
+                        </div>
+                        <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0;">{{ item.description }}</p>
+                        {% if item.popular %}<span style="background: #C9A87C; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">Popular</span>{% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
 
 <script>
 function filterMenu(category, btn) {
