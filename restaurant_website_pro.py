@@ -230,7 +230,7 @@ def create_app(config_name="production"):
                 {'title': 'Off-Site Catering', 'description': 'Bring the Aurelia experience to your venue. Full-service team, custom menus, and sommelier-curated wine selections.', 'icon': 'fa-truck'}
             ],
             'upcoming_events': [
-                {'title': 'Chef Elena's Sunday Supper', 'description': 'A rotating family-style menu featuring dishes from Chef Elena's travels through the Mediterranean. $85 per person, wine pairings available.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
+                {'title': "Chef Elena's Sunday Supper", 'description': 'A rotating family-style menu featuring dishes from Chef Elena's travels through the Mediterranean. $85 per person, wine pairings available.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
                 {'title': 'Wine & Waves', 'description': 'Monthly tasting series exploring coastal wine regions. August feature: Croatian Pelješac Peninsula wines with paired small plates.', 'date': 'Last Thursday of each month', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
                 {'title': 'Pasta Masterclass', 'description': 'Learn to make paccheri, pappardelle, and squid ink fettuccine from scratch. Includes lunch, wine, and a take-home recipe book.', 'date': 'First Saturday of each month, 11:00 AM', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
             ]
