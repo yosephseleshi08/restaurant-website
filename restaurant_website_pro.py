@@ -15,7 +15,7 @@ from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from functools import wraps
 import json
 import os
@@ -84,7 +84,7 @@ def create_app(config_name="production"):
         app=app,
         default_limits=["200 per day", "50 per hour"],
         storage_uri=os.environ.get('REDIS_URL', 'memory://'),
-        strategy="fixed-window"
+        strategy="fixed-window-elastic-expiry"
     )
 
     db = SQLAlchemy(app)
@@ -94,180 +94,176 @@ def create_app(config_name="production"):
     _data_lock = threading.Lock()
 
     DEFAULT_DATA = {
-    'theme': {
-        'primary_color': '#C0392B',
-        'secondary_color': '#E67E22',
-        'background_color': '#FDF8F5',
-        'text_color': '#2C1810',
-        'card_bg': '#FFFFFF',
-        'accent_color': '#8E44AD',
-        'font_family': "'Playfair Display', 'Inter', sans-serif",
-        'dark_mode': False,
-        'custom_css': '''
-        .hero {
-            background: linear-gradient(135deg, rgba(192,57,43,0.9), rgba(44,24,16,0.95));
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #C0392B, #E67E22);
-        }
-        .featured-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(192,57,43,0.2);
-        }
-        '''
-    },
-    'seo': {
-        'meta_title': 'Il Forno Ristorante — Award-Winning Italian Fine Dining in NYC',
-        'meta_description': 'Experience authentic Italian cuisine at Il Forno Ristorante. Michelin-rated, farm-to-table ingredients, award-winning wine list. Reserve your table today.',
-        'meta_keywords': 'italian restaurant, fine dining, michelin rated, wine bar, NYC restaurants, romantic dinner',
-        'og_image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=630&fit=crop',
-        'google_analytics_id': '',
-        'facebook_pixel': ''
-    },
-    'restaurant': {
-        'name': "Il Forno Ristorante",
-        'tagline': "Where Tradition Meets Culinary Art • Est. 2008",
-        'address': "45 West 54th Street, New York, NY 10019",
-        'phone': "(212) 555-0188",
-        'phone_link': "+12125550188",
-        'email': "reservations@ilfornonyc.com",
-        'hours': {
-            'monday': '5:00 PM - 10:00 PM',
-            'tuesday': '5:00 PM - 10:00 PM',
-            'wednesday': '5:00 PM - 10:00 PM',
-            'thursday': '5:00 PM - 10:00 PM',
-            'friday': '5:00 PM - 11:00 PM',
-            'saturday': '4:30 PM - 11:00 PM',
-            'sunday': '4:00 PM - 9:00 PM'
+        'theme': {
+            'primary_color': '#C75B39',
+            'secondary_color': '#D4A574',
+            'background_color': '#FAF7F2',
+            'text_color': '#1A1A1A',
+            'card_bg': '#FFFFFF',
+            'accent_color': '#2E8B78',
+            'font_family': "'Playfair Display', 'Georgia', serif",
+            'dark_mode': False,
+            'custom_css': ''
         },
-        'social': {
-            'instagram': 'ilforno_nyc',
-            'facebook': 'IlFornoNYC',
-            'twitter': 'IlFornoNYC',
-            'yelp': 'il-forno-ristorante-nyc'
+        'seo': {
+            'meta_title': 'Aurelia — Modern Coastal Mediterranean Dining',
+            'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia. Chef-prepared dishes, ocean-fresh ingredients, and an unforgettable atmosphere in the heart of the city.',
+            'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations, coastal cuisine, chef curated',
+            'og_image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=630&fit=crop',
+            'google_analytics_id': '',
+            'facebook_pixel': ''
         },
-        'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-74.006!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjEiTiA3NMKwMDAnMjEuNiJX!5e0!3m2!1sen!2us!4v1'
-    },
-    'about': {
-        'story': "In 2008, Chef Alessandro Bianchi left his two-Michelin-starred position in Florence to bring true Italian culinary artistry to New York. What started as a passion project — a 30-seat trattoria — has become one of Manhattan's most celebrated dining destinations. Today, Il Forno Ristorante continues to honor traditional Italian techniques while embracing locally-sourced, sustainable ingredients. Every dish tells a story of family, heritage, and an unwavering commitment to excellence.",
-        'chef_name': "Chef Alessandro Bianchi",
-        'chef_bio': "A native of Tuscany, Chef Alessandro honed his craft in Michelin-starred kitchens across Florence and Rome for over 15 years. His philosophy is simple: let the ingredients speak. Known for his signature handmade pastas and wood-fired meats, Chef Alessandro brings the soul of Italy to every plate. Named 'Best New Chef' by Food & Wine magazine in 2010, he continues to push boundaries while honoring tradition.",
-        'chef_image': "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop",
-        'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
-        'food_image': "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=600&fit=crop",
-        'values': [
-            {'title': 'Farm-to-Table Philosophy', 'description': 'We partner with local farms and import directly from Italy to ensure every ingredient is at its peak freshness.'},
-            {'title': 'Generations of Tradition', 'description': 'Every sauce, pasta, and bread is made from scratch daily using family recipes passed down through five generations.'},
-            {'title': 'Warm Italian Hospitality', 'description': 'From the moment you walk through our doors, you are family. We treat every guest with the warmth and care of a traditional Italian home.'}
-        ]
-    },
-    'testimonials': [
-        {'name': 'Victoria S.', 'text': 'The best dining experience I have ever had. The truffle pasta was life-changing. Chef Alessandro is a true artist.', 'rating': 5},
-        {'name': 'Michael & Elena R.', 'text': 'We celebrated our 10th anniversary here and it was nothing short of magical. The staff made us feel like royalty.', 'rating': 5},
-        {'name': 'David C., Food Critic', 'text': 'Il Forno has quickly become one of the finest Italian restaurants in NYC. The attention to detail is unparalleled.', 'rating': 5},
-        {'name': 'Maria G.', 'text': 'As an Italian expat, I can finally say I found authentic Italian cuisine in New York. The carbonara rivals my grandmother\'s.', 'rating': 5}
-    ],
-    'menu': {
-        'appetizers': [
-            {'name': 'Burrata e Prosciutto di Parma', 'description': 'Creamy house-made burrata with 24-month aged prosciutto, heirloom tomatoes, and aged balsamic', 'price': 18.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=500&h=350&fit=crop', 'dietary': []},
-            {'name': 'Calamari Fritti al Limone', 'description': 'Wild-caught calamari, lightly fried, served with lemon aioli and fresh herb salad', 'price': 16.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1599084993091-41d2bd2722cc6?w=500&h=350&fit=crop', 'dietary': []},
-            {'name': 'Bruschetta al Pomodoro e Basilico', 'description': 'Wood-fired sourdough with San Marzano tomatoes, fresh basil, garlic, and extra virgin olive oil', 'price': 13.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1572695157369-7b5e6e5a04c5?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+        'restaurant': {
+            'name': "Aurelia",
+            'tagline': "Modern Coastal Mediterranean Dining",
+            'address': "47 Harbor View Boulevard, Marina District, CA 94123",
+            'phone': "(415) 555-0199",
+            'phone_link': "+14155550199",
+            'email': "reservations@aurelia.co",
+            'hours': {
+                'monday': '5:00 PM - 10:00 PM',
+                'tuesday': '5:00 PM - 10:00 PM',
+                'wednesday': '5:00 PM - 10:00 PM',
+                'thursday': '5:00 PM - 10:00 PM',
+                'friday': '5:00 PM - 11:00 PM',
+                'saturday': '4:30 PM - 11:00 PM',
+                'sunday': '4:00 PM - 9:30 PM'
+            },
+            'social': {
+                'instagram': 'aurelia.dining',
+                'facebook': 'AureliaDining',
+                'twitter': 'AureliaDining',
+                'yelp': 'aurelia-marina-district'
+            },
+            'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzEwLjAiVw!5e0!3m2!1sen!2sus!4v1'
+        },
+        'about': {
+            'story': "Founded in 2019 by Chef Elena Marchetti, Aurelia was born from a simple belief: the Mediterranean diet is not just healthy — it is the purest expression of joy on a plate. After training under Michelin-starred chefs in Barcelona and Athens, Chef Elena returned to California to create a space where old-world tradition meets Pacific innovation.",
+            'chef_name': "Chef Elena Marchetti",
+            'chef_bio': "A James Beard Award semifinalist, Chef Elena trained at El Celler de Can Roca and Lycabettus Restaurant in Athens. Her cuisine celebrates the Mediterranean's 'fifth quarter' — nose-to-tail, root-to-stem, nothing wasted, everything celebrated.",
+            'chef_image': "https://images.unsplash.com/photo-1583394293214-28ez7a28f731?w=400&h=400&fit=crop&crop=face",
+            'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
+            'food_image': "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop",
+            'values': [
+                {'title': 'Ocean to Table', 'description': 'We source seafood daily from Monterey Bay fishermen and produce from organic farms within 50 miles. If it is not in season, it is not on the menu.'},
+                {'title': 'Zero Waste Kitchen', 'description': 'Every herb stem becomes a sauce. Every bone becomes a broth. We compost what we cannot use and donate surplus to local shelters.'},
+                {'title': 'Wine as Philosophy', 'description': 'Our sommelier curates 200+ labels from Greece, Lebanon, and the Dalmatian Coast — regions most American diners have never explored.'}
+            ]
+        },
+        'testimonials': [
+            {'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini. Best fine dining experience in San Francisco this year.', 'rating': 5},
+            {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here. The private dining room, the custom tasting menu, the sommelier pairings — perfection.', 'rating': 5},
+            {'name': 'David R., SF Chronicle', 'text': 'Aurelia is doing what few restaurants dare: making sustainability the star of the show without sacrificing an ounce of flavor.', 'rating': 5},
+            {'name': 'Sofia L.', 'text': 'As a Greek native, I am notoriously critical of Mediterranean restaurants abroad. Aurelia earned my respect. The spanakopita alone is worth the trip.', 'rating': 5}
         ],
-        'mains': [
-            {'name': 'Spaghetti alla Carbonara Tradizionale', 'description': 'Fresh pasta with guanciale, pecorino romano, farm eggs, and cracked black pepper', 'price': 26.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&h=350&fit=crop', 'dietary': []},
-            {'name': 'Pollo alla Parmigiana', 'description': 'Hand-breaded organic chicken breast with San Marzano marinara, fresh mozzarella, and basil', 'price': 28.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=500&h=350&fit=crop', 'dietary': []},
-            {'name': 'Margherita Pizza al Forno', 'description': 'San Marzano tomato sauce, fior di latte mozzarella, basil, and EVOO on our signature wood-fired crust', 'price': 21.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
-            {'name': 'Osso Buco alla Milanese', 'description': 'Braised veal shank in white wine with gremolata, served with saffron risotto', 'price': 38.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
-        ],
-        'desserts': [
-            {'name': 'Tiramisu Classico', 'description': 'Layers of espresso-soaked ladyfingers with mascarpone cream, dusted with Valrhona cocoa', 'price': 12.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
-            {'name': 'Panna Cotta alla Vaniglia', 'description': 'Silky vanilla bean custard with seasonal berry compote and fresh mint', 'price': 10.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
-        ],
-        'beverages': [
-            {'name': 'Espresso Doppio', 'description': 'Double shot of our signature Italian espresso blend, roasted in-house', 'price': 5.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
-            {'name': 'Aperol Spritz', 'description': 'Aperol, prosecco, and soda with fresh orange and green olive', 'price': 14.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
-            {'name': 'Limonata Fresca', 'description': 'House-made Sicilian lemonade with fresh mint and a touch of honey', 'price': 7.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
-        ]
-    },
-    'reservations': {
-        'hold_time': '15 minutes',
-        'large_party_note': 'Parties of 8+ please call us directly at (212) 555-0188',
-        'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'],
-        'max_guests_per_slot': 25
-    },
-    'online_ordering': {
-        'enabled': True,
-        'page_title': 'Order Online',
-        'page_subtitle': 'Experience Il Forno from the comfort of your home. Fine dining, delivered.',
-        'platforms': [
-            {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
-            {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
-            {'name': 'Grubhub', 'url': 'https://grubhub.com', 'icon': 'fa-hamburger', 'active': True, 'color': '#F63440'},
-            {'name': 'Toast', 'url': 'https://toasttab.com', 'icon': 'fa-receipt', 'active': False, 'color': '#4A90D9'}
-        ]
-    },
-    'gallery': {
-        'enabled': True,
-        'page_title': 'Gallery',
-        'page_subtitle': 'A visual journey through Il Forno — from our kitchen to your table.',
-        'photos': [
-            {'url': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop', 'caption': 'Our signature dining room', 'category': 'interior'},
-            {'url': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop', 'caption': 'Wood-fired Margherita Pizza', 'category': 'food'},
-            {'url': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop', 'caption': 'Spaghetti alla Carbonara', 'category': 'food'},
-            {'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'Elegant dining atmosphere', 'category': 'interior'},
-            {'url': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&h=600&fit=crop', 'caption': 'Tiramisu Classico', 'category': 'food'},
-            {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Our open kitchen', 'category': 'interior'},
-            {'url': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=800&h=600&fit=crop', 'caption': 'Aperol Spritz', 'category': 'drinks'},
-            {'url': 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=800&h=600&fit=crop', 'caption': 'Private dining room', 'category': 'interior'}
-        ]
-    },
-    'events': {
-        'enabled': True,
-        'page_title': 'Events & Private Dining',
-        'page_subtitle': 'Host your next celebration in the heart of Manhattan. From intimate dinners to grand galas, we create unforgettable experiences.',
-        'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop',
-        'cta_title': 'Plan Your Private Event',
-        'cta_text': 'Let our award-winning team create a bespoke culinary experience for your special occasion. Contact our event coordinator to discuss custom menus and exclusive buyouts.',
-        'services': [
-            {'title': 'Private Dining Room', 'description': 'An intimate space for up to 24 guests. Perfect for family celebrations, business meetings, and romantic dinners.', 'icon': 'fa-utensils'},
-            {'title': 'Full Restaurant Buyout', 'description': 'Exclusive access to our entire 80-seat venue. Ideal for weddings, corporate events, and grand celebrations.', 'icon': 'fa-building'},
-            {'title': 'Off-Site Catering', 'description': 'Bring the Il Forno experience to your venue. Full-service catering for events of any size, anywhere in NYC.', 'icon': 'fa-truck'},
-            {'title': 'Wine & Dine Experiences', 'description': 'Curated wine pairing dinners led by our sommelier. Perfect for corporate events or special occasions.', 'icon': 'fa-wine-glass'}
-        ],
-        'upcoming_events': [
-            {'title': 'Wine & Dine Wednesday', 'description': 'Every Wednesday, enjoy a 4-course prix fixe menu paired with sommelier-selected wines. $85 per person.', 'date': 'Every Wednesday', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
-            {'title': 'Sunday Family Feast', 'description': 'A rotating family-style menu featuring our most celebrated dishes. Served at communal tables.', 'date': 'Every Sunday', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
-            {'title': 'Pasta Making Class', 'description': 'Learn the art of fresh pasta from Chef Alessandro himself. Includes hands-on instruction and a three-course dinner.', 'date': 'First Saturday of the month', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
-        ]
-    },
-    'analytics': {
-        'daily_sales': [2850, 3200, 2950, 3800, 4200, 5100, 3900],
-        'monthly_revenue': [85000, 92000, 89000, 105000, 115000, 125000],
-        'popular_items': ['Spaghetti alla Carbonara', 'Osso Buco', 'Tiramisu'],
-        'customer_satisfaction': 4.9,
-        'total_reservations': 342
-    },
-    'settings': {
-        'sendgrid_api_key': '',
-        'from_email': '',
-        'notification_email': '',
-        'currency': '$',
-        'tax_rate': 8.875,
-        'delivery_fee': 7.99,
-        'min_order': 25.00,
-        'cookie_consent': True,
-        'enable_online_ordering': True,
-        'enable_reservations': True,
-        'enable_events': True,
-        'enable_gallery': True,
-        'enable_loyalty': True,
-        'enable_gift_cards': True,
-        'enable_waitlist': True,
-        'enable_table_management': True,
-        'enable_kitchen_display': True,
-        'webhook_secret': secrets.token_hex(16)
+        'menu': {
+            'raw bar': [
+                {'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection, mignonette granita, preserved lemon, sea grapes', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&h=350&fit=crop', 'dietary': ['gluten-free']},
+                {'name': 'Hamachi Crudo', 'description': 'Citrus-cured Pacific yellowtail, Calabrian chili oil, crispy capers, micro shiso', 'price': 22.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=500&h=350&fit=crop', 'dietary': ['gluten-free']},
+                {'name': 'Wagyu Beef Tartare', 'description': 'Hand-chopped A5 Miyazaki, smoked egg yolk, pickled shallot, charred sourdough', 'price': 28.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=350&fit=crop', 'dietary': []}
+            ],
+            'small plates': [
+                {'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush, pomegranate molasses, toasted pistachios, warm pita', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+                {'name': 'Crispy Zucchini Flowers', 'description': 'Tempura-battered squash blossoms, whipped ricotta, local honey, Aleppo pepper', 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+                {'name': 'Grilled Spanish Octopus', 'description': 'Charred tentacles, fingerling potatoes, smoked paprika aioli, pickled Fresno chilies', 'price': 26.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1551248429-40975aa4de74?w=500&h=350&fit=crop', 'dietary': ['gluten-free', 'dairy-free']}
+            ],
+            'mains': [
+                {'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass, herb-stuffed, lemon confit, castelvetrano olives, extra virgin olive oil from Chef Elenas family grove in Liguria', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&h=350&fit=crop', 'dietary': ['gluten-free', 'dairy-free']},
+                {'name': 'Lamb Osso Buco', 'description': 'Braised Colorado lamb shank, saffron risotto, gremolata, crispy sage, natural jus', 'price': 48.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=350&fit=crop', 'dietary': ['gluten-free']},
+                {'name': 'Truffle Paccheri', 'description': 'Hand-rolled pasta, black truffle cream, aged Parmigiano-Reggiano 36-month, toasted breadcrumbs', 'price': 34.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+                {'name': 'Dry-Aged Ribeye', 'description': '45-day aged prime ribeye, bone marrow butter, charred broccolini, red wine reduction', 'price': 58.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+            ],
+            'desserts': [
+                {'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge, blood orange curd, mascarpone chantilly, candied pistachios', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+                {'name': 'Baklava Ice Cream Sandwich', 'description': 'House-made pistachio ice cream, phyllo crisps, rose water honey, crushed pistachios', 'price': 13.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+                {'name': 'Dark Chocolate Ganache Tart', 'description': 'Valrhona 70% ganache, sea salt caramel, hazelnut praline, gold leaf', 'price': 15.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+            ],
+            'craft cocktails': [
+                {'name': 'The Aegean', 'description': 'Mastiha liqueur, cucumber, fresh lime, Mediterranean tonic, dill oil', 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+                {'name': 'Smoked Negroni', 'description': 'Mezcal, Campari, sweet vermouth, orange peel, smoked over rosemary', 'price': 19.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&h=350&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+                {'name': 'Santorini Sunset', 'description': 'Greek rosé, Aperol, grapefruit, thyme, sparkling water', 'price': 16.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=500&h=350&fit=crop', 'dietary': ['vegan', 'gluten-free']}
+            ]
+        },
+        'reservations': {
+            'hold_time': '15 minutes',
+            'large_party_note': 'Parties of 8+ please contact our events team directly',
+            'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'],
+            'max_guests_per_slot': 24
+        },
+        'online_ordering': {
+            'enabled': True,
+            'page_title': 'Order Online',
+            'page_subtitle': 'Enjoy Aurelias coastal Mediterranean cuisine at home. Curated for delivery within 5 miles of Marina District.',
+            'platforms': [
+                {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
+                {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
+                {'name': 'Grubhub', 'url': 'https://grubhub.com', 'icon': 'fa-hamburger', 'active': True, 'color': '#F63440'},
+                {'name': 'Toast', 'url': 'https://toasttab.com', 'icon': 'fa-receipt', 'active': False, 'color': '#4A90D9'}
+            ]
+        },
+        'gallery': {
+            'enabled': True,
+            'page_title': 'Gallery',
+            'page_subtitle': 'A glimpse into our kitchen, our craft, and the warm, sun-drenched atmosphere that defines the Aurelia experience.',
+            'photos': [
+                {'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'The main dining room at golden hour', 'category': 'interior'},
+                {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Fresh oysters from Monterey Bay', 'category': 'food'},
+                {'url': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop', 'caption': 'Whole roasted branzino, Ligurian style', 'category': 'food'},
+                {'url': 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=800&h=600&fit=crop', 'caption': 'Private dining room for up to 24 guests', 'category': 'interior'},
+                {'url': 'https://images.unsplash.com/photo-1572695157369-7b5e6e5a04c5?w=800&h=600&fit=crop', 'caption': 'Hand-rolled pasta station', 'category': 'food'},
+                {'url': 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&h=600&fit=crop', 'caption': 'Craft cocktail bar', 'category': 'drinks'},
+                {'url': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=800&h=600&fit=crop', 'caption': 'Charred eggplant dip with warm pita', 'category': 'food'},
+                {'url': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop', 'caption': 'Sunset view from the terrace', 'category': 'interior'}
+            ]
+        },
+        'events': {
+            'enabled': True,
+            'page_title': 'Events & Private Dining',
+            'page_subtitle': 'Host your next celebration at Aurelia. From intimate gatherings to full buyouts, we craft experiences as memorable as our cuisine.',
+            'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop',
+            'cta_title': 'Plan Your Private Event',
+            'cta_text': 'Let our events team design a bespoke experience. Custom menus, wine pairings, floral design — every detail tailored to your vision.',
+            'services': [
+                {'title': 'The Terrace', 'description': 'An intimate al fresco space for up to 32 guests, with panoramic marina views and a dedicated chef station.', 'icon': 'fa-utensils'},
+                {'title': 'The Cellar', 'description': 'Our underground wine cellar hosts up to 16 guests for private tastings and chef-curated dinners.', 'icon': 'fa-wine-glass'},
+                {'title': 'Full Buyout', 'description': 'Exclusive use of the entire restaurant for up to 120 guests. Perfect for weddings, corporate galas, and milestone celebrations.', 'icon': 'fa-building'},
+                {'title': 'Off-Site Catering', 'description': 'Bring the Aurelia experience to your venue. Full-service team, custom menus, and sommelier-curated wine selections.', 'icon': 'fa-truck'}
+            ],
+            'upcoming_events': [
+                {'title': 'Chef Elena's Sunday Supper', 'description': 'A rotating family-style menu featuring dishes from Chef Elena's travels through the Mediterranean. $85 per person, wine pairings available.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
+                {'title': 'Wine & Waves', 'description': 'Monthly tasting series exploring coastal wine regions. August feature: Croatian Pelješac Peninsula wines with paired small plates.', 'date': 'Last Thursday of each month', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
+                {'title': 'Pasta Masterclass', 'description': 'Learn to make paccheri, pappardelle, and squid ink fettuccine from scratch. Includes lunch, wine, and a take-home recipe book.', 'date': 'First Saturday of each month, 11:00 AM', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
+            ]
+        },
+        'analytics': {
+            'daily_sales': [2850, 3200, 2950, 4100, 5200, 6800, 5900],
+            'monthly_revenue': [98000, 112000, 105000, 128000, 135000, 148000],
+            'popular_items': ['Whole Roasted Branzino', 'Grilled Spanish Octopus', 'Truffle Paccheri'],
+            'customer_satisfaction': 4.9,
+            'total_reservations': 342
+        },
+        'settings': {
+            'sendgrid_api_key': '',
+            'from_email': '',
+            'notification_email': '',
+            'currency': '$',
+            'tax_rate': 8.75,
+            'delivery_fee': 6.0,
+            'min_order': 25.0,
+            'cookie_consent': True,
+            'enable_online_ordering': True,
+            'enable_reservations': True,
+            'enable_events': True,
+            'enable_gallery': True,
+            'enable_loyalty': True,
+            'enable_gift_cards': True,
+            'enable_waitlist': True,
+            'enable_table_management': True,
+            'enable_kitchen_display': True,
+            'webhook_secret': secrets.token_hex(16)
+        }
     }
-}
+
     # ─── Database Models ───────────────────────────────────────────────
 
     class User(db.Model):
@@ -560,7 +556,7 @@ def create_app(config_name="production"):
             db.session.rollback()
 
     def get_real_analytics():
-        today = datetime.now(timezone.utc).date()
+        today = datetime.utcnow().date()
         week_ago = today - timedelta(days=7)
         total_views = PageView.query.count()
         week_views = PageView.query.filter(PageView.created_at >= week_ago).count()
@@ -730,7 +726,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = db.session.get(User, session['user_id'])
+            user = User.query.get(session['user_id'])
             if not user or user.role not in ('admin', 'manager', 'staff'):
                 return redirect(url_for('login'))
             return f(*args, **kwargs)
@@ -741,7 +737,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = db.session.get(User, session['user_id'])
+            user = User.query.get(session['user_id'])
             if not user or user.role not in ('admin', 'manager'):
                 flash('Manager access required', 'error')
                 return redirect(url_for('dashboard'))
@@ -753,7 +749,7 @@ def create_app(config_name="production"):
         def decorated(*args, **kwargs):
             if 'user_id' not in session:
                 return redirect(url_for('login'))
-            user = db.session.get(User, session['user_id'])
+            user = User.query.get(session['user_id'])
             if not user or user.role != 'admin':
                 flash('Admin access required', 'error')
                 return redirect(url_for('dashboard'))
@@ -816,7 +812,7 @@ def create_app(config_name="production"):
             db.session.execute(db.text('SELECT 1'))
             return jsonify({
                 'status': 'healthy',
-                'timestamp': datetime.now(timezone.utc).isoformat(),
+                'timestamp': datetime.utcnow().isoformat(),
                 'version': '2.0.0-pro',
                 'database': 'connected'
             })
@@ -824,7 +820,7 @@ def create_app(config_name="production"):
             return jsonify({
                 'status': 'unhealthy',
                 'error': str(e),
-                'timestamp': datetime.now(timezone.utc).isoformat()
+                'timestamp': datetime.utcnow().isoformat()
             }), 503
 
     # ─── Public Routes ─────────────────────────────────────────────────
@@ -1121,7 +1117,7 @@ def create_app(config_name="production"):
                 session['user_id'] = user.id
                 session['username'] = user.username
                 session['role'] = user.role
-                user.last_login = datetime.now(timezone.utc)
+                user.last_login = datetime.utcnow()
                 db.session.commit()
                 log_audit('user_login', 'User', user.id)
                 return redirect(url_for('dashboard'))
@@ -1146,13 +1142,13 @@ def create_app(config_name="production"):
         recent_reservations = Reservation.query.order_by(Reservation.created_at.desc()).limit(10).all()
         recent_orders = Order.query.order_by(Order.created_at.desc()).limit(10).all()
         recent_messages = ContactMessage.query.filter_by(status='new').order_by(ContactMessage.created_at.desc()).limit(5).all()
-        week_ago = datetime.now(timezone.utc).date() - timedelta(days=7)
+        week_ago = datetime.utcnow().date() - timedelta(days=7)
         views_by_page = {}
         for pv in PageView.query.filter(PageView.created_at >= week_ago).all():
             views_by_page[pv.page] = views_by_page.get(pv.page, 0) + 1
         daily_views = []
         for i in range(7):
-            day = datetime.now(timezone.utc).date() - timedelta(days=6-i)
+            day = datetime.utcnow().date() - timedelta(days=6-i)
             count = PageView.query.filter(db.func.date(PageView.created_at) == day).count()
             daily_views.append(count)
         return render_template('dashboard.html',
@@ -1182,7 +1178,7 @@ def create_app(config_name="production"):
         if not to_email:
             flash('No notification email configured. Set one in Settings first.', 'error')
             return redirect(url_for('admin_settings'))
-        html = f"""<h2>Test Email from {data['restaurant']['name']}</h2><p>This is a test email to confirm your email configuration is working correctly.</p><p>Sent at: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>"""
+        html = f"""<h2>Test Email from {data['restaurant']['name']}</h2><p>This is a test email to confirm your email configuration is working correctly.</p><p>Sent at: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>"""
         if send_email(to_email, f"Test Email — {data['restaurant']['name']}", html):
             flash('Test email sent successfully! Check your inbox.', 'success')
         else:
@@ -1196,7 +1192,7 @@ def create_app(config_name="production"):
             current = request.form.get('current_password', '')
             new_pass = request.form.get('new_password', '')
             confirm = request.form.get('confirm_password', '')
-            user = db.session.get(User, session['user_id'])
+            user = User.query.get(session['user_id'])
             if not check_password_hash(user.password_hash, current):
                 flash('Current password is incorrect', 'error')
             elif len(new_pass) < 6:
@@ -1638,7 +1634,7 @@ def create_app(config_name="production"):
         data = load_data()
         backup = {
             'data': data,
-            'exported_at': datetime.now(timezone.utc).isoformat(),
+            'exported_at': datetime.utcnow().isoformat(),
             'db_stats': {
                 'users': User.query.count(),
                 'reservations': Reservation.query.count(),
@@ -1737,10 +1733,6 @@ def create_app(config_name="production"):
                 {"src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png"}
             ]
         })
-
-    @app.route('/sw.js')
-    def service_worker():
-        return send_file('static/sw.js', mimetype='application/javascript')
 
     @app.route('/api/schema')
     def schema_json():
