@@ -95,20 +95,20 @@ def create_app(config_name="production"):
 
     DEFAULT_DATA = {
     'theme': {
-        'primary_color': '#1A2A3A',
-        'secondary_color': '#C9A87C',
-        'background_color': '#F8F6F2',
+        'primary_color': '#0B0F19',
+        'secondary_color': '#C9A96E',
+        'background_color': '#FAF7F2',
         'text_color': '#1A1A1A',
         'card_bg': '#FFFFFF',
-        'accent_color': '#8B6B4A',
+        'accent_color': '#8B7355',
         'font_family': "'Playfair Display', 'Georgia', serif",
         'dark_mode': False,
         'custom_css': ''
     },
     'seo': {
         'meta_title': 'Aurelia — Modern Coastal Mediterranean Dining',
-        'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia.',
-        'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations',
+        'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia. Reserve your table today.',
+        'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations, luxury dining',
         'og_image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=630&fit=crop',
         'google_analytics_id': '',
         'facebook_pixel': ''
@@ -138,38 +138,57 @@ def create_app(config_name="production"):
         'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzEwLjAiVw!5e0!3m2!1sen!2us!4v1'
     },
     'about': {
-        'story': "Founded in 2019 by Chef Elena Marchetti, Aurelia was born from a simple belief: the Mediterranean diet is not just healthy — it is the purest expression of joy on a plate.",
+        'story': "Founded in 2019 by Chef Elena Marchetti, Aurelia was born from a simple belief: the Mediterranean diet is not just healthy — it is the purest expression of joy on a plate. Every evening, as the sun dips below the Golden Gate, our kitchen comes alive with the aromas of charcoal-grilled branzino, hand-rolled paccheri, and citrus-kissed olive oil cakes.",
         'chef_name': "Chef Elena Marchetti",
-        'chef_bio': "A James Beard Award semifinalist, Chef Elena trained at El Celler de Can Roca and Lycabettus Restaurant in Athens.",
-        'chef_image': "https://images.unsplash.com/photo-1583394293214-28ez7a28f731?w=400&h=400&fit=crop",
-        'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
-        'food_image': "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop",
+        'chef_bio': "A James Beard Award semifinalist, Chef Elena trained at El Celler de Can Roca and Lycabettus Restaurant in Athens. Her philosophy is simple: let the ingredient speak.",
+        'chef_image': "https://images.unsplash.com/photo-1583394293214-28ez7a28f731?w=600&h=600&fit=crop&crop=faces",
+        'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=900&fit=crop",
+        'food_image': "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=900&fit=crop",
         'values': [
-            {'title': 'Ocean to Table', 'description': 'We source seafood daily from Monterey Bay.'},
-            {'title': 'Zero Waste Kitchen', 'description': 'Every herb stem becomes a sauce.'},
-            {'title': 'Wine as Philosophy', 'description': 'Our sommelier curates 200+ labels.'}
+            {'title': 'Ocean to Table', 'description': 'We source seafood daily from Monterey Bay, ensuring the freshest catch reaches your plate within hours.'},
+            {'title': 'Zero Waste Kitchen', 'description': 'Every herb stem becomes a sauce. Every bone becomes a stock. Sustainability is not a trend — it is our foundation.'},
+            {'title': 'Wine as Philosophy', 'description': 'Our sommelier curates 200+ labels from coastal vineyards, pairing each course with intention and care.'}
         ]
     },
     'testimonials': [
-        {'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini.', 'rating': 5},
-        {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here — perfection.', 'rating': 5},
-        {'name': 'David R., SF Chronicle', 'text': 'Aurelia is doing what few restaurants dare.', 'rating': 5}
+        {'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini. Simply extraordinary.', 'rating': 5},
+        {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here — every detail was perfection. The staff anticipated needs we did not know we had.', 'rating': 5},
+        {'name': 'David R., SF Chronicle', 'text': 'Aurelia is doing what few restaurants dare: making fine dining feel like coming home.', 'rating': 5},
+        {'name': 'Isabella M.', 'text': 'The olive oil cake alone is worth the flight to San Francisco. A revelation.', 'rating': 5}
     ],
     'menu': {
         'raw bar': [
-            {'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection, mignonette granita', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+            {'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection, mignonette granita, lemon verbena', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop', 'dietary': ['gluten-free']},
+            {'name': 'Tuna Crudo', 'description': 'Bigeye tuna, Sicilian olive oil, Calabrian chili, preserved lemon', 'price': 28.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']},
+            {'name': 'Caviar Service', 'description': 'Osetra caviar, blinis, crème fraîche, chive, shallot', 'price': 85.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}
         ],
         'small plates': [
-            {'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush, pomegranate molasses', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+            {'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush, pomegranate molasses, toasted pine nuts, warm pita', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&h=400&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Whipped Feta', 'description': "Whipped sheep's milk feta, honeycomb, toasted walnuts, warm sourdough", 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=600&h=400&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Grilled Spanish Octopus', 'description': 'Charred octopus, fingerling potatoes, smoked paprika, salsa verde', 'price': 26.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']},
+            {'name': 'Burrata & Heirloom Tomatoes', 'description': 'Pugliese burrata, San Marzano tomatoes, basil oil, aged balsamic', 'price': 22.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=600&h=400&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
         ],
         'mains': [
-            {'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass, herb-stuffed', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+            {'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass, herb-stuffed, lemon, extra virgin olive oil', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']},
+            {'name': 'Truffle Paccheri', 'description': 'Hand-rolled paccheri, black truffle cream, aged Parmigiano-Reggiano', 'price': 38.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Lamb Osso Buco', 'description': 'Braised lamb shank, saffron risotto, gremolata, natural jus', 'price': 48.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop', 'dietary': ['gluten-free']},
+            {'name': 'Dry-Aged Ribeye', 'description': '45-day dry-aged ribeye, bone marrow butter, charred spring onion', 'price': 65.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=600&h=400&fit=crop', 'dietary': ['gluten-free']}
         ],
         'desserts': [
-            {'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge, blood orange curd', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+            {'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge, blood orange curd, mascarpone chantilly', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&h=400&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Dark Chocolate Fondant', 'description': 'Valrhona dark chocolate, sea salt caramel core, vanilla bean ice cream', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&h=400&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Baklava Ice Cream', 'description': 'Pistachio ice cream, honey-soaked phyllo, rose water syrup', 'price': 13.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}
         ],
         'craft cocktails': [
-            {'name': 'The Aegean', 'description': 'Mastiha liqueur, cucumber, lime, tonic', 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegan', 'gluten-free']}
+            {'name': 'The Aegean', 'description': 'Mastiha liqueur, cucumber, fresh lime, Mediterranean tonic', 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+            {'name': 'Santorini Sunset', 'description': 'Aperol, prosecco, blood orange, thyme, edible flower', 'price': 19.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+            {'name': 'Olive Branch', 'description': 'Gin, olive brine, dry vermouth, castelvetrano olive', 'price': 17.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1575023782549-62ca0d244b39?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+            {'name': 'Negroni Bianco', 'description': 'Suze, Lillet Blanc, dry gin, grapefruit twist', 'price': 18.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']}
+        ],
+        'wine selection': [
+            {'name': 'Santorini Assyrtiko', 'description': 'Gaia Wines, 2022 — Crisp minerality, citrus, saline finish', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+            {'name': 'Barolo DOCG', 'description': 'Pio Cesare, 2018 — Nebbiolo, tar and roses, firm tannins', 'price': 28.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']},
+            {'name': 'Châteauneuf-du-Pape', 'description': 'Domaine du Pegau, 2019 — Grenache blend, dark fruit, spice', 'price': 24.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=600&h=400&fit=crop', 'dietary': ['vegan', 'gluten-free']}
         ]
     },
     'reservations': {
@@ -181,7 +200,7 @@ def create_app(config_name="production"):
     'online_ordering': {
         'enabled': True,
         'page_title': 'Order Online',
-        'page_subtitle': 'Enjoy Aurelias coastal Mediterranean cuisine at home.',
+        'page_subtitle': "Enjoy Aurelia's coastal Mediterranean cuisine at home.",
         'platforms': [
             {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
             {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
