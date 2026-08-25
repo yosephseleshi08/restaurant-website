@@ -103,26 +103,149 @@ def create_app(config_name="production"):
         'accent_color': '#8B6B4A',
         'font_family': "'Playfair Display', 'Georgia', serif",
         'dark_mode': False,
-        'custom_css': '''
-        body { background: linear-gradient(180deg, #F8F6F2 0%, #EDE8DF 100%); }
-        .hero { background: linear-gradient(135deg, rgba(26,42,58,0.92), rgba(26,42,58,0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=800&fit=crop'); background-size: cover; background-position: center; }
-        .btn-primary { background: linear-gradient(135deg, #C9A87C, #B8946A); color: #1A2A3A; }
-        .btn-primary:hover { background: linear-gradient(135deg, #B8946A, #A88060); }
-        .featured-card { border: 1px solid rgba(201,168,124,0.2); transition: all 0.3s ease; }
-        .featured-card:hover { border-color: #C9A87C; box-shadow: 0 12px 40px rgba(201,168,124,0.15); transform: translateY(-4px); }
-        .tab-btn { font-family: 'Playfair Display', serif; font-size: 1rem; letter-spacing: 1px; text-transform: uppercase; color: #666; background: transparent; border: 2px solid transparent; padding: 0.8rem 2rem; transition: all 0.3s; }
-        .tab-btn.active { color: #1A2A3A; border-bottom: 3px solid #C9A87C; background: transparent; }
-        .tab-btn:hover { color: #1A2A3A; border-bottom: 3px solid #C9A87C; }
-        .menu-item { border-bottom: 1px solid rgba(201,168,124,0.15); padding: 1.5rem 0; }
-        .menu-item:last-child { border-bottom: none; }
-        .price { color: #C9A87C; font-weight: 600; font-size: 1.1rem; }
-        .gift-card { background: linear-gradient(135deg, #1A2A3A, #2A3A4A); border-radius: 20px; }
-        .gift-card input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: white; }
-        .gift-card input:focus { border-color: #C9A87C; }
-        .reservation-hero { background: linear-gradient(135deg, rgba(26,42,58,0.85), rgba(26,42,58,0.5)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=600&fit=crop'); background-size: cover; background-position: center; padding: 6rem 2rem; border-radius: 24px; }
-        '''
+        'custom_css': ''
     },
-    # ... rest of the data (keep your Aurelia data)
+    'seo': {
+        'meta_title': 'Aurelia — Modern Coastal Mediterranean Dining',
+        'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia.',
+        'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations',
+        'og_image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=630&fit=crop',
+        'google_analytics_id': '',
+        'facebook_pixel': ''
+    },
+    'restaurant': {
+        'name': "Aurelia",
+        'tagline': "Modern Coastal Mediterranean Dining",
+        'address': "47 Harbor View Boulevard, Marina District, CA 94123",
+        'phone': "(415) 555-0199",
+        'phone_link': "+14155550199",
+        'email': "reservations@aurelia.co",
+        'hours': {
+            'monday': '5:00 PM - 10:00 PM',
+            'tuesday': '5:00 PM - 10:00 PM',
+            'wednesday': '5:00 PM - 10:00 PM',
+            'thursday': '5:00 PM - 10:00 PM',
+            'friday': '5:00 PM - 11:00 PM',
+            'saturday': '4:30 PM - 11:00 PM',
+            'sunday': '4:00 PM - 9:30 PM'
+        },
+        'social': {
+            'instagram': 'aurelia.dining',
+            'facebook': 'AureliaDining',
+            'twitter': 'AureliaDining',
+            'yelp': 'aurelia-marina-district'
+        },
+        'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzEwLjAiVw!5e0!3m2!1sen!2us!4v1'
+    },
+    'about': {
+        'story': "Founded in 2019 by Chef Elena Marchetti, Aurelia was born from a simple belief: the Mediterranean diet is not just healthy — it is the purest expression of joy on a plate.",
+        'chef_name': "Chef Elena Marchetti",
+        'chef_bio': "A James Beard Award semifinalist, Chef Elena trained at El Celler de Can Roca and Lycabettus Restaurant in Athens.",
+        'chef_image': "https://images.unsplash.com/photo-1583394293214-28ez7a28f731?w=400&h=400&fit=crop",
+        'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
+        'food_image': "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&h=600&fit=crop",
+        'values': [
+            {'title': 'Ocean to Table', 'description': 'We source seafood daily from Monterey Bay.'},
+            {'title': 'Zero Waste Kitchen', 'description': 'Every herb stem becomes a sauce.'},
+            {'title': 'Wine as Philosophy', 'description': 'Our sommelier curates 200+ labels.'}
+        ]
+    },
+    'testimonials': [
+        {'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini.', 'rating': 5},
+        {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here — perfection.', 'rating': 5},
+        {'name': 'David R., SF Chronicle', 'text': 'Aurelia is doing what few restaurants dare.', 'rating': 5}
+    ],
+    'menu': {
+        'raw bar': [
+            {'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection, mignonette granita', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+        ],
+        'small plates': [
+            {'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush, pomegranate molasses', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+        ],
+        'mains': [
+            {'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass, herb-stuffed', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+        ],
+        'desserts': [
+            {'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge, blood orange curd', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+        ],
+        'craft cocktails': [
+            {'name': 'The Aegean', 'description': 'Mastiha liqueur, cucumber, lime, tonic', 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegan', 'gluten-free']}
+        ]
+    },
+    'reservations': {
+        'hold_time': '15 minutes',
+        'large_party_note': 'Parties of 8+ please contact our events team directly',
+        'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'],
+        'max_guests_per_slot': 24
+    },
+    'online_ordering': {
+        'enabled': True,
+        'page_title': 'Order Online',
+        'page_subtitle': 'Enjoy Aurelias coastal Mediterranean cuisine at home.',
+        'platforms': [
+            {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
+            {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
+            {'name': 'Grubhub', 'url': 'https://grubhub.com', 'icon': 'fa-hamburger', 'active': True, 'color': '#F63440'},
+            {'name': 'Toast', 'url': 'https://toasttab.com', 'icon': 'fa-receipt', 'active': False, 'color': '#4A90D9'}
+        ]
+    },
+    'gallery': {
+        'enabled': True,
+        'page_title': 'Gallery',
+        'page_subtitle': 'A glimpse into our kitchen, our craft, and the warm, sun-drenched atmosphere.',
+        'photos': [
+            {'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'The main dining room at golden hour', 'category': 'interior'},
+            {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Fresh oysters from Monterey Bay', 'category': 'food'},
+            {'url': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop', 'caption': 'Whole roasted branzino, Ligurian style', 'category': 'food'},
+            {'url': 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=800&h=600&fit=crop', 'caption': 'Private dining room', 'category': 'interior'}
+        ]
+    },
+    'events': {
+        'enabled': True,
+        'page_title': 'Events & Private Dining',
+        'page_subtitle': 'Host your next celebration at Aurelia.',
+        'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop',
+        'cta_title': 'Plan Your Private Event',
+        'cta_text': 'Let our events team design a bespoke experience.',
+        'services': [
+            {'title': 'The Terrace', 'description': 'Intimate space for up to 32 guests.', 'icon': 'fa-utensils'},
+            {'title': 'The Cellar', 'description': 'Underground wine cellar for up to 16 guests.', 'icon': 'fa-wine-glass'},
+            {'title': 'Full Buyout', 'description': 'Exclusive use for up to 120 guests.', 'icon': 'fa-building'},
+            {'title': 'Off-Site Catering', 'description': 'Bring Aurelia to your venue.', 'icon': 'fa-truck'}
+        ],
+        'upcoming_events': [
+            {'title': "Chef Elena's Sunday Supper", 'description': 'A rotating family-style menu. $85 per person.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
+            {'title': 'Wine & Waves', 'description': 'Monthly tasting series exploring coastal wine regions.', 'date': 'Last Thursday of each month', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
+            {'title': 'Pasta Masterclass', 'description': 'Learn to make paccheri, pappardelle, and squid ink fettuccine.', 'date': 'First Saturday of each month', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
+        ]
+    },
+    'analytics': {
+        'daily_sales': [2850, 3200, 2950, 4100, 5200, 6800, 5900],
+        'monthly_revenue': [98000, 112000, 105000, 128000, 135000, 148000],
+        'popular_items': ['Whole Roasted Branzino', 'Grilled Spanish Octopus', 'Truffle Paccheri'],
+        'customer_satisfaction': 4.9,
+        'total_reservations': 342
+    },
+    'settings': {
+        'sendgrid_api_key': '',
+        'from_email': '',
+        'notification_email': '',
+        'currency': '$',
+        'tax_rate': 8.75,
+        'delivery_fee': 6.0,
+        'min_order': 25.0,
+        'cookie_consent': True,
+        'enable_online_ordering': True,
+        'enable_reservations': True,
+        'enable_events': True,
+        'enable_gallery': True,
+        'enable_loyalty': True,
+        'enable_gift_cards': True,
+        'enable_waitlist': True,
+        'enable_table_management': True,
+        'enable_kitchen_display': True,
+        'webhook_secret': secrets.token_hex(16)
+    }
 }
     # ─── Database Models ───────────────────────────────────────────────
 
