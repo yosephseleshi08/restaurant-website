@@ -21,40 +21,10 @@
 </section>
 
 <!-- Featured Dishes -->
-<section style="padding: 5rem 2rem; max-width: 1200px; margin: 0 auto;">
-    <h2 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 0.5rem;">Chef's Selections</h2>
-    <p style="text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 3rem;">Hand-picked favorites from our kitchen, crafted with the finest Mediterranean ingredients.</p>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
-        {% for item in featured %}
-        <div class="featured-card" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
-            <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 100%; height: 240px; object-fit: cover;">
-            <div style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <h3 style="font-size: 1.3rem; font-family: 'Playfair Display', serif;">{{ item.name }}</h3>
-                    <span class="price">${{ "%.2f"|format(item.price) }}</span>
-                </div>
-                <p style="color: #666; font-size: 0.95rem; margin: 0.5rem 0;">{{ item.description }}</p>
-                {% if item.dietary %}
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    {% for tag in item.dietary %}
-                    <span style="background: rgba(201,168,124,0.1); color: #8B6B4A; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem;">{{ tag }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <div style="text-align: center; margin-top: 3rem;">
-        <a href="/menu" class="btn btn-secondary" style="padding: 0.8rem 2.5rem; border-radius: 50px; border: 2px solid #1A2A3A; color: #1A2A3A; background: transparent;">See Full Menu →</a>
-    </div>
-</section>
-
-<!-- Featured Dishes -->
 <section class="container mb-4">
     <div class="section-title fade-in">
         <h2>Chef's Selections</h2>
-        <p>Hand-picked favorites from our kitchen, crafted with imported Italian ingredients</p>
+        <p>Hand-picked favorites from our kitchen, crafted with the finest Mediterranean ingredients</p>
         <div class="line"></div>
     </div>
     <div class="grid grid-3 mt-2">
@@ -158,7 +128,7 @@
                 </div>
                 <div>
                     <p style="font-weight: 600; font-size: 0.95rem;">{{ t.name }}</p>
-                    <p style="font-size: 0.8rem; color: #999;">Verified Diner</p>
+                    <p style="font-size: 0.8rem; color: #999;">{{ 'Press' if ',' in t.name else 'Verified Diner' }}</p>
                 </div>
             </div>
         </div>
@@ -169,7 +139,7 @@
 <!-- CTA Banner -->
 <section class="cta-banner">
     <div style="max-width: 700px; margin: 0 auto;">
-        <h2>Ready to Experience Authentic Italy?</h2>
+        <h2>Ready to Experience the Coast?</h2>
         <p>Reserve your table today and let us take care of the rest. Walk-ins welcome, but reservations recommended for dinner.</p>
         <div class="cta-actions">
             <a href="/reservations" class="btn" style="background: white; color: var(--primary); box-shadow: 0 4px 20px rgba(0,0,0,0.15);"><i class="fas fa-calendar-check"></i> Reserve Now</a>
