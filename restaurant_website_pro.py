@@ -348,7 +348,7 @@ def create_app(config_name="production"):
             return result
         return current
 
-    def load_data():
+  def load_data():
     with _data_lock:
         if os.path.exists(DATA_FILE):
             try:
@@ -356,12 +356,6 @@ def create_app(config_name="production"):
                     current = json.load(f)
                 return deep_merge(DEFAULT_DATA, current)
             except (json.JSONDecodeError, IOError):
-                # File is corrupted — delete it and use default
-                try:
-                    os.remove(DATA_FILE)
-                    print(f"Removed corrupted {DATA_FILE}")
-                except:
-                    pass
                 return DEFAULT_DATA.copy()
         return DEFAULT_DATA.copy()
 
