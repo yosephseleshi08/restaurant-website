@@ -2,34 +2,312 @@
 {% block title %}Menu — {{ restaurant.name }}{% endblock %}
 {% block content %}
 
-<section style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
-    <h1 style="text-align: center; font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 0.5rem;">Our Menu</h1>
-    <p style="text-align: center; color: #666; font-size: 1.1rem; margin-bottom: 3rem;">Every dish is prepared fresh using Mediterranean ingredients and time-honored techniques.</p>
+<style>
+/* ===== MENU HERO ===== */
+.menu-hero {
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%);
+}
+.menu-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&h=600&fit=crop') center/cover no-repeat;
+    opacity: 0.2;
+}
+.menu-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,15,25,0.8) 0%, rgba(11,15,25,0.6) 50%, rgba(11,15,25,0.95) 100%);
+}
+.menu-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.menu-hero .section-label {
+    color: var(--secondary);
+    border-color: rgba(201,169,110,0.3);
+    background: rgba(201,169,110,0.08);
+    margin-bottom: 1.5rem;
+}
+.menu-hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: 1rem;
+}
+.menu-hero p {
+    font-size: 1.15rem;
+    opacity: 0.7;
+    font-weight: 300;
+    line-height: 1.6;
+}
 
-    <!-- Elegant Category Tabs -->
-    <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 3rem;">
-        <button class="tab-btn active" onclick="filterMenu('all', this)">All</button>
-        {% for category in menu.keys() %}
-        <button class="tab-btn" onclick="filterMenu('{{ category }}', this)">{{ category|capitalize }}</button>
-        {% endfor %}
+/* ===== CATEGORY TABS ===== */
+.category-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 2.5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 50px;
+    border: 2px solid #e8e4df;
+    background: white;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+.tab-btn i {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    transition: color 0.3s;
+}
+.tab-btn:hover {
+    border-color: var(--secondary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201,169,110,0.12);
+}
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), #1a2332);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 8px 25px rgba(11,15,25,0.2);
+    transform: translateY(-2px);
+}
+.tab-btn.active i {
+    color: var(--secondary);
+}
+
+/* ===== MENU GRID ===== */
+.menu-section {
+    padding: 0 2rem 5rem;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+.menu-category {
+    margin-bottom: 4rem;
+}
+.menu-category-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0ebe4;
+}
+.menu-category-header h2 {
+    font-size: 1.8rem;
+    color: var(--primary);
+    text-transform: capitalize;
+}
+.menu-category-count {
+    background: rgba(201,169,110,0.12);
+    color: var(--accent);
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+}
+.menu-item-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+.menu-item-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+.menu-item-img {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+.menu-item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-item-card:hover .menu-item-img img {
+    transform: scale(1.08);
+}
+.menu-item-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.3) 100%);
+}
+.menu-item-badges {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.menu-item-badge {
+    background: rgba(255,255,255,0.95);
+    padding: 0.35rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+}
+.menu-item-badge.popular {
+    background: linear-gradient(135deg, var(--secondary), #b8956a);
+    color: white;
+}
+.menu-item-badge.dietary {
+    color: var(--accent);
+}
+.menu-item-body {
+    padding: 1.75rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+}
+.menu-item-header h3 {
+    font-size: 1.15rem;
+    color: var(--primary);
+    line-height: 1.3;
+}
+.menu-item-price {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--secondary);
+    white-space: nowrap;
+}
+.menu-item-desc {
+    color: #666;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    flex: 1;
+}
+.menu-item-footer {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f5f2ee;
+}
+.menu-item-tag {
+    background: rgba(201,169,110,0.08);
+    color: var(--accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+    .menu-grid { grid-template-columns: 1fr; }
+    .category-tabs { gap: 0.5rem; }
+    .tab-btn { padding: 0.7rem 1.2rem; font-size: 0.85rem; }
+    .menu-hero { padding: 5rem 1.5rem 3rem; }
+}
+</style>
+
+<!-- Menu Hero -->
+<section class="menu-hero">
+    <div class="menu-hero-overlay"></div>
+    <div class="menu-hero-content fade-in">
+        <div class="section-label">Our Culinary Offerings</div>
+        <h1>Our Menu</h1>
+        <p>Every dish is prepared fresh using Mediterranean ingredients and time-honored techniques passed down through generations.</p>
     </div>
+</section>
 
-    <!-- Menu Grid -->
+<!-- Category Tabs -->
+<div class="category-tabs fade-in">
+    <button class="tab-btn active" onclick="filterMenu('all', this)">
+        <i class="fas fa-th-large"></i> All
+    </button>
+    {% for category in menu.keys() %}
+    <button class="tab-btn" onclick="filterMenu('{{ category }}', this)">
+        {% if category == 'raw bar' %}<i class="fas fa-fish"></i>{% endif %}
+        {% if category == 'small plates' %}<i class="fas fa-utensils"></i>{% endif %}
+        {% if category == 'mains' %}<i class="fas fa-drumstick-bite"></i>{% endif %}
+        {% if category == 'desserts' %}<i class="fas fa-ice-cream"></i>{% endif %}
+        {% if category == 'craft cocktails' %}<i class="fas fa-cocktail"></i>{% endif %}
+        {% if category == 'wine selection' %}<i class="fas fa-wine-glass-alt"></i>{% endif %}
+        {{ category }}
+    </button>
+    {% endfor %}
+</div>
+
+<!-- Menu Grid -->
+<section class="menu-section">
     <div id="menuGrid">
         {% for category, items in menu.items() %}
-        <div class="menu-category" data-category="{{ category }}" style="display: {% if loop.first %}block{% else %}none{% endif %};">
-            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 2rem; border-bottom: 3px solid #C9A87C; padding-bottom: 0.5rem; display: inline-block;">{{ category|capitalize }}</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+        <div class="menu-category" data-category="{{ category }}">
+            <div class="menu-category-header">
+                <h2>{{ category }}</h2>
+                <span class="menu-category-count">{{ items|length }} items</span>
+            </div>
+            <div class="menu-grid">
                 {% for item in items %}
-                <div class="menu-item" style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: none; padding: 0;">
-                    <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 100%; height: 200px; object-fit: cover;">
-                    <div style="padding: 1.5rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                            <h3 style="font-size: 1.2rem; font-family: 'Playfair Display', serif;">{{ item.name }}</h3>
-                            <span class="price">${{ "%.2f"|format(item.price) }}</span>
+                <div class="menu-item-card fade-in">
+                    <div class="menu-item-img">
+                        <img src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
+                        <div class="menu-item-img-overlay"></div>
+                        <div class="menu-item-badges">
+                            {% if item.popular %}<span class="menu-item-badge popular"><i class="fas fa-fire" style="margin-right:0.3rem;"></i>Popular</span>{% endif %}
+                            {% for tag in item.dietary %}
+                            <span class="menu-item-badge dietary">{{ tag }}</span>
+                            {% endfor %}
                         </div>
-                        <p style="color: #666; font-size: 0.9rem; margin: 0.5rem 0;">{{ item.description }}</p>
-                        {% if item.popular %}<span style="background: #C9A87C; color: white; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">Popular</span>{% endif %}
+                    </div>
+                    <div class="menu-item-body">
+                        <div class="menu-item-header">
+                            <h3>{{ item.name }}</h3>
+                            <span class="menu-item-price">${{ "%.2f"|format(item.price) }}</span>
+                        </div>
+                        <p class="menu-item-desc">{{ item.description }}</p>
+                        <div class="menu-item-footer">
+                            {% for tag in item.dietary %}
+                            <span class="menu-item-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -43,9 +321,26 @@
 function filterMenu(category, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.menu-category').forEach(cat => {
-        cat.style.display = (category === 'all' || cat.dataset.category === category) ? 'block' : 'none';
+
+    const categories = document.querySelectorAll('.menu-category');
+    categories.forEach(cat => {
+        if (category === 'all' || cat.dataset.category === category) {
+            cat.style.display = 'block';
+            // Re-trigger fade-in animation
+            cat.querySelectorAll('.fade-in').forEach(el => {
+                el.style.animation = 'none';
+                el.offsetHeight; // trigger reflow
+                el.style.animation = '';
+            });
+        } else {
+            cat.style.display = 'none';
+        }
     });
+
+    // Scroll to menu section
+    if (category !== 'all') {
+        document.querySelector('.menu-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 </script>
 
