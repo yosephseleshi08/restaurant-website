@@ -94,170 +94,180 @@ def create_app(config_name="production"):
     _data_lock = threading.Lock()
 
     DEFAULT_DATA = {
-        'theme': {
-            'primary_color': '#E85D3A',
-            'secondary_color': '#F4A261',
-            'background_color': '#FFF8F0',
-            'text_color': '#2D1B12',
-            'card_bg': '#FFFFFF',
-            'accent_color': '#2A9D8F',
-            'font_family': "'Inter', sans-serif",
-            'dark_mode': False,
-            'custom_css': ''
-        },
-        'seo': {
-            'meta_title': 'La Bella Cucina — Authentic Italian Dining Experience',
-            'meta_description': 'Experience authentic Italian cuisine at La Bella Cucina. Fresh ingredients, family recipes, warm hospitality. Book your table today.',
-            'meta_keywords': 'italian restaurant, pasta, pizza, fine dining, reservations',
-            'og_image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=630&fit=crop',
-            'google_analytics_id': '',
-            'facebook_pixel': ''
-        },
-        'restaurant': {
-            'name': "La Bella Cucina",
-            'tagline': "Authentic Italian Dining Experience",
-            'address': "123 Main Street, Foodville, FD 12345",
-            'phone': "(555) 123-4567",
-            'phone_link': "+15551234567",
-            'email': "info@labellacucina.com",
-            'hours': {
-                'monday': '11:00 AM - 10:00 PM',
-                'tuesday': '11:00 AM - 10:00 PM',
-                'wednesday': '11:00 AM - 10:00 PM',
-                'thursday': '11:00 AM - 10:00 PM',
-                'friday': '11:00 AM - 11:00 PM',
-                'saturday': '10:00 AM - 11:00 PM',
-                'sunday': '10:00 AM - 9:00 PM'
-            },
-            'social': {
-                'instagram': 'labellacucina',
-                'facebook': 'LaBellaCucina',
-                'twitter': 'LaBellaCucina',
-                'yelp': 'la-bella-cucina-foodville'
-            },
-            'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-74.006!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjEiTiA3NMKwMDAnMjEuNiJX!5e0!3m2!1sen!2us!4v1'
-        },
-        'about': {
-            'story': "Founded in 2010 by Chef Marco Rossi, La Bella Cucina brings the heart of Tuscany to your table.",
-            'chef_name': "Chef Marco Rossi",
-            'chef_bio': "With over 20 years of experience in Michelin-starred kitchens across Rome and Florence.",
-            'chef_image': "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop",
-            'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
-            'food_image': "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=600&fit=crop",
-            'values': [
-                {'title': 'Fresh Ingredients', 'description': 'We source locally and import directly from Italy every week.'},
-                {'title': 'Family Recipes', 'description': 'Every sauce and dough is made from scratch using time-honored techniques.'},
-                {'title': 'Warm Hospitality', 'description': 'We treat every guest like family from the moment you walk through our doors.'}
-            ]
-        },
-        'testimonials': [
-            {'name': 'Sarah M.', 'text': 'The best carbonara I have had outside of Rome!', 'rating': 5},
-            {'name': 'James & Linda K.', 'text': 'We celebrated our anniversary here and the staff made us feel so special.', 'rating': 5},
-            {'name': 'David R.', 'text': 'Authentic flavors, generous portions, and the wine selection is incredible.', 'rating': 5},
-            {'name': 'Maria G.', 'text': 'As an Italian expat, I can confirm this is the real deal.', 'rating': 5}
-        ],
-        'menu': {
-            'appetizers': [
-                {'name': 'Bruschetta al Pomodoro', 'description': 'Grilled sourdough topped with fresh tomatoes, basil, garlic, and extra virgin olive oil', 'price': 12.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1572695157369-7b5e6e5a04c5?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
-                {'name': 'Calamari Fritti', 'description': 'Tender calamari lightly fried and served with lemon aioli', 'price': 14.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1599084993091-41d2bd2722cc6?w=500&h=350&fit=crop', 'dietary': []},
-                {'name': 'Burrata e Prosciutto', 'description': 'Creamy burrata cheese with aged prosciutto di Parma, arugula, and balsamic glaze', 'price': 16.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=500&h=350&fit=crop', 'dietary': []}
-            ],
-            'mains': [
-                {'name': 'Spaghetti alla Carbonara', 'description': 'Classic Roman pasta with guanciale, pecorino romano, farm eggs, and cracked black pepper', 'price': 22.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&h=350&fit=crop', 'dietary': []},
-                {'name': 'Chicken Parmigiana', 'description': 'Hand-breaded chicken breast with San Marzano marinara, fresh mozzarella, and parmesan', 'price': 24.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=500&h=350&fit=crop', 'dietary': []},
-                {'name': 'Margherita Pizza', 'description': 'San Marzano tomato sauce, fresh fior di latte mozzarella, basil, and EVOO on wood-fired crust', 'price': 18.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
-                {'name': 'Osso Buco alla Milanese', 'description': 'Braised veal shank in white wine and gremolata, served with saffron risotto', 'price': 34.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
-            ],
-            'desserts': [
-                {'name': 'Tiramisu Classico', 'description': 'Layers of espresso-soaked ladyfingers and mascarpone cream, dusted with Valrhona cocoa', 'price': 10.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
-                {'name': 'Panna Cotta', 'description': 'Silky vanilla bean custard with seasonal berry compote and fresh mint', 'price': 9.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
-            ],
-            'beverages': [
-                {'name': 'Espresso Doppio', 'description': 'Double shot of rich Italian espresso, roasted in-house', 'price': 4.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
-                {'name': 'Aperol Spritz', 'description': 'Aperol, prosecco, and soda with a fresh orange slice and green olive', 'price': 12.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
-                {'name': 'Limonata Fresca', 'description': 'House-made lemonade with fresh Sicilian lemons, mint, and a touch of honey', 'price': 6.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
-            ]
-        },
-        'reservations': {
-            'hold_time': '15 minutes',
-            'large_party_note': 'Parties of 8+ please call directly',
-            'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00'],
-            'max_guests_per_slot': 30
-        },
-        'online_ordering': {
-            'enabled': True,
-            'page_title': 'Order Online',
-            'page_subtitle': 'Enjoy our authentic Italian cuisine from the comfort of your home.',
-            'platforms': [
-                {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
-                {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
-                {'name': 'Grubhub', 'url': 'https://grubhub.com', 'icon': 'fa-hamburger', 'active': True, 'color': '#F63440'},
-                {'name': 'Toast', 'url': 'https://toasttab.com', 'icon': 'fa-receipt', 'active': False, 'color': '#4A90D9'}
-            ]
-        },
-        'gallery': {
-            'enabled': True,
-            'page_title': 'Gallery',
-            'page_subtitle': 'A glimpse into our kitchen, our dishes, and the warm atmosphere that awaits you.',
-            'photos': [
-                {'url': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop', 'caption': 'Our signature dining room', 'category': 'interior'},
-                {'url': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop', 'caption': 'Wood-fired Margherita Pizza', 'category': 'food'},
-                {'url': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop', 'caption': 'Spaghetti alla Carbonara', 'category': 'food'},
-                {'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'Elegant dining atmosphere', 'category': 'interior'},
-                {'url': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&h=600&fit=crop', 'caption': 'Tiramisu Classico', 'category': 'food'},
-                {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Our open kitchen', 'category': 'interior'},
-                {'url': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=800&h=600&fit=crop', 'caption': 'Aperol Spritz', 'category': 'drinks'},
-                {'url': 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=800&h=600&fit=crop', 'caption': 'Private dining room', 'category': 'interior'}
-            ]
-        },
-        'events': {
-            'enabled': True,
-            'page_title': 'Events & Private Dining',
-            'page_subtitle': 'Host your next celebration with us. From intimate dinners to large gatherings, we create unforgettable experiences.',
-            'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop',
-            'cta_title': 'Book Your Private Event',
-            'cta_text': 'Let us help you plan the perfect occasion. Contact us to discuss custom menus and special requests.',
-            'services': [
-                {'title': 'Private Dining Room', 'description': 'An intimate space for up to 24 guests, perfect for family celebrations and business meetings.', 'icon': 'fa-utensils'},
-                {'title': 'Full Restaurant Buyout', 'description': 'Host up to 80 guests for a truly exclusive experience. Ideal for weddings and corporate events.', 'icon': 'fa-building'},
-                {'title': 'Catering & Off-Site', 'description': 'Bring the flavors of La Bella Cucina to your venue. Full-service catering for events of any size.', 'icon': 'fa-truck'},
-                {'title': 'Wine Pairing Dinners', 'description': 'Elevate your event with a curated wine pairing experience.', 'icon': 'fa-wine-glass'}
-            ],
-            'upcoming_events': [
-                {'title': 'Wine & Dine Wednesday', 'description': 'Every Wednesday, enjoy a 3-course prix fixe menu paired with sommelier-selected wines. $65 per person.', 'date': 'Every Wednesday', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
-                {'title': 'Sunday Family Feast', 'description': 'A rotating family-style menu featuring classic Italian dishes served at communal tables.', 'date': 'Every Sunday', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
-                {'title': 'Pasta Making Class', 'description': 'Learn the art of fresh pasta from Chef Marco. Includes hands-on instruction and dinner.', 'date': 'First Saturday of the month', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
-            ]
-        },
-        'analytics': {
-            'daily_sales': [1250, 1420, 1380, 1680, 2100, 2450, 1800],
-            'monthly_revenue': [45000, 52000, 49000, 58000, 62000, 68000],
-            'popular_items': ['Spaghetti Carbonara', 'Chicken Parmigiana', 'Margherita Pizza'],
-            'customer_satisfaction': 4.8,
-            'total_reservations': 156
-        },
-        'settings': {
-            'sendgrid_api_key': '',
-            'from_email': '',
-            'notification_email': '',
-            'currency': '$',
-            'tax_rate': 8.5,
-            'delivery_fee': 5.0,
-            'min_order': 15.0,
-            'cookie_consent': True,
-            'enable_online_ordering': True,
-            'enable_reservations': True,
-            'enable_events': True,
-            'enable_gallery': True,
-            'enable_loyalty': True,
-            'enable_gift_cards': True,
-            'enable_waitlist': True,
-            'enable_table_management': True,
-            'enable_kitchen_display': True,
-            'webhook_secret': secrets.token_hex(16)
+    'theme': {
+        'primary_color': '#C0392B',
+        'secondary_color': '#E67E22',
+        'background_color': '#FDF8F5',
+        'text_color': '#2C1810',
+        'card_bg': '#FFFFFF',
+        'accent_color': '#8E44AD',
+        'font_family': "'Playfair Display', 'Inter', sans-serif",
+        'dark_mode': False,
+        'custom_css': '''
+        .hero {
+            background: linear-gradient(135deg, rgba(192,57,43,0.9), rgba(44,24,16,0.95));
         }
+        .btn-primary {
+            background: linear-gradient(135deg, #C0392B, #E67E22);
+        }
+        .featured-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(192,57,43,0.2);
+        }
+        '''
+    },
+    'seo': {
+        'meta_title': 'Il Forno Ristorante — Award-Winning Italian Fine Dining in NYC',
+        'meta_description': 'Experience authentic Italian cuisine at Il Forno Ristorante. Michelin-rated, farm-to-table ingredients, award-winning wine list. Reserve your table today.',
+        'meta_keywords': 'italian restaurant, fine dining, michelin rated, wine bar, NYC restaurants, romantic dinner',
+        'og_image': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=630&fit=crop',
+        'google_analytics_id': '',
+        'facebook_pixel': ''
+    },
+    'restaurant': {
+        'name': "Il Forno Ristorante",
+        'tagline': "Where Tradition Meets Culinary Art • Est. 2008",
+        'address': "45 West 54th Street, New York, NY 10019",
+        'phone': "(212) 555-0188",
+        'phone_link': "+12125550188",
+        'email': "reservations@ilfornonyc.com",
+        'hours': {
+            'monday': '5:00 PM - 10:00 PM',
+            'tuesday': '5:00 PM - 10:00 PM',
+            'wednesday': '5:00 PM - 10:00 PM',
+            'thursday': '5:00 PM - 10:00 PM',
+            'friday': '5:00 PM - 11:00 PM',
+            'saturday': '4:30 PM - 11:00 PM',
+            'sunday': '4:00 PM - 9:00 PM'
+        },
+        'social': {
+            'instagram': 'ilforno_nyc',
+            'facebook': 'IlFornoNYC',
+            'twitter': 'IlFornoNYC',
+            'yelp': 'il-forno-ristorante-nyc'
+        },
+        'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-74.006!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQyJzQ2LjEiTiA3NMKwMDAnMjEuNiJX!5e0!3m2!1sen!2us!4v1'
+    },
+    'about': {
+        'story': "In 2008, Chef Alessandro Bianchi left his two-Michelin-starred position in Florence to bring true Italian culinary artistry to New York. What started as a passion project — a 30-seat trattoria — has become one of Manhattan's most celebrated dining destinations. Today, Il Forno Ristorante continues to honor traditional Italian techniques while embracing locally-sourced, sustainable ingredients. Every dish tells a story of family, heritage, and an unwavering commitment to excellence.",
+        'chef_name': "Chef Alessandro Bianchi",
+        'chef_bio': "A native of Tuscany, Chef Alessandro honed his craft in Michelin-starred kitchens across Florence and Rome for over 15 years. His philosophy is simple: let the ingredients speak. Known for his signature handmade pastas and wood-fired meats, Chef Alessandro brings the soul of Italy to every plate. Named 'Best New Chef' by Food & Wine magazine in 2010, he continues to push boundaries while honoring tradition.",
+        'chef_image': "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=400&h=400&fit=crop",
+        'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=600&fit=crop",
+        'food_image': "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=600&fit=crop",
+        'values': [
+            {'title': 'Farm-to-Table Philosophy', 'description': 'We partner with local farms and import directly from Italy to ensure every ingredient is at its peak freshness.'},
+            {'title': 'Generations of Tradition', 'description': 'Every sauce, pasta, and bread is made from scratch daily using family recipes passed down through five generations.'},
+            {'title': 'Warm Italian Hospitality', 'description': 'From the moment you walk through our doors, you are family. We treat every guest with the warmth and care of a traditional Italian home.'}
+        ]
+    },
+    'testimonials': [
+        {'name': 'Victoria S.', 'text': 'The best dining experience I have ever had. The truffle pasta was life-changing. Chef Alessandro is a true artist.', 'rating': 5},
+        {'name': 'Michael & Elena R.', 'text': 'We celebrated our 10th anniversary here and it was nothing short of magical. The staff made us feel like royalty.', 'rating': 5},
+        {'name': 'David C., Food Critic', 'text': 'Il Forno has quickly become one of the finest Italian restaurants in NYC. The attention to detail is unparalleled.', 'rating': 5},
+        {'name': 'Maria G.', 'text': 'As an Italian expat, I can finally say I found authentic Italian cuisine in New York. The carbonara rivals my grandmother\'s.', 'rating': 5}
+    ],
+    'menu': {
+        'appetizers': [
+            {'name': 'Burrata e Prosciutto di Parma', 'description': 'Creamy house-made burrata with 24-month aged prosciutto, heirloom tomatoes, and aged balsamic', 'price': 18.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1529312266912-b33cf6227e24?w=500&h=350&fit=crop', 'dietary': []},
+            {'name': 'Calamari Fritti al Limone', 'description': 'Wild-caught calamari, lightly fried, served with lemon aioli and fresh herb salad', 'price': 16.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1599084993091-41d2bd2722cc6?w=500&h=350&fit=crop', 'dietary': []},
+            {'name': 'Bruschetta al Pomodoro e Basilico', 'description': 'Wood-fired sourdough with San Marzano tomatoes, fresh basil, garlic, and extra virgin olive oil', 'price': 13.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1572695157369-7b5e6e5a04c5?w=500&h=350&fit=crop', 'dietary': ['vegetarian']}
+        ],
+        'mains': [
+            {'name': 'Spaghetti alla Carbonara Tradizionale', 'description': 'Fresh pasta with guanciale, pecorino romano, farm eggs, and cracked black pepper', 'price': 26.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=500&h=350&fit=crop', 'dietary': []},
+            {'name': 'Pollo alla Parmigiana', 'description': 'Hand-breaded organic chicken breast with San Marzano marinara, fresh mozzarella, and basil', 'price': 28.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?w=500&h=350&fit=crop', 'dietary': []},
+            {'name': 'Margherita Pizza al Forno', 'description': 'San Marzano tomato sauce, fior di latte mozzarella, basil, and EVOO on our signature wood-fired crust', 'price': 21.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Osso Buco alla Milanese', 'description': 'Braised veal shank in white wine with gremolata, served with saffron risotto', 'price': 38.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=500&h=350&fit=crop', 'dietary': ['gluten-free']}
+        ],
+        'desserts': [
+            {'name': 'Tiramisu Classico', 'description': 'Layers of espresso-soaked ladyfingers with mascarpone cream, dusted with Valrhona cocoa', 'price': 12.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop', 'dietary': ['vegetarian']},
+            {'name': 'Panna Cotta alla Vaniglia', 'description': 'Silky vanilla bean custard with seasonal berry compote and fresh mint', 'price': 10.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
+        ],
+        'beverages': [
+            {'name': 'Espresso Doppio', 'description': 'Double shot of our signature Italian espresso blend, roasted in-house', 'price': 5.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
+            {'name': 'Aperol Spritz', 'description': 'Aperol, prosecco, and soda with fresh orange and green olive', 'price': 14.99, 'popular': True, 'image': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']},
+            {'name': 'Limonata Fresca', 'description': 'House-made Sicilian lemonade with fresh mint and a touch of honey', 'price': 7.99, 'popular': False, 'image': 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&h=350&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}
+        ]
+    },
+    'reservations': {
+        'hold_time': '15 minutes',
+        'large_party_note': 'Parties of 8+ please call us directly at (212) 555-0188',
+        'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'],
+        'max_guests_per_slot': 25
+    },
+    'online_ordering': {
+        'enabled': True,
+        'page_title': 'Order Online',
+        'page_subtitle': 'Experience Il Forno from the comfort of your home. Fine dining, delivered.',
+        'platforms': [
+            {'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'},
+            {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'},
+            {'name': 'Grubhub', 'url': 'https://grubhub.com', 'icon': 'fa-hamburger', 'active': True, 'color': '#F63440'},
+            {'name': 'Toast', 'url': 'https://toasttab.com', 'icon': 'fa-receipt', 'active': False, 'color': '#4A90D9'}
+        ]
+    },
+    'gallery': {
+        'enabled': True,
+        'page_title': 'Gallery',
+        'page_subtitle': 'A visual journey through Il Forno — from our kitchen to your table.',
+        'photos': [
+            {'url': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop', 'caption': 'Our signature dining room', 'category': 'interior'},
+            {'url': 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop', 'caption': 'Wood-fired Margherita Pizza', 'category': 'food'},
+            {'url': 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop', 'caption': 'Spaghetti alla Carbonara', 'category': 'food'},
+            {'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'Elegant dining atmosphere', 'category': 'interior'},
+            {'url': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&h=600&fit=crop', 'caption': 'Tiramisu Classico', 'category': 'food'},
+            {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Our open kitchen', 'category': 'interior'},
+            {'url': 'https://images.unsplash.com/photo-1560512823-8ea9f5b3028b?w=800&h=600&fit=crop', 'caption': 'Aperol Spritz', 'category': 'drinks'},
+            {'url': 'https://images.unsplash.com/photo-1550966871-3ed3c47e2ce2?w=800&h=600&fit=crop', 'caption': 'Private dining room', 'category': 'interior'}
+        ]
+    },
+    'events': {
+        'enabled': True,
+        'page_title': 'Events & Private Dining',
+        'page_subtitle': 'Host your next celebration in the heart of Manhattan. From intimate dinners to grand galas, we create unforgettable experiences.',
+        'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop',
+        'cta_title': 'Plan Your Private Event',
+        'cta_text': 'Let our award-winning team create a bespoke culinary experience for your special occasion. Contact our event coordinator to discuss custom menus and exclusive buyouts.',
+        'services': [
+            {'title': 'Private Dining Room', 'description': 'An intimate space for up to 24 guests. Perfect for family celebrations, business meetings, and romantic dinners.', 'icon': 'fa-utensils'},
+            {'title': 'Full Restaurant Buyout', 'description': 'Exclusive access to our entire 80-seat venue. Ideal for weddings, corporate events, and grand celebrations.', 'icon': 'fa-building'},
+            {'title': 'Off-Site Catering', 'description': 'Bring the Il Forno experience to your venue. Full-service catering for events of any size, anywhere in NYC.', 'icon': 'fa-truck'},
+            {'title': 'Wine & Dine Experiences', 'description': 'Curated wine pairing dinners led by our sommelier. Perfect for corporate events or special occasions.', 'icon': 'fa-wine-glass'}
+        ],
+        'upcoming_events': [
+            {'title': 'Wine & Dine Wednesday', 'description': 'Every Wednesday, enjoy a 4-course prix fixe menu paired with sommelier-selected wines. $85 per person.', 'date': 'Every Wednesday', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'},
+            {'title': 'Sunday Family Feast', 'description': 'A rotating family-style menu featuring our most celebrated dishes. Served at communal tables.', 'date': 'Every Sunday', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'},
+            {'title': 'Pasta Making Class', 'description': 'Learn the art of fresh pasta from Chef Alessandro himself. Includes hands-on instruction and a three-course dinner.', 'date': 'First Saturday of the month', 'image': 'https://images.unsplash.com/photo-1551183053-bf91b1dca034?w=600&h=400&fit=crop'}
+        ]
+    },
+    'analytics': {
+        'daily_sales': [2850, 3200, 2950, 3800, 4200, 5100, 3900],
+        'monthly_revenue': [85000, 92000, 89000, 105000, 115000, 125000],
+        'popular_items': ['Spaghetti alla Carbonara', 'Osso Buco', 'Tiramisu'],
+        'customer_satisfaction': 4.9,
+        'total_reservations': 342
+    },
+    'settings': {
+        'sendgrid_api_key': '',
+        'from_email': '',
+        'notification_email': '',
+        'currency': '$',
+        'tax_rate': 8.875,
+        'delivery_fee': 7.99,
+        'min_order': 25.00,
+        'cookie_consent': True,
+        'enable_online_ordering': True,
+        'enable_reservations': True,
+        'enable_events': True,
+        'enable_gallery': True,
+        'enable_loyalty': True,
+        'enable_gift_cards': True,
+        'enable_waitlist': True,
+        'enable_table_management': True,
+        'enable_kitchen_display': True,
+        'webhook_secret': secrets.token_hex(16)
     }
-
+}
     # ─── Database Models ───────────────────────────────────────────────
 
     class User(db.Model):
