@@ -11,6 +11,7 @@
     <div class="card">
         <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-user text-primary"></i> Your Details</h3>
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
                 <label>Full Name *</label>
                 <input type="text" name="name" required placeholder="John Doe">
