@@ -494,18 +494,19 @@ def create_app(config_name="production"):
         with app.app_context():
             db.create_all()
             if User.query.count() == 0:
+                initial_password = os.environ.get('ADMIN_INITIAL_PASSWORD') or secrets.token_urlsafe(12)
                 admin = User(
-                    username='admin', 
-                    password_hash=generate_password_hash('admin123'), 
+                    username='admin',
+                    password_hash=generate_password_hash(initial_password),
                     role='admin'
                 )
                 db.session.add(admin)
                 db.session.commit()
                 print("\n" + "=" * 60)
-                print("  ADMIN CREDENTIALS")
+                print("  ADMIN CREDENTIALS (one-time — change on first login)")
                 print("=" * 60)
                 print("  Username: admin")
-                print("  Password: admin123")
+                print(f"  Password: {initial_password}")
                 print("=" * 60 + "\n")
 
     def track_page_view(page):
@@ -832,6 +833,41 @@ def create_app(config_name="production"):
         data = load_data()
         return render_template('about.html',
             theme=data['theme'], restaurant=data['restaurant'], about=data['about'],
+            current_year=datetime.now().year, seo=data['seo'])
+
+    @app.route('/privacy')
+    def privacy():
+        data = load_data()
+        content = f"""
+        <p>{data['restaurant']['name']} ("we", "us") collects the information you provide when making a reservation, joining our loyalty program, or placing an order — such as your name, email, phone number, and order details.</p>
+        <p>We use this information solely to fulfill reservations and orders, communicate with you about your visit, and, where you've opted in, send occasional updates about the restaurant. We do not sell your personal information to third parties.</p>
+        <p>We retain reservation and order records as needed for business and legal purposes. You may request access to, or deletion of, your personal data at any time by contacting us.</p>
+        """
+        return render_template('legal.html', theme=data['theme'], restaurant=data['restaurant'],
+            page_title='Privacy Policy', page_content=content,
+            current_year=datetime.now().year, seo=data['seo'])
+
+    @app.route('/terms')
+    def terms():
+        data = load_data()
+        content = f"""
+        <p>By using this website or placing an order or reservation with {data['restaurant']['name']}, you agree to these terms.</p>
+        <p>Reservations are held for 15 minutes past the booked time unless we're notified of a delay. Online orders are subject to availability and current menu pricing, which may change without notice. Gift cards and loyalty points are non-transferable for cash value except where required by law.</p>
+        <p>All content on this site — including photography, menu descriptions, and branding — is the property of {data['restaurant']['name']} and may not be reproduced without permission.</p>
+        """
+        return render_template('legal.html', theme=data['theme'], restaurant=data['restaurant'],
+            page_title='Terms of Service', page_content=content,
+            current_year=datetime.now().year, seo=data['seo'])
+
+    @app.route('/accessibility')
+    def accessibility():
+        data = load_data()
+        content = f"""
+        <p>{data['restaurant']['name']} is committed to making our website usable for all guests, including those using assistive technology. We aim to meet WCAG 2.1 AA guidelines across this site.</p>
+        <p>If you encounter any barrier while browsing our menu, making a reservation, or ordering online, please let us know so we can address it. Our dining room can also accommodate accessibility needs — call us ahead of your visit and we'll be glad to help.</p>
+        """
+        return render_template('legal.html', theme=data['theme'], restaurant=data['restaurant'],
+            page_title='Accessibility', page_content=content,
             current_year=datetime.now().year, seo=data['seo'])
 
     @app.route('/contact', methods=['GET', 'POST'])
@@ -2033,7 +2069,7 @@ if __name__ == '__main__':
     print("=" * 60)
     print("  RESTAURANT CMS PRO — v2.0")
     print("=" * 60)
-    print("  Login:    admin / admin123")
+    print("  Login:    admin / (see one-time password printed above on first run)")
     print("  Health:   http://localhost:5000/health")
     print("=" * 60)
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
