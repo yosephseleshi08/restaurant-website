@@ -3,7 +3,7 @@
 {% block content %}
 <style>
 .about-hero { position: relative; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; overflow: hidden; }
-.about-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
+.about-hero-bg { position: absolute; inset: 0; background: url('{{ about.interior_image }}') center/cover no-repeat; }
 .about-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,15,25,0.6) 0%, rgba(11,15,25,0.8) 100%); }
 .about-hero-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; }
 .about-section { padding: 5rem 2rem; }
@@ -19,7 +19,7 @@
 </style>
 
 <section class="about-hero">
-    <div class="about-hero-bg" style="background-image: url('{{ about.interior_image }}');"></div>
+    <div class="about-hero-bg"></div>
     <div class="about-hero-overlay"></div>
     <div class="about-hero-content">
         <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Our Story</h1>
