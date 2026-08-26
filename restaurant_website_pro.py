@@ -45,7 +45,7 @@ def create_app(config_name="production"):
     DATA_FILE = 'restaurant_data.json'
     _data_lock = threading.Lock()
 
-        DEFAULT_DATA = {
+    DEFAULT_DATA = {
         'theme': {'primary_color': '#0B0F19', 'secondary_color': '#C9A96E', 'background_color': '#FAF7F2', 'text_color': '#1A1A1A', 'card_bg': '#FFFFFF', 'accent_color': '#8B7355', 'font_family': "'Playfair Display', 'Georgia', serif", 'dark_mode': False, 'custom_css': ''},
         'seo': {'meta_title': 'Aurelia — Modern Coastal Mediterranean Dining', 'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia.', 'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations', 'og_image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=630&fit=crop', 'google_analytics_id': '', 'facebook_pixel': ''},
         'restaurant': {'name': "Aurelia", 'tagline': "Modern Coastal Mediterranean Dining", 'address': "47 Harbor View Boulevard, Marina District, CA 94123", 'phone': "(415) 555-0199", 'phone_link': "+14155550199", 'email': "reservations@aurelia.co", 'hours': {'monday': '5:00 PM - 10:00 PM', 'tuesday': '5:00 PM - 10:00 PM', 'wednesday': '5:00 PM - 10:00 PM', 'thursday': '5:00 PM - 10:00 PM', 'friday': '5:00 PM - 11:00 PM', 'saturday': '4:30 PM - 11:00 PM', 'sunday': '4:00 PM - 9:30 PM'}, 'social': {'instagram': 'aurelia.dining', 'facebook': 'AureliaDining', 'twitter': 'AureliaDining', 'yelp': 'aurelia-marina-district'}},
