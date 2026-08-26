@@ -1,363 +1,59 @@
 {% extends "base.html" %}
 {% block title %}Reservations — {{ restaurant.name }}{% endblock %}
 {% block content %}
-
 <style>
-.res-hero {
-    position: relative;
-    padding: 5rem 2rem;
-    text-align: center;
-    color: white;
-    overflow: hidden;
-    background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%);
+.res-section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+.res-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+.res-info-card { background: var(--primary); color: white; padding: 2.5rem; border-radius: 20px; }
+.res-info-card h3 { color: white; margin-bottom: 1.5rem; font-size: 1.5rem; }
+.res-info-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
+.res-info-item i { color: var(--secondary); font-size: 1.2rem; margin-top: 0.2rem; }
+.res-info-item p { margin: 0; font-size: 0.95rem; opacity: 0.9; }
+.res-info-item a { color: white; text-decoration: none; opacity: 0.9; }
+.res-form-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.res-form-card h3 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.5rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 0.85rem; border: 1px solid #ddd; border-radius: 10px;
+    font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.3s;
 }
-.res-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&h=800&fit=crop') center/cover no-repeat;
-    opacity: 0.25;
-}
-.res-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(11,15,25,0.85) 0%, rgba(11,15,25,0.7) 50%, rgba(11,15,25,0.95) 100%);
-}
-.res-hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 700px;
-    margin: 0 auto;
-}
-.res-hero .section-label {
-    color: var(--secondary);
-    border-color: rgba(201,169,110,0.3);
-    background: rgba(201,169,110,0.08);
-    margin-bottom: 1.5rem;
-}
-.res-hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    margin-bottom: 1rem;
-}
-.res-hero p {
-    font-size: 1.15rem;
-    opacity: 0.75;
-    font-weight: 300;
-    line-height: 1.6;
-}
-
-.res-section {
-    padding: 4rem 2rem 6rem;
-    background: linear-gradient(180deg, var(--background) 0%, #f5f1eb 50%, var(--background) 100%);
-    position: relative;
-    overflow: hidden;
-}
-.res-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1px;
-    height: 100px;
-    background: linear-gradient(180deg, var(--secondary), transparent);
-    opacity: 0.3;
-}
-.res-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 2.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
-
-/* Info Card */
-.info-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-.info-panel-card {
-    background: white;
-    border-radius: 24px;
-    padding: 2rem;
-    box-shadow: 0 4px 25px rgba(0,0,0,0.05);
-    border: 1px solid rgba(0,0,0,0.03);
-    transition: all 0.4s ease;
-}
-.info-panel-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-}
-.info-panel-card h3 {
-    font-size: 1.2rem;
-    color: var(--primary);
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.info-panel-card h3 i {
-    color: var(--secondary);
-    font-size: 1rem;
-}
-.info-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.info-list li {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid #f5f2ee;
-    font-size: 0.95rem;
-}
-.info-list li:last-child { border-bottom: none; }
-.info-list li i {
-    color: var(--secondary);
-    width: 24px;
-    text-align: center;
-    font-size: 0.9rem;
-}
-.info-list li strong {
-    color: var(--primary);
-    font-weight: 600;
-}
-.info-list li a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s;
-}
-.info-list li a:hover {
-    color: var(--secondary);
-}
-
-.map-container {
-    border-radius: 16px;
-    overflow: hidden;
-    height: 200px;
-    margin-top: 1rem;
-    border: 1px solid #f0ebe4;
-}
-.map-container iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-/* Form Card */
-.form-panel {
-    background: white;
-    border-radius: 28px;
-    padding: 2.5rem;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.03);
-}
-.form-panel h3 {
-    font-size: 1.3rem;
-    color: var(--primary);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.form-panel h3 i {
-    color: var(--secondary);
-}
-.form-field {
-    margin-bottom: 1.25rem;
-}
-.form-field label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text);
-}
-.form-field label i {
-    color: var(--secondary);
-    margin-right: 0.4rem;
-    font-size: 0.85rem;
-}
-.form-field input,
-.form-field select,
-.form-field textarea {
-    width: 100%;
-    padding: 0.9rem 1.1rem;
-    border: 2px solid #e8e4df;
-    border-radius: 14px;
-    font-size: 0.95rem;
-    font-family: var(--font-body);
-    transition: all 0.3s ease;
-    color: var(--text);
-    background: white;
-}
-.form-field input:focus,
-.form-field select:focus,
-.form-field textarea:focus {
-    outline: none;
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 4px rgba(201,169,110,0.1);
-}
-.form-field input::placeholder,
-.form-field textarea::placeholder {
-    color: #bbb;
-}
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--secondary); }
 .submit-btn {
-    width: 100%;
-    padding: 1.1rem;
-    background: linear-gradient(135deg, var(--primary), #1a2332);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    font-family: var(--font-body);
-    letter-spacing: 0.3px;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
+    width: 100%; padding: 1rem; background: var(--primary); color: white; border: none;
+    border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: background 0.3s;
 }
-.submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(11,15,25,0.2);
-}
-
-.alert-success-custom {
-    background: #f0f7f0;
-    color: #2d6a2d;
-    padding: 1.25rem 1.5rem;
-    border-radius: 16px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #4caf50;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-}
-.alert-error-custom {
-    background: #fdf2f2;
-    color: #9b2c2c;
-    padding: 1.25rem 1.5rem;
-    border-radius: 16px;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #ef4444;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
-}
-
-@media (max-width: 900px) {
-    .res-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-    .form-panel { padding: 1.75rem; }
-}
+.submit-btn:hover { background: #1a2332; }
+@media (max-width: 768px) { .res-grid, .form-row { grid-template-columns: 1fr; } }
 </style>
 
-<!-- Reservation Hero -->
-<section class="res-hero">
-    <div class="res-hero-overlay"></div>
-    <div class="res-hero-content fade-in">
-        <div class="section-label">Reserve Your Table</div>
-        <h1>Book a Table</h1>
-        <p>Experience an unforgettable evening of coastal Mediterranean cuisine at {{ restaurant.name }}.</p>
+<section class="res-section">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem;">Book Your Table</h1>
+        <p style="color: #666;">Reserve your spot for an unforgettable dining experience.</p>
     </div>
-</section>
-
-<div class="res-section">
     <div class="res-grid">
-        <!-- Info Panel -->
-        <div class="info-panel fade-in">
-            {% if success %}
-            <div class="alert-success-custom">
-                <i class="fas fa-check-circle" style="font-size:1.3rem;"></i>
-                <div><strong>Reservation Confirmed!</strong><br>We've received your booking. You'll receive a confirmation shortly.</div>
-            </div>
-            {% endif %}
-
-            {% if error_msg %}
-            <div class="alert-error-custom">
-                <i class="fas fa-exclamation-circle" style="font-size:1.3rem;"></i>
-                <div>{{ error_msg }}</div>
-            </div>
-            {% endif %}
-
-            <div class="info-panel-card">
-                <h3><i class="fas fa-info-circle"></i> Reservation Info</h3>
-                <ul class="info-list">
-                    <li>
-                        <i class="fas fa-clock"></i>
-                        <span>We hold reservations for <strong>15 minutes</strong></span>
-                    </li>
-                    <li>
-                        <i class="fas fa-users"></i>
-                        <span>Parties of <strong>8+</strong> please call directly</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-phone-alt"></i>
-                        <span>Questions? <a href="tel:{{ restaurant.phone_link }}">{{ restaurant.phone }}</a></span>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <span><a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></span>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="info-panel-card">
-                <h3><i class="fas fa-map-marker-alt"></i> Location</h3>
-                <p style="color:#666;font-size:0.95rem;line-height:1.7;margin-bottom:1rem;">{{ restaurant.address }}</p>
-                <div class="map-container">
-                    <iframe src="{{ restaurant.google_maps_embed }}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-            </div>
+        <div class="res-info-card">
+            <h3>Reservation Info</h3>
+            <div class="res-info-item"><i class="fas fa-clock"></i><p>We hold reservations for <strong>{{ reservations.hold_time }}</strong></p></div>
+            <div class="res-info-item"><i class="fas fa-users"></i><p>{{ reservations.large_party_note }}</p></div>
+            <div class="res-info-item"><i class="fas fa-phone-alt"></i><p>Questions? <a href="tel:{{ restaurant.phone_link }}">{{ restaurant.phone }}</a></p></div>
+            <div class="res-info-item"><i class="fas fa-envelope"></i><p><a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></p></div>
         </div>
-
-        <!-- Form Panel -->
-        <div class="form-panel fade-in fade-in-delay-1">
-            <h3><i class="fas fa-calendar-alt"></i> Book Your Table</h3>
-            <form method="POST" id="reservationForm">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-                <div class="form-field">
-                    <label><i class="fas fa-user"></i> Full Name *</label>
-                    <input type="text" name="name" placeholder="John Doe" required>
-                </div>
-
+        <div class="res-form-card">
+            <h3>Book Your Table</h3>
+            <form method="POST">
+                <div class="form-group"><label>Full Name *</label><input type="text" name="name" placeholder="John Doe" required></div>
                 <div class="form-row">
-                    <div class="form-field">
-                        <label><i class="fas fa-envelope"></i> Email *</label>
-                        <input type="email" name="email" placeholder="john@example.com" required>
-                    </div>
-                    <div class="form-field">
-                        <label><i class="fas fa-phone"></i> Phone *</label>
-                        <input type="tel" name="phone" placeholder="(555) 123-4567" required>
-                    </div>
+                    <div class="form-group"><label>Email *</label><input type="email" name="email" placeholder="john@example.com" required></div>
+                    <div class="form-group"><label>Phone *</label><input type="tel" name="phone" placeholder="(555) 123-4567" required></div>
                 </div>
-
                 <div class="form-row">
-                    <div class="form-field">
-                        <label><i class="fas fa-calendar"></i> Date *</label>
-                        <input type="date" name="date" required id="resDate">
-                    </div>
-                    <div class="form-field">
-                        <label><i class="fas fa-clock"></i> Time *</label>
-                        <select name="time" required id="resTime">
+                    <div class="form-group"><label>Date *</label><input type="date" name="date" required></div>
+                    <div class="form-group">
+                        <label>Time *</label>
+                        <select name="time" required>
                             <option value="">Select time</option>
                             {% for slot in reservations.time_slots %}
                             <option value="{{ slot }}">{{ slot[:2]|int }}:{{ slot[3:] }} {% if slot[:2]|int >= 12 %}PM{% else %}AM{% endif %}</option>
@@ -365,37 +61,18 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="form-field">
-                    <label><i class="fas fa-users"></i> Number of Guests *</label>
+                <div class="form-group">
+                    <label>Number of Guests *</label>
                     <select name="guests" required>
                         <option value="">Select guests</option>
-                        <option value="1">1 Guest</option>
-                        <option value="2">2 Guests</option>
-                        <option value="3">3 Guests</option>
-                        <option value="4">4 Guests</option>
-                        <option value="5">5 Guests</option>
-                        <option value="6">6 Guests</option>
-                        <option value="7">7 Guests</option>
-                        <option value="8">8+ Guests (call us)</option>
+                        {% for i in range(1, 9) %}<option value="{{ i }}">{{ i }} Guest{% if i > 1 %}s{% endif %}</option>{% endfor %}
+                        <option value="8+">8+ Guests (call us)</option>
                     </select>
                 </div>
-
-                <div class="form-field">
-                    <label><i class="fas fa-comment"></i> Special Requests</label>
-                    <textarea name="special_requests" rows="3" placeholder="Allergies, special occasion, seating preference..."></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-calendar-check"></i> Confirm Reservation
-                </button>
+                <div class="form-group"><label>Special Requests</label><textarea name="special_requests" rows="3" placeholder="Allergies, special occasion..."></textarea></div>
+                <button type="submit" class="submit-btn"><i class="fas fa-calendar-check"></i> Confirm Reservation</button>
             </form>
         </div>
     </div>
-</div>
-
-<script>
-document.getElementById('resDate').min = new Date().toISOString().split('T')[0];
-</script>
-
+</section>
 {% endblock %}
