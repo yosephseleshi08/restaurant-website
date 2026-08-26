@@ -1,149 +1,48 @@
 {% extends "base.html" %}
-{% block title %}{{ restaurant.name }} — {{ restaurant.tagline }}{% endblock %}
+{% block title %}About Us — {{ restaurant.name }}{% endblock %}
 {% block content %}
-
 <style>
-.hero {
-    position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    text-align: center; color: white; overflow: hidden;
-    background: linear-gradient(135deg, #0B0F19 0%, #1a2332 50%, #0B0F19 100%);
-}
-.hero-bg {
-    position: absolute; inset: 0;
-    background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&h=1080&fit=crop') center/cover no-repeat;
-    opacity: 0.35;
-}
-.hero-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(11,15,25,0.7) 0%, rgba(11,15,25,0.4) 40%, rgba(11,15,25,0.6) 70%, rgba(11,15,25,0.95) 100%);
-}
-.hero-content { position: relative; z-index: 2; max-width: 850px; padding: 2rem; }
-.hero-label {
-    font-family: var(--font-body); font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 5px; color: var(--secondary); margin-bottom: 1.5rem; display: inline-block;
-    padding: 0.5rem 1.5rem; border: 1px solid rgba(201,169,110,0.3); border-radius: 50px; background: rgba(201,169,110,0.08);
-}
-.hero h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 700; margin-bottom: 1.25rem; letter-spacing: -0.03em; line-height: 1.05; }
-.hero h1 em { font-style: italic; font-weight: 400; color: var(--secondary); }
-.hero-subtitle { font-size: clamp(1.1rem, 2.5vw, 1.4rem); opacity: 0.85; margin-bottom: 2.5rem; font-weight: 300; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
-.hero-badges { display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
-.hero-badge { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; opacity: 0.8; font-weight: 500; }
-.hero-badge i { color: var(--secondary); font-size: 1rem; }
-.hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 2; animation: bounce 2s infinite; }
-.hero-scroll i { font-size: 1.5rem; color: rgba(255,255,255,0.5); }
-@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-10px); } 60% { transform: translateX(-50%) translateY(-5px); } }
-
-.value-prop-section {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    padding: 3rem 2rem; text-align: center; border-bottom: 1px solid #bbf7d0;
-}
-.value-prop-section h3 { color: #166534; font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1rem; font-weight: 700; }
-.value-prop-section p { color: #15803d; font-size: 1.1rem; max-width: 700px; margin: 0 auto 2rem; line-height: 1.6; }
-.value-stats { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; }
-.value-stat-item { text-align: center; }
-.value-stat-number { font-size: 2.5rem; font-weight: 800; color: #16a34a; line-height: 1; margin-bottom: 0.5rem; }
-.value-stat-label { font-size: 0.9rem; color: #166534; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-
-.featured-section { padding: 6rem 2rem; background: linear-gradient(180deg, var(--background) 0%, #f5f1eb 100%); position: relative; }
-.featured-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1280px; margin: 0 auto; }
-.featured-card {
-    background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-    transition: all 0.5s ease; border: 1px solid rgba(0,0,0,0.04);
-}
-.featured-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
-.featured-img-wrap { position: relative; overflow: hidden; height: 260px; }
-.featured-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
-.featured-card:hover .featured-img-wrap img { transform: scale(1.08); }
-.featured-img-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.4) 100%); }
-.featured-category {
-    position: absolute; top: 1rem; left: 1rem; background: rgba(255,255,255,0.95);
-    padding: 0.4rem 1rem; border-radius: 50px; font-size: 0.75rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); backdrop-filter: blur(10px);
-}
-.featured-body { padding: 1.75rem; }
-.featured-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
-.featured-header h3 { font-size: 1.25rem; color: var(--primary); max-width: 70%; }
-.featured-price { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 600; color: var(--secondary); }
-.featured-desc { color: #666; font-size: 0.92rem; line-height: 1.6; margin-bottom: 1rem; }
-.dietary-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.dietary-badge { background: rgba(201,169,110,0.1); color: var(--accent); padding: 0.3rem 0.85rem; border-radius: 50px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.popular-badge { background: linear-gradient(135deg, var(--secondary), #b8956a); color: white; padding: 0.3rem 0.85rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-
-.section-label { font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--secondary); margin-bottom: 1rem; }
-
-@media (max-width: 768px) {
-    .featured-grid { grid-template-columns: 1fr; }
-    .value-stats { gap: 1.5rem; }
-}
+.about-hero { position: relative; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; overflow: hidden; }
+.about-hero-bg { position: absolute; inset: 0; background: url('{{ about.interior_image }}') center/cover no-repeat; }
+.about-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,15,25,0.6) 0%, rgba(11,15,25,0.8) 100%); }
+.about-hero-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; }
+.about-section { padding: 5rem 2rem; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1200px; margin: 0 auto; align-items: center; }
+.about-img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.about-text h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem; }
+.about-text p { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 1.5rem; }
+.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1200px; margin: 4rem auto 0; }
+.value-card { background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.value-card h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem; }
+.value-card p { color: #666; font-size: 0.95rem; line-height: 1.6; }
+@media (max-width: 768px) { .about-grid, .values-grid { grid-template-columns: 1fr; gap: 2rem; } }
 </style>
 
-<section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-        <div class="hero-label">Est. 2019 — Marina District</div>
-        <h1>{{ restaurant.name }}<br><em>{{ restaurant.tagline }}</em></h1>
-        <p class="hero-subtitle">Where the Mediterranean meets the Pacific. An intimate culinary journey guided by Chef Elena Marchetti.</p>
-        <div class="hero-actions">
-            <a href="/menu" class="btn btn-lg"><i class="fas fa-utensils"></i> Explore Menu</a>
-            <a href="/reservations" class="btn btn-outline btn-lg"><i class="fas fa-calendar-check"></i> Reserve a Table</a>
-        </div>
-        <div class="hero-badges">
-            <div class="hero-badge"><i class="fas fa-star"></i> 4.9 Rating</div>
-            <div class="hero-badge"><i class="fas fa-award"></i> Best New Restaurant 2024</div>
-            <div class="hero-badge"><i class="fas fa-leaf"></i> Sustainable Seafood</div>
-        </div>
-    </div>
-    <div class="hero-scroll"><i class="fas fa-chevron-down"></i></div>
-</section>
-
-<section class="value-prop-section">
-    <div class="container">
-        <h3>🛑 Stop Giving 30% of Your Revenue to Delivery Apps</h3>
-        <p>With <strong>Restaurant CMS Pro</strong>, your customers order directly from your website or QR code. The order goes straight to your kitchen display. <strong>You keep 100% of the profit.</strong></p>
-        <div class="value-stats">
-            <div class="value-stat-item"><div class="value-stat-number">0%</div><div class="value-stat-label">Commission Fees</div></div>
-            <div class="value-stat-item"><div class="value-stat-number">2 Min</div><div class="value-stat-label">Setup Time</div></div>
-            <div class="value-stat-item"><div class="value-stat-number">100%</div><div class="value-stat-label">Customer Data Ownership</div></div>
-        </div>
+<section class="about-hero">
+    <div class="about-hero-bg"></div>
+    <div class="about-hero-overlay"></div>
+    <div class="about-hero-content">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Our Story</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">{{ about.story }}</p>
     </div>
 </section>
 
-<section class="featured-section">
-    <div class="container" style="text-align:center;margin-bottom:3rem;">
-        <div class="section-label">Curated by Chef Elena</div>
-        <h2 style="font-size:clamp(2rem,4vw,2.8rem);color:var(--primary);margin-bottom:0.75rem;">Chef's Selections</h2>
-        <p style="color:#777;font-size:1.1rem;max-width:550px;margin:0 auto;">Hand-picked favorites from our kitchen, crafted with the finest Mediterranean ingredients.</p>
-        <div style="width:60px;height:3px;background:linear-gradient(90deg,var(--secondary),#d4b896);margin:1.5rem auto 0;border-radius:3px;"></div>
+<section class="about-section">
+    <div class="about-grid">
+        <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" class="about-img">
+        <div class="about-text">
+            <div class="section-label">Meet The Chef</div>
+            <h2>{{ about.chef_name }}</h2>
+            <p>{{ about.chef_bio }}</p>
+        </div>
     </div>
-    <div class="featured-grid">
-        {% for item in featured %}
-        <div class="featured-card">
-            <div class="featured-img-wrap">
-                <img src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
-                <div class="featured-img-overlay"></div>
-                <div class="featured-category">{{ item.category }}</div>
-            </div>
-            <div class="featured-body">
-                <div class="featured-header">
-                    <h3>{{ item.name }}</h3>
-                    <span class="featured-price">${{ "%.2f"|format(item.price) }}</span>
-                </div>
-                <p class="featured-desc">{{ item.description }}</p>
-                <div class="dietary-tags">
-                    {% for tag in item.dietary %}
-                    <span class="dietary-badge">{{ tag }}</span>
-                    {% endfor %}
-                    {% if item.popular %}<span class="popular-badge"><i class="fas fa-fire" style="font-size:0.6rem;margin-right:0.3rem;"></i>Popular</span>{% endif %}
-                </div>
-            </div>
+    <div class="values-grid">
+        {% for value in about.values %}
+        <div class="value-card">
+            <h3>{{ value.title }}</h3>
+            <p>{{ value.description }}</p>
         </div>
         {% endfor %}
     </div>
-    <div style="text-align:center;margin-top:3rem;">
-        <a href="/menu" class="btn btn-secondary btn-lg">View Full Menu <i class="fas fa-arrow-right" style="font-size:0.8rem;"></i></a>
-    </div>
 </section>
-
 {% endblock %}
