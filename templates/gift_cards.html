@@ -5,488 +5,283 @@
 <style>
 .gift-hero {
     position: relative;
-    padding: 5rem 2rem;
+    padding: 6rem 2rem;
     text-align: center;
+    background: linear-gradient(135deg, var(--primary) 0%, #1a2332 100%);
     color: white;
-    overflow: hidden;
-    background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%);
-}
-.gift-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=1920&h=800&fit=crop') center/cover no-repeat;
-    opacity: 0.2;
-}
-.gift-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(11,15,25,0.85) 0%, rgba(11,15,25,0.7) 50%, rgba(11,15,25,0.9) 100%);
-}
-.gift-hero-content {
-    position: relative;
-    z-index: 2;
-    max-width: 600px;
-    margin: 0 auto;
-}
-.gift-hero .section-label {
-    color: var(--secondary);
-    border-color: rgba(201,169,110,0.3);
-    background: rgba(201,169,110,0.08);
-    margin-bottom: 1.5rem;
 }
 .gift-hero h1 {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-size: clamp(2.5rem, 5vw, 4rem);
     margin-bottom: 1rem;
+    color: white;
 }
 .gift-hero p {
-    font-size: 1.15rem;
-    opacity: 0.75;
-    font-weight: 300;
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
     line-height: 1.6;
 }
-
 .gift-section {
-    padding: 4rem 2rem;
-    max-width: 800px;
+    padding: 5rem 2rem;
+    max-width: 1000px;
     margin: 0 auto;
 }
-
-/* Gift Card Visual */
-.gift-card-visual {
-    position: relative;
-    border-radius: 24px;
-    padding: 3rem 2rem;
-    text-align: center;
-    color: white;
-    margin-bottom: 3rem;
-    overflow: hidden;
-}
-.gift-card-visual-bg {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #1a2332 0%, #0B0F19 50%, #1a2332 100%);
-}
-.gift-card-visual::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -30%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 70%);
-}
-.gift-card-visual::after {
-    content: '';
-    position: absolute;
-    bottom: -40%;
-    left: -20%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(201,169,110,0.1) 0%, transparent 70%);
-}
-.gift-card-visual-content {
-    position: relative;
-    z-index: 2;
-}
-.gift-card-visual .gift-icon {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(201,169,110,0.2), rgba(201,169,110,0.1));
-    border: 2px solid rgba(201,169,110,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 1.8rem;
-    color: var(--secondary);
-}
-.gift-card-visual h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-.gift-card-visual p {
-    opacity: 0.7;
-    font-size: 1rem;
-    font-weight: 300;
-}
-.gift-card-line {
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--secondary), transparent);
-    margin: 1.5rem auto;
-}
-
-/* Purchase Card */
-.purchase-card {
-    background: white;
-    border-radius: 28px;
-    padding: 2.5rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.03);
-}
-.purchase-card h3 {
-    font-size: 1.4rem;
-    color: var(--primary);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.purchase-card h3 i {
-    color: var(--secondary);
-    font-size: 1.1rem;
-}
-
-.amount-selector {
+.gift-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
 }
-.amount-btn {
-    background: #faf8f5;
-    border: 2px solid #e8e4df;
-    padding: 1rem;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: var(--font-heading);
+.gift-card-form {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+.gift-card-form h3 {
     color: var(--primary);
-}
-.amount-btn:hover {
-    border-color: var(--secondary);
-    background: rgba(201,169,110,0.05);
-    transform: translateY(-2px);
-}
-.amount-btn.selected {
-    background: linear-gradient(135deg, var(--primary), #1a2332);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 8px 25px rgba(11,15,25,0.15);
-}
-
-.custom-amount {
     margin-bottom: 1.5rem;
+    font-size: 1.5rem;
 }
-.custom-amount label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text);
-}
-.custom-amount input {
-    width: 100%;
-    padding: 0.9rem 1.1rem;
-    border: 2px solid #e8e4df;
-    border-radius: 14px;
-    font-size: 1rem;
-    font-family: var(--font-body);
-    transition: all 0.3s ease;
-}
-.custom-amount input:focus {
-    outline: none;
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 4px rgba(201,169,110,0.1);
-}
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-bottom: 1rem;
 }
-.form-field {
-    margin-bottom: 1rem;
+.form-group {
+    margin-bottom: 1.25rem;
 }
-.form-field label {
+.form-group label {
     display: block;
-    margin-bottom: 0.5rem;
     font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
     font-size: 0.9rem;
-    color: var(--text);
 }
-.form-field input,
-.form-field textarea {
+.form-group input, .form-group textarea, .form-group select {
     width: 100%;
-    padding: 0.9rem 1.1rem;
-    border: 2px solid #e8e4df;
-    border-radius: 14px;
-    font-size: 0.95rem;
+    padding: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
     font-family: var(--font-body);
-    transition: all 0.3s ease;
-    color: var(--text);
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
 }
-.form-field input:focus,
-.form-field textarea:focus {
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
     outline: none;
     border-color: var(--secondary);
-    box-shadow: 0 0 0 4px rgba(201,169,110,0.1);
 }
-.form-field input::placeholder,
-.form-field textarea::placeholder {
-    color: #bbb;
-}
-
-.purchase-btn {
-    width: 100%;
-    padding: 1.1rem;
-    background: linear-gradient(135deg, var(--primary), #1a2332);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 1.05rem;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    font-family: var(--font-body);
-    letter-spacing: 0.3px;
-    margin-top: 0.5rem;
-}
-.purchase-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(11,15,25,0.2);
-}
-
-/* Balance Card */
-.balance-card {
-    background: white;
-    border-radius: 28px;
-    padding: 2.5rem;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
-    border: 1px solid rgba(0,0,0,0.03);
-}
-.balance-card h3 {
-    font-size: 1.3rem;
-    color: var(--primary);
-    margin-bottom: 1.5rem;
+.amount-options {
     display: flex;
-    align-items: center;
     gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
-.balance-card h3 i {
+.amount-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    background: white;
+    border-radius: 10px;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: var(--font-body);
+}
+.amount-btn:hover, .amount-btn.active {
+    border-color: var(--secondary);
+    background: rgba(201, 169, 110, 0.1);
     color: var(--secondary);
 }
-.balance-input-group {
+.how-it-works {
+    padding: 2rem;
+}
+.how-it-works h3 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+.step {
     display: flex;
-    gap: 0.75rem;
-    align-items: stretch;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
-.balance-input-group input {
-    flex: 1;
-    padding: 0.9rem 1.1rem;
-    border: 2px solid #e8e4df;
-    border-radius: 14px;
-    font-size: 0.95rem;
-    font-family: var(--font-body);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text);
-}
-.balance-input-group input:focus {
-    outline: none;
-    border-color: var(--secondary);
-    box-shadow: 0 0 0 4px rgba(201,169,110,0.1);
-}
-.balance-input-group input::placeholder {
-    text-transform: none;
-    letter-spacing: normal;
-    color: #bbb;
-}
-.check-btn {
-    padding: 0.9rem 2rem;
+.step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     background: linear-gradient(135deg, var(--secondary), #b8956a);
     color: white;
-    border: none;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.35s ease;
-    font-family: var(--font-body);
-    white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    flex-shrink: 0;
 }
-.check-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(201,169,110,0.3);
+.step-content h4 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
 }
-.balance-result {
-    margin-top: 1.25rem;
-    padding: 1.25rem;
-    border-radius: 16px;
-    display: none;
-    align-items: center;
-    gap: 0.75rem;
-    font-weight: 500;
+.step-content p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
 }
-.balance-result.success {
-    background: #f0f7f0;
-    color: #2d6a2d;
-    border: 1px solid #c8e6c9;
-}
-.balance-result.error {
-    background: #fdf2f2;
-    color: #9b2c2c;
-    border: 1px solid #fecaca;
-}
-.balance-result i {
-    font-size: 1.3rem;
-}
-
 @media (max-width: 768px) {
-    .amount-selector { grid-template-columns: repeat(2, 1fr); }
-    .form-row { grid-template-columns: 1fr; }
-    .balance-input-group { flex-direction: column; }
-    .check-btn { width: 100%; justify-content: center; }
-    .purchase-card, .balance-card { padding: 1.75rem; }
+    .gift-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
 
-<!-- Gift Hero -->
+<!-- HERO -->
 <section class="gift-hero">
-    <div class="gift-hero-overlay"></div>
-    <div class="gift-hero-content fade-in">
-        <div class="section-label">The Perfect Gift</div>
-        <h1>Gift Cards</h1>
-        <p>Give the gift of an unforgettable dining experience. Delivered instantly via email.</p>
+    <h1>Give the Gift of Great Food</h1>
+    <p>Share the {{ restaurant.name }} experience with friends, family, or colleagues. Digital gift cards are delivered instantly via email.</p>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="gift-section">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}" style="padding: 1rem; border-radius: 12px; margin-bottom: 2rem; {% if category == 'error' %}background: #fdf2f2; color: #9b2c2c; border: 1px solid #fecaca;{% else %}background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;{% endif %}">
+            <i class="fas fa-{% if category == 'error' %}exclamation{% else %}check{% endif %}-circle"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="gift-grid">
+        <!-- PURCHASE FORM -->
+        <div class="gift-card-form">
+            <h3><i class="fas fa-gift" style="color: var(--secondary); margin-right: 0.5rem;"></i> Purchase a Gift Card</h3>
+            <form method="POST" action="/gift-cards">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="form-group">
+                    <label>Select Amount *</label>
+                    <div class="amount-options">
+                        <button type="button" class="amount-btn" onclick="setAmount(25)">$25</button>
+                        <button type="button" class="amount-btn active" onclick="setAmount(50)">$50</button>
+                        <button type="button" class="amount-btn" onclick="setAmount(100)">$100</button>
+                        <button type="button" class="amount-btn" onclick="setAmount(200)">$200</button>
+                    </div>
+                    <input type="number" name="amount" id="amountInput" value="50" min="10" step="1" required style="margin-top: 0.5rem;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="purchaser_name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Email *</label>
+                        <input type="email" name="purchaser_email" placeholder="john@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Recipient Name *</label>
+                        <input type="text" name="recipient_name" placeholder="Jane Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Email *</label>
+                        <input type="email" name="recipient_email" placeholder="jane@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Personal Message (Optional)</label>
+                    <textarea name="message" rows="3" placeholder="Happy Birthday! Can't wait to celebrate with you."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-block" style="font-size: 1.05rem; padding: 1rem;">
+                    <i class="fas fa-credit-card"></i> Purchase Gift Card
+                </button>
+                <p style="text-align: center; font-size: 0.85rem; color: #666; margin-top: 1rem;">
+                    <i class="fas fa-lock"></i> Secure checkout. No hidden fees.
+                </p>
+            </form>
+        </div>
+
+        <!-- HOW IT WORKS -->
+        <div class="how-it-works">
+            <h3>How It Works</h3>
+            
+            <div class="step">
+                <div class="step-icon">1</div>
+                <div class="step-content">
+                    <h4>Choose an Amount</h4>
+                    <p>Select a value that fits your budget. Custom amounts are also welcome.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div class="step-content">
+                    <h4>Add a Personal Touch</h4>
+                    <p>Enter the recipient's details and write a custom message to make it special.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div class="step-content">
+                    <h4>Instant Delivery</h4>
+                    <p>The recipient will receive a beautifully designed email with a unique redemption code.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-icon">4</div>
+                <div class="step-content">
+                    <h4>Easy Redemption</h4>
+                    <p>They can use the code for online orders, dine-in reservations, or at the register.</p>
+                </div>
+            </div>
+
+            <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border-left: 4px solid var(--secondary);">
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="fas fa-info-circle"></i> Good to Know</h4>
+                <p style="color: #666; font-size: 0.9rem; margin: 0; line-height: 1.6;">
+                    Gift cards never expire and can be used for any menu item, including alcohol where permitted by law. 
+                    If you have any questions, please <a href="/contact" style="color: var(--secondary); font-weight: 600;">contact us</a>.
+                </p>
+            </div>
+        </div>
     </div>
 </section>
 
-<div class="gift-section">
-    <!-- Gift Card Visual -->
-    <div class="gift-card-visual fade-in">
-        <div class="gift-card-visual-bg"></div>
-        <div class="gift-card-visual-content">
-            <div class="gift-icon">
-                <i class="fas fa-gift"></i>
-            </div>
-            <h2>{{ restaurant.name }} Gift Card</h2>
-            <div class="gift-card-line"></div>
-            <p>Valid for dine-in, takeout, and online orders. Never expires.</p>
-        </div>
-    </div>
-
-    <!-- Purchase Card -->
-    <div class="purchase-card fade-in">
-        <h3><i class="fas fa-shopping-bag"></i> Purchase a Gift Card</h3>
-
-        <div class="amount-selector">
-            <button class="amount-btn" onclick="setAmount(25, this)">$25</button>
-            <button class="amount-btn selected" onclick="setAmount(50, this)">$50</button>
-            <button class="amount-btn" onclick="setAmount(100, this)">$100</button>
-            <button class="amount-btn" onclick="setAmount(200, this)">$200</button>
-        </div>
-
-        <div class="custom-amount">
-            <label>Custom Amount</label>
-            <input type="number" id="giftAmount" value="50" min="10" step="5" placeholder="Enter amount">
-        </div>
-
-        <div class="form-row">
-            <div class="form-field">
-                <label>Your Name</label>
-                <input type="text" id="purchaserName" placeholder="John Doe">
-            </div>
-            <div class="form-field">
-                <label>Your Email</label>
-                <input type="email" id="purchaserEmail" placeholder="john@example.com">
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-field">
-                <label>Recipient Name</label>
-                <input type="text" id="recipientName" placeholder="Jane Doe">
-            </div>
-            <div class="form-field">
-                <label>Recipient Email</label>
-                <input type="email" id="recipientEmail" placeholder="jane@example.com">
-            </div>
-        </div>
-
-        <div class="form-field">
-            <label>Message (optional)</label>
-            <textarea id="giftMessage" rows="3" placeholder="Happy Birthday! Enjoy a meal on me."></textarea>
-        </div>
-
-        <button class="purchase-btn" onclick="purchaseGiftCard()">
-            <i class="fas fa-gift"></i> Purchase Gift Card
-        </button>
-    </div>
-
-    <!-- Balance Card -->
-    <div class="balance-card fade-in">
-        <h3><i class="fas fa-search-dollar"></i> Check Balance</h3>
-        <div class="balance-input-group">
-            <input type="text" id="checkCode" placeholder="Enter gift card code">
-            <button class="check-btn" onclick="checkBalance()">
-                <i class="fas fa-search"></i> Check
-            </button>
-        </div>
-        <div id="balanceResult" class="balance-result"></div>
-    </div>
-</div>
-
 <script>
-let selectedAmount = 50;
-
-function setAmount(amt, btn) {
-    selectedAmount = amt;
-    document.getElementById('giftAmount').value = amt;
-    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-}
-
-function purchaseGiftCard() {
-    const payload = {
-        amount: parseFloat(document.getElementById('giftAmount').value),
-        purchaser_name: document.getElementById('purchaserName').value,
-        purchaser_email: document.getElementById('purchaserEmail').value,
-        recipient_name: document.getElementById('recipientName').value,
-        recipient_email: document.getElementById('recipientEmail').value,
-        message: document.getElementById('giftMessage').value
-    };
-    fetch('/api/gift-card/purchase', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(payload)
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            alert('Gift card purchased successfully! Code: ' + data.code);
-        } else {
-            alert(data.message);
+function setAmount(val) {
+    document.getElementById('amountInput').value = val;
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === '$' + val) {
+            btn.classList.add('active');
         }
     });
 }
 
-function checkBalance() {
-    const code = document.getElementById('checkCode').value;
-    const result = document.getElementById('balanceResult');
-
-    fetch('/api/gift-card/balance', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({code})
-    }).then(r => r.json()).then(data => {
-        result.style.display = 'flex';
-        if (data.success) {
-            result.className = 'balance-result success';
-            result.innerHTML = '<i class="fas fa-check-circle"></i><div><strong>Balance: $' + data.balance + '</strong><br><span style="font-size:0.85rem;opacity:0.7;">Status: ' + data.status + '</span></div>';
-        } else {
-            result.className = 'balance-result error';
-            result.innerHTML = '<i class="fas fa-exclamation-circle"></i><div>' + data.message + '</div>';
+// Sync input changes with button states
+document.getElementById('amountInput').addEventListener('input', function(e) {
+    const val = e.target.value;
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === '$' + val) {
+            btn.classList.add('active');
         }
     });
-}
+});
 </script>
 
 {% endblock %}
