@@ -1,57 +1,156 @@
 {% extends "base.html" %}
 {% block title %}Visual Editor — {{ restaurant.name }}{% endblock %}
 {% block content %}
+
 <style>
 .editor-section { padding: 2rem; max-width: 1400px; margin: 0 auto; }
 .editor-header { margin-bottom: 2rem; }
-.editor-header h1 { font-size: 2rem; color: var(--primary); }
-.editor-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; }
-.editor-tab { padding: 0.75rem 1.5rem; background: transparent; border: none; color: #666; font-weight: 600; cursor: pointer; border-radius: 8px 8px 0 0; transition: all 0.3s; }
-.editor-tab:hover { background: #f8fafc; }
+.editor-header h1 { font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; }
+.editor-header p { color: #666; }
+
+.editor-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0;
+}
+.editor-tab {
+    padding: 0.85rem 1.5rem;
+    background: transparent;
+    border: none;
+    color: #666;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    font-family: var(--font-body);
+}
+.editor-tab:hover { background: #f8fafc; color: var(--primary); }
 .editor-tab.active { background: var(--primary); color: white; }
+
 .editor-panel { display: none; }
 .editor-panel.active { display: block; }
-.editor-card { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-.editor-card h3 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.3rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; }
+
+.editor-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+.editor-card h3 {
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.75rem;
+}
+
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
 .form-group { margin-bottom: 1.5rem; }
 .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
-.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.85rem; border: 1px solid #ddd; border-radius: 10px; font-family: var(--font-body); font-size: 0.95rem; }
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
 .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--secondary); }
+.form-group textarea { resize: vertical; min-height: 100px; }
+
 .color-picker { display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .color-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-.color-item input[type="color"] { width: 60px; height: 60px; border: none; border-radius: 10px; cursor: pointer; }
-.menu-category { background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
-.menu-category h4 { color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem; }
-.menu-item { background: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; }
+.color-item input[type="color"] {
+    width: 70px;
+    height: 70px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    padding: 4px;
+}
+.color-item label { font-size: 0.85rem; color: #666; font-weight: 600; }
+
+.menu-category {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+.menu-category h4 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.menu-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
 .menu-item-info { flex: 1; }
-.menu-item-info h5 { margin: 0 0 0.25rem; color: var(--primary); }
+.menu-item-info h5 { margin: 0 0 0.25rem; color: var(--primary); font-size: 1rem; }
 .menu-item-info p { margin: 0; font-size: 0.85rem; color: #666; }
 .menu-item-actions { display: flex; gap: 0.5rem; }
-.btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: opacity 0.3s; }
+.btn-sm:hover { opacity: 0.9; }
 .btn-danger { background: #ef4444; color: white; }
 .btn-success { background: #10b981; color: white; }
+.btn-gold { background: linear-gradient(135deg, var(--secondary), #b8956a); color: white; padding: 0.85rem 2rem; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.95rem; }
+.btn-gold:hover { opacity: 0.9; }
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #10b981;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: none;
+    font-weight: 600;
+}
+.toast.show { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
 @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } }
 </style>
+
+<div id="toast" class="toast">✓ Saved successfully!</div>
 
 <section class="editor-section">
     <div class="editor-header">
         <h1><i class="fas fa-paint-brush" style="color: var(--secondary); margin-right: 0.5rem;"></i> Visual Editor</h1>
-        <p style="color: #666;">Customize every aspect of your restaurant's website.</p>
+        <p>Customize every aspect of your restaurant's website.</p>
     </div>
 
     <div class="editor-tabs">
-        <button class="editor-tab active" onclick="showPanel('restaurant')">Restaurant Info</button>
-        <button class="editor-tab" onclick="showPanel('about')">About Page</button>
-        <button class="editor-tab" onclick="showPanel('menu')">Menu</button>
-        <button class="editor-tab" onclick="showPanel('testimonials')">Testimonials</button>
-        <button class="editor-tab" onclick="showPanel('gallery')">Gallery</button>
-        <button class="editor-tab" onclick="showPanel('events')">Events</button>
-        <button class="editor-tab" onclick="showPanel('seo')">SEO</button>
-        <button class="editor-tab" onclick="showPanel('theme')">Theme</button>
+        <button class="editor-tab active" onclick="showPanel('restaurant', this)">Restaurant Info</button>
+        <button class="editor-tab" onclick="showPanel('about', this)">About Page</button>
+        <button class="editor-tab" onclick="showPanel('menu', this)">Menu</button>
+        <button class="editor-tab" onclick="showPanel('testimonials', this)">Testimonials</button>
+        <button class="editor-tab" onclick="showPanel('gallery', this)">Gallery</button>
+        <button class="editor-tab" onclick="showPanel('events', this)">Events</button>
+        <button class="editor-tab" onclick="showPanel('seo', this)">SEO</button>
+        <button class="editor-tab" onclick="showPanel('theme', this)">Theme</button>
     </div>
 
-    <!-- RESTAURANT INFO PANEL -->
+    <!-- RESTAURANT INFO -->
     <div id="restaurant-panel" class="editor-panel active">
         <div class="editor-card">
             <h3>Basic Information</h3>
@@ -65,7 +164,7 @@
                     <div class="form-group"><label>Email</label><input type="email" name="email" value="{{ restaurant.email }}"></div>
                 </div>
                 <div class="form-group"><label>Address</label><input type="text" name="address" value="{{ restaurant.address }}"></div>
-                <button type="button" class="btn btn-gold" onclick="saveRestaurant()">Save Information</button>
+                <button type="button" class="btn-gold" onclick="saveRestaurant()">Save Information</button>
             </form>
         </div>
         <div class="editor-card">
@@ -77,12 +176,12 @@
                     <input type="text" name="{{ day }}" value="{{ hours }}">
                 </div>
                 {% endfor %}
-                <button type="button" class="btn btn-gold" onclick="saveHours()">Save Hours</button>
+                <button type="button" class="btn-gold" onclick="saveHours()">Save Hours</button>
             </form>
         </div>
     </div>
 
-    <!-- ABOUT PAGE PANEL -->
+    <!-- ABOUT PAGE -->
     <div id="about-panel" class="editor-panel">
         <div class="editor-card">
             <h3>About Page Content</h3>
@@ -93,50 +192,42 @@
                     <div class="form-group"><label>Chef Image URL</label><input type="text" name="chef_image" value="{{ data.about.chef_image }}"></div>
                 </div>
                 <div class="form-group"><label>Chef Bio</label><textarea name="chef_bio" rows="3">{{ data.about.chef_bio }}</textarea></div>
-                <div class="form-group"><label>Interior Image URL</label><input type="text" name="interior_image" value="{{ data.about.interior_image }}"></div>
-                <button type="button" class="btn btn-gold" onclick="saveAbout()">Save About Page</button>
-            </form>
-        </div>
-        <div class="editor-card">
-            <h3>Values ({{ data.about.values|length }} items)</h3>
-            <div id="valuesList">
-                {% for value in data.about.values %}
-                <div class="menu-item">
-                    <div class="menu-item-info">
-                        <h5>{{ value.title }}</h5>
-                        <p>{{ value.description }}</p>
-                    </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Interior Image URL (Hero)</label><input type="text" name="interior_image" value="{{ data.about.interior_image }}"></div>
+                    <div class="form-group"><label>Food Image URL</label><input type="text" name="food_image" value="{{ data.about.food_image }}"></div>
                 </div>
-                {% endfor %}
-            </div>
+                <button type="button" class="btn-gold" onclick="saveAbout()">Save About Page</button>
+            </form>
         </div>
     </div>
 
-    <!-- MENU PANEL -->
+    <!-- MENU -->
     <div id="menu-panel" class="editor-panel">
         <div class="editor-card">
             <h3>Menu Items</h3>
             {% for category, items in data.menu.items() %}
             <div class="menu-category">
-                <h4>{{ category|title }} ({{ items|length }} items)</h4>
+                <h4>
+                    <span>{{ category|title }} ({{ items|length }} items)</span>
+                    <button class="btn-sm btn-success" onclick="addMenuItem('{{ category }}')">+ Add Item</button>
+                </h4>
                 {% for item in items %}
                 <div class="menu-item">
                     <div class="menu-item-info">
-                        <h5>{{ item.name }} - ${{ "%.2f"|format(item.price) }}</h5>
+                        <h5>{{ item.name }} — ${{ "%.2f"|format(item.price) }}</h5>
                         <p>{{ item.description }}</p>
                     </div>
                     <div class="menu-item-actions">
-                        <button class="btn btn-sm btn-danger" onclick="deleteMenuItem('{{ category }}', {{ loop.index0 }})">Delete</button>
+                        <button class="btn-sm btn-danger" onclick="deleteMenuItem('{{ category }}', {{ loop.index0 }})">Delete</button>
                     </div>
                 </div>
                 {% endfor %}
-                <button class="btn btn-sm btn-success" onclick="addMenuItem('{{ category }}')">+ Add Item</button>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- TESTIMONIALS PANEL -->
+    <!-- TESTIMONIALS -->
     <div id="testimonials-panel" class="editor-panel">
         <div class="editor-card">
             <h3>Customer Testimonials ({{ data.testimonials|length }})</h3>
@@ -144,17 +235,20 @@
                 {% for t in data.testimonials %}
                 <div class="menu-item">
                     <div class="menu-item-info">
-                        <h5>{{ t.name }} - {{ t.rating }} stars</h5>
+                        <h5>{{ t.name }} — {{ t.rating }} stars</h5>
                         <p>{{ t.text }}</p>
+                    </div>
+                    <div class="menu-item-actions">
+                        <button class="btn-sm btn-danger" onclick="deleteTestimonial({{ loop.index0 }})">Delete</button>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <button class="btn btn-success" style="margin-top: 1rem;" onclick="addTestimonial()">+ Add Testimonial</button>
+            <button class="btn-gold" style="margin-top: 1rem;" onclick="addTestimonial()">+ Add Testimonial</button>
         </div>
     </div>
 
-    <!-- GALLERY PANEL -->
+    <!-- GALLERY -->
     <div id="gallery-panel" class="editor-panel">
         <div class="editor-card">
             <h3>Gallery Photos ({{ data.gallery.photos|length }})</h3>
@@ -163,19 +257,19 @@
                 <div class="menu-item">
                     <div class="menu-item-info">
                         <h5>{{ photo.caption }}</h5>
-                        <p>{{ photo.category }}</p>
+                        <p>Category: {{ photo.category }}</p>
                     </div>
                     <div class="menu-item-actions">
-                        <button class="btn btn-sm btn-danger" onclick="deleteGalleryPhoto({{ loop.index0 }})">Delete</button>
+                        <button class="btn-sm btn-danger" onclick="deleteGalleryPhoto({{ loop.index0 }})">Delete</button>
                     </div>
                 </div>
                 {% endfor %}
             </div>
-            <button class="btn btn-success" style="margin-top: 1rem;" onclick="addGalleryPhoto()">+ Add Photo</button>
+            <button class="btn-gold" style="margin-top: 1rem;" onclick="addGalleryPhoto()">+ Add Photo</button>
         </div>
     </div>
 
-    <!-- EVENTS PANEL -->
+    <!-- EVENTS -->
     <div id="events-panel" class="editor-panel">
         <div class="editor-card">
             <h3>Events Page Settings</h3>
@@ -187,12 +281,12 @@
                     <div class="form-group"><label>CTA Title</label><input type="text" name="cta_title" value="{{ data.events.cta_title }}"></div>
                     <div class="form-group"><label>CTA Text</label><input type="text" name="cta_text" value="{{ data.events.cta_text }}"></div>
                 </div>
-                <button type="button" class="btn btn-gold" onclick="saveEvents()">Save Events Settings</button>
+                <button type="button" class="btn-gold" onclick="saveEvents()">Save Events Settings</button>
             </form>
         </div>
     </div>
 
-    <!-- SEO PANEL -->
+    <!-- SEO -->
     <div id="seo-panel" class="editor-panel">
         <div class="editor-card">
             <h3>SEO Settings</h3>
@@ -200,134 +294,144 @@
                 <div class="form-group"><label>Meta Title</label><input type="text" name="meta_title" value="{{ data.seo.meta_title }}"></div>
                 <div class="form-group"><label>Meta Description</label><textarea name="meta_description" rows="3">{{ data.seo.meta_description }}</textarea></div>
                 <div class="form-group"><label>Meta Keywords</label><input type="text" name="meta_keywords" value="{{ data.seo.meta_keywords }}"></div>
-                <button type="button" class="btn btn-gold" onclick="saveSEO()">Save SEO Settings</button>
+                <button type="button" class="btn-gold" onclick="saveSEO()">Save SEO Settings</button>
             </form>
         </div>
     </div>
 
-    <!-- THEME PANEL -->
+    <!-- THEME -->
     <div id="theme-panel" class="editor-panel">
         <div class="editor-card">
             <h3>Brand Colors</h3>
             <form id="themeForm">
                 <div class="color-picker">
-                    <div class="color-item">
-                        <input type="color" name="primary_color" value="{{ theme.primary_color }}">
-                        <label>Primary</label>
-                    </div>
-                    <div class="color-item">
-                        <input type="color" name="secondary_color" value="{{ theme.secondary_color }}">
-                        <label>Secondary</label>
-                    </div>
-                    <div class="color-item">
-                        <input type="color" name="background_color" value="{{ theme.background_color }}">
-                        <label>Background</label>
-                    </div>
-                    <div class="color-item">
-                        <input type="color" name="text_color" value="{{ theme.text_color }}">
-                        <label>Text</label>
-                    </div>
+                    <div class="color-item"><input type="color" name="primary_color" value="{{ theme.primary_color }}"><label>Primary</label></div>
+                    <div class="color-item"><input type="color" name="secondary_color" value="{{ theme.secondary_color }}"><label>Secondary</label></div>
+                    <div class="color-item"><input type="color" name="background_color" value="{{ theme.background_color }}"><label>Background</label></div>
+                    <div class="color-item"><input type="color" name="text_color" value="{{ theme.text_color }}"><label>Text</label></div>
+                    <div class="color-item"><input type="color" name="card_bg" value="{{ theme.card_bg }}"><label>Card BG</label></div>
+                    <div class="color-item"><input type="color" name="accent_color" value="{{ theme.accent_color }}"><label>Accent</label></div>
                 </div>
-                <button type="button" class="btn btn-gold" style="margin-top: 1.5rem;" onclick="saveTheme()">Save Colors</button>
+                <button type="button" class="btn-gold" style="margin-top: 1.5rem;" onclick="saveTheme()">Save Colors</button>
             </form>
         </div>
     </div>
 </section>
 
 <script>
-function showPanel(panelName) {
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = '✓ ' + message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function showPanel(panelName, btn) {
     document.querySelectorAll('.editor-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
     document.getElementById(panelName + '-panel').classList.add('active');
-    event.target.classList.add('active');
+    btn.classList.add('active');
+}
+
+function apiCall(endpoint, data, successMessage) {
+    fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if(result.success) {
+            showToast(successMessage || 'Saved successfully!');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            alert('Error: ' + (result.message || 'Unknown error'));
+        }
+    })
+    .catch(err => alert('Network error: ' + err));
 }
 
 function saveRestaurant() {
     const formData = new FormData(document.getElementById('restaurantForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/update_restaurant', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('Saved! Refreshing...'); location.reload(); } });
+    apiCall('/api/update_restaurant', Object.fromEntries(formData.entries()), 'Restaurant info saved!');
 }
 
 function saveHours() {
     const formData = new FormData(document.getElementById('hoursForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/update_hours', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('Hours saved!'); location.reload(); } });
+    apiCall('/api/update_hours', Object.fromEntries(formData.entries()), 'Hours saved!');
 }
 
 function saveAbout() {
     const formData = new FormData(document.getElementById('aboutForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/update_about', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('About page saved!'); location.reload(); } });
+    apiCall('/api/update_about', Object.fromEntries(formData.entries()), 'About page saved!');
 }
 
 function saveTheme() {
     const formData = new FormData(document.getElementById('themeForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/update_theme', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('Theme saved! Refreshing...'); location.reload(); } });
+    apiCall('/api/update_theme', Object.fromEntries(formData.entries()), 'Theme saved!');
 }
 
 function saveSEO() {
     const formData = new FormData(document.getElementById('seoForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/update_seo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('SEO saved!'); location.reload(); } });
+    apiCall('/api/update_seo', Object.fromEntries(formData.entries()), 'SEO settings saved!');
 }
 
 function saveEvents() {
     const formData = new FormData(document.getElementById('eventsForm'));
-    const data = Object.fromEntries(formData.entries());
-    fetch('/api/events/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
-    .then(res => res.json()).then(data => { if(data.success) { alert('Events saved!'); location.reload(); } });
+    apiCall('/api/events/update', Object.fromEntries(formData.entries()), 'Events settings saved!');
 }
 
 function deleteMenuItem(category, index) {
     if(!confirm('Delete this menu item?')) return;
-    fetch('/api/menu/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category, index }) })
-    .then(res => res.json()).then(data => { if(data.success) location.reload(); });
+    apiCall('/api/menu/delete', { category, index }, 'Menu item deleted!');
 }
 
 function addMenuItem(category) {
     const name = prompt('Item name:');
+    if(!name) return;
     const description = prompt('Description:');
-    const price = parseFloat(prompt('Price:'));
-    const image = prompt('Image URL:');
-    if(!name || !price) return;
-    fetch('/api/menu/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ category, item: { name, description, price, image, popular: false, dietary: [] } }) })
-    .then(res => res.json()).then(data => { if(data.success) location.reload(); });
+    const price = parseFloat(prompt('Price (e.g. 24.00):'));
+    const image = prompt('Image URL (or leave blank):');
+    if(!price) return;
+    apiCall('/api/menu/add', { category, item: { name, description: description || '', price, image: image || '', popular: false, dietary: [] } }, 'Menu item added!');
+}
+
+function deleteTestimonial(index) {
+    if(!confirm('Delete this testimonial?')) return;
+    const testimonials = {{ data.testimonials | tojson }};
+    testimonials.splice(index, 1);
+    apiCall('/api/testimonials/update', { testimonials }, 'Testimonial deleted!');
+}
+
+function addTestimonial() {
+    const name = prompt('Customer name:');
+    if(!name) return;
+    const text = prompt('Testimonial text:');
+    if(!text) return;
+    const rating = parseInt(prompt('Rating (1-5):'));
+    if(!rating || rating < 1 || rating > 5) { alert('Rating must be 1-5'); return; }
+    const testimonials = {{ data.testimonials | tojson }};
+    testimonials.push({ name, text, rating });
+    apiCall('/api/testimonials/update', { testimonials }, 'Testimonial added!');
 }
 
 function deleteGalleryPhoto(index) {
     if(!confirm('Delete this photo?')) return;
     const photos = {{ data.gallery.photos | tojson }};
     photos.splice(index, 1);
-    fetch('/api/gallery/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ photos }) })
-    .then(res => res.json()).then(data => { if(data.success) location.reload(); });
+    apiCall('/api/gallery/update', { photos }, 'Photo deleted!');
 }
 
 function addGalleryPhoto() {
     const url = prompt('Image URL:');
-    const caption = prompt('Caption:');
-    const category = prompt('Category (food/interior/drinks):');
     if(!url) return;
+    const caption = prompt('Caption:');
+    const category = prompt('Category (food, interior, or drinks):');
+    if(!['food', 'interior', 'drinks'].includes(category)) { alert('Category must be food, interior, or drinks'); return; }
     const photos = {{ data.gallery.photos | tojson }};
-    photos.push({ url, caption, category });
-    fetch('/api/gallery/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ photos }) })
-    .then(res => res.json()).then(data => { if(data.success) location.reload(); });
-}
-
-function addTestimonial() {
-    const name = prompt('Customer name:');
-    const text = prompt('Testimonial text:');
-    const rating = parseInt(prompt('Rating (1-5):'));
-    if(!name || !text) return;
-    const testimonials = {{ data.testimonials | tojson }};
-    testimonials.push({ name, text, rating });
-    fetch('/api/testimonials/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ testimonials }) })
-    .then(res => res.json()).then(data => { if(data.success) location.reload(); });
+    photos.push({ url, caption: caption || '', category });
+    apiCall('/api/gallery/update', { photos }, 'Photo added!');
 }
 </script>
+
 {% endblock %}
