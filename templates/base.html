@@ -65,6 +65,30 @@
             letter-spacing: -0.02em;
         }
 
+        /* ===== DEMO BANNER (NEW) ===== */
+        .demo-banner {
+            background-color: #1e3a8a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px 15px;
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .demo-banner a {
+            color: #fbbf24;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
         /* ===== NAVBAR ===== */
         .navbar {
             background: rgba(255,255,255,0.85);
@@ -647,12 +671,22 @@
             .container { padding: 0 1.25rem; }
             .admin-bar { flex-direction: column; gap: 0.5rem; text-align: center; }
             .admin-bar a { margin: 0 0.5rem; }
+            .demo-banner { flex-direction: column; gap: 5px; padding: 12px 15px; }
         }
     </style>
     {% block head %}{% endblock %}
-<base target="_blank">
 </head>
 <body>
+    <!-- DEMO BANNER (NEW) -->
+    <div class="demo-banner">
+        <span>🔹 This is a live demo of <strong>Restaurant CMS Pro</strong>.</span>
+        <div style="display: flex; gap: 15px;">
+            <a href="/dashboard">View Admin/Kitchen Dashboard</a>
+            <span style="color: #94a3b8;">|</span>
+            <a href="mailto:your-email@example.com">Get this for your restaurant</a>
+        </div>
+    </div>
+
     {% if user_role %}
     <div class="admin-bar">
         <span><i class="fas fa-shield-alt" style="margin-right:0.5rem;color:var(--secondary);"></i> Admin Panel — Logged in as {{ session.username }} ({{ user_role }})</span>
@@ -670,6 +704,7 @@
         </div>
     </div>
     {% endif %}
+    
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a href="/" class="nav-brand">{{ restaurant.name }}<span>.</span></a>
