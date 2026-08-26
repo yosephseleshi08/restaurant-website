@@ -1,96 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Contact — {{ restaurant.name }}{% endblock %}
 {% block content %}
+<style>
+.contact-section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+.contact-info-card { background: var(--primary); color: white; padding: 2.5rem; border-radius: 20px; }
+.contact-info-card h3 { color: white; margin-bottom: 1.5rem; font-size: 1.5rem; }
+.contact-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
+.contact-item i { color: var(--secondary); font-size: 1.2rem; margin-top: 0.2rem; }
+.contact-item p { margin: 0; font-size: 0.95rem; opacity: 0.9; }
+.contact-item a { color: white; text-decoration: none; opacity: 0.9; }
+.contact-item a:hover { opacity: 1; text-decoration: underline; }
+.contact-form-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.contact-form-card h3 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.5rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 0.85rem; border: 1px solid #ddd; border-radius: 10px;
+    font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.3s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--secondary); }
+@media (max-width: 768px) { .contact-grid, .form-row { grid-template-columns: 1fr; } }
+</style>
 
-<section class="section-header">
-    <h1>Get in Touch</h1>
-    <p>Have a question, feedback, or want to book a private event? We'd love to hear from you.</p>
-    <div class="line"></div>
-</section>
-
-{% if success %}
-<div class="alert alert-success container-md mx-auto mb-3">
-    <i class="fas fa-check-circle"></i>
-    <div>
-        <strong>Message Sent!</strong><br>
-        <span style="font-size: 0.9rem;">Thank you for reaching out. We'll get back to you within 24 hours.</span>
+<section class="contact-section">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem;">Get in Touch</h1>
+        <p style="color: #666;">Have a question or want to book a private event? We'd love to hear from you.</p>
     </div>
-</div>
-{% endif %}
-
-{% if error_msg %}
-<div class="alert alert-error container-md mx-auto mb-3">
-    <i class="fas fa-exclamation-circle"></i>
-    <div>
-        <strong>Error</strong><br>
-        <span style="font-size: 0.9rem;">{{ error_msg }}</span>
-    </div>
-</div>
-{% endif %}
-
-<div class="grid grid-2 container-md mx-auto">
-    <!-- Contact Info -->
-    <div>
-        <div class="card mb-2">
-            <h3 class="mb-2" style="font-size: 1.3rem;">Contact Information</h3>
-            <div class="flex flex-wrap" style="flex-direction: column; gap: 1.25rem;">
-                <div class="contact-info-item">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div>
-                        <p style="font-weight: 600; margin-bottom: 0.2rem;">Address</p>
-                        <p style="color: #666; font-size: 0.95rem;">{{ restaurant.address }}</p>
-                    </div>
-                </div>
-                <div class="contact-info-item">
-                    <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
-                    <div>
-                        <p style="font-weight: 600; margin-bottom: 0.2rem;">Phone</p>
-                        <a href="tel:{{ restaurant.phone_link }}" class="text-primary" style="text-decoration: none; font-weight: 500;">{{ restaurant.phone }}</a>
-                    </div>
-                </div>
-                <div class="contact-info-item">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <div>
-                        <p style="font-weight: 600; margin-bottom: 0.2rem;">Email</p>
-                        <a href="mailto:{{ restaurant.email }}" class="text-primary" style="text-decoration: none; font-weight: 500;">{{ restaurant.email }}</a>
-                    </div>
-                </div>
-                <div class="contact-info-item">
-                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                    <div>
-                        <p style="font-weight: 600; margin-bottom: 0.2rem;">Hours</p>
-                        <p style="color: #666; font-size: 0.95rem;">Mon–Thu: 11AM – 10PM<br>Fri: 11AM – 11PM<br>Sat: 10AM – 11PM<br>Sun: 10AM – 9PM</p>
-                    </div>
-                </div>
+    <div class="contact-grid">
+        <div class="contact-info-card">
+            <h3>Contact Information</h3>
+            <div class="contact-item"><i class="fas fa-map-marker-alt"></i><p>{{ restaurant.address }}</p></div>
+            <div class="contact-item"><i class="fas fa-phone-alt"></i><p><a href="tel:{{ restaurant.phone_link }}">{{ restaurant.phone }}</a></p></div>
+            <div class="contact-item"><i class="fas fa-envelope"></i><p><a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></p></div>
+            <div class="contact-item">
+                <i class="fas fa-clock"></i>
+                <p>{% for day, hours in restaurant.hours.items() %}{{ day.capitalize() }}: {{ hours }}<br>{% endfor %}</p>
             </div>
         </div>
-
-        <div class="card">
-            <h3 class="mb-1" style="font-size: 1.1rem;">Follow Us</h3>
-            <div class="flex gap-1">
-                {% if restaurant.social.instagram %}<a href="https://instagram.com/{{ restaurant.social.instagram }}" target="_blank" class="contact-icon-sm social-instagram"><i class="fab fa-instagram"></i></a>{% endif %}
-                {% if restaurant.social.facebook %}<a href="https://facebook.com/{{ restaurant.social.facebook }}" target="_blank" class="contact-icon-sm social-facebook"><i class="fab fa-facebook-f"></i></a>{% endif %}
-                {% if restaurant.social.twitter %}<a href="https://twitter.com/{{ restaurant.social.twitter }}" target="_blank" class="contact-icon-sm social-twitter"><i class="fab fa-twitter"></i></a>{% endif %}
-                {% if restaurant.social.yelp %}<a href="https://yelp.com/biz/{{ restaurant.social.yelp }}" target="_blank" class="contact-icon-sm social-yelp"><i class="fab fa-yelp"></i></a>{% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Contact Form -->
-    <div>
-        <div class="card">
-            <h3 class="mb-2" style="font-size: 1.3rem;"><i class="fas fa-paper-plane text-primary" style="margin-right: 0.5rem;"></i>Send a Message</h3>
+        <div class="contact-form-card">
+            <h3>Send us a Message</h3>
             <form method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="grid grid-2">
-                    <div class="form-group">
-                        <label>Name *</label>
-                        <input type="text" name="name" placeholder="Your name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email *</label>
-                        <input type="email" name="email" placeholder="your@email.com" required>
-                    </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Name *</label><input type="text" name="name" placeholder="Your name" required></div>
+                    <div class="form-group"><label>Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
                 </div>
                 <div class="form-group">
                     <label>Subject *</label>
@@ -100,24 +55,15 @@
                         <option value="reservation">Reservation Question</option>
                         <option value="private-event">Private Event / Catering</option>
                         <option value="feedback">Feedback</option>
-                        <option value="other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Message *</label>
                     <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-block" style="font-size: 1.05rem;">
-                    <i class="fas fa-paper-plane"></i> Send Message
-                </button>
+                <button type="submit" class="btn btn-block" style="font-size: 1.05rem;"><i class="fas fa-paper-plane"></i> Send Message</button>
             </form>
         </div>
     </div>
-</div>
-
-<!-- Full-width Map -->
-<div class="mt-3" style="margin-left: -1.5rem; margin-right: -1.5rem; height: 400px;">
-    <iframe src="{{ restaurant.google_maps_embed }}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-</div>
-
+</section>
 {% endblock %}
