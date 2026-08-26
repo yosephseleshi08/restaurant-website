@@ -1,70 +1,68 @@
 {% extends "base.html" %}
-{% block title %}Events & Private Dining — {{ restaurant.name }}{% endblock %}
+{% block title %}Events — {{ restaurant.name }}{% endblock %}
 {% block content %}
+<style>
+.events-hero { position: relative; height: 50vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; overflow: hidden; }
+.events-hero-bg { position: absolute; inset: 0; background: url('{{ events.hero_image }}') center/cover no-repeat; }
+.events-hero-overlay { position: absolute; inset: 0; background: rgba(11,15,25,0.7); }
+.events-hero-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; }
+.events-section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+.events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+.event-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.event-card img { width: 100%; height: 200px; object-fit: cover; }
+.event-card-body { padding: 1.5rem; }
+.event-card h3 { color: var(--primary); margin-bottom: 0.5rem; font-size: 1.2rem; }
+.event-card p { color: #666; font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; }
+.event-date { color: var(--secondary); font-weight: 600; font-size: 0.9rem; }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.service-card { background: var(--background); padding: 2rem; border-radius: 16px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+.service-card i { font-size: 2rem; color: var(--secondary); margin-bottom: 1rem; }
+.service-card h3 { color: var(--primary); margin-bottom: 0.5rem; }
+</style>
 
-<!-- Hero -->
-<section class="relative overflow-hidden" style="margin: -2rem -1.5rem 3rem; height: 50vh; min-height: 350px; display: flex; align-items: center; justify-content: center;">
-    <div class="absolute inset-0" style="background: url('{{ events.hero_image }}') center/cover no-repeat;"></div>
-    <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(45,27,18,0.8), rgba(232,93,58,0.6));"></div>
-    <div class="relative z-2 text-center text-white" style="padding: 2rem;">
-        <p style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 1rem; opacity: 0.9;">Private Events & Celebrations</p>
-        <h1 style="font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700;">{{ events.page_title }}</h1>
+<section class="events-hero">
+    <div class="events-hero-bg"></div>
+    <div class="events-hero-overlay"></div>
+    <div class="events-hero-content">
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">{{ events.page_title }}</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9;">{{ events.page_subtitle }}</p>
     </div>
 </section>
 
-<div class="container">
-    <div class="section-title mb-3">
-        <p style="color: #777; font-size: 1.1rem; max-width: 700px; margin: 0 auto;">{{ events.page_subtitle }}</p>
-        <div class="line"></div>
+<section class="events-section">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h2 style="font-size: 2rem; color: var(--primary);">Private Dining Services</h2>
     </div>
-
-    <!-- Services -->
-    <div class="grid grid-2 mb-4">
+    <div class="services-grid">
         {% for service in events.services %}
-        <div class="card service-card">
-            <div class="service-icon">
-                <i class="fas {{ service.icon }}"></i>
-            </div>
-            <div>
-                <h3 class="service-title">{{ service.title }}</h3>
-                <p class="service-desc">{{ service.description }}</p>
-            </div>
+        <div class="service-card">
+            <i class="fas {{ service.icon }}"></i>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
         </div>
         {% endfor %}
     </div>
 
-    <!-- Upcoming Events -->
-    <div class="section-title mb-3">
-        <h2>Upcoming Events</h2>
-        <p>Join us for special experiences throughout the year</p>
-        <div class="line"></div>
+    <div style="text-align: center; margin: 4rem 0 2rem;">
+        <h2 style="font-size: 2rem; color: var(--primary);">Upcoming Events</h2>
     </div>
-    <div class="grid grid-3 mb-4">
+    <div class="events-grid">
         {% for event in events.upcoming_events %}
-        <div class="card card-nopad">
-            <div class="overflow-hidden" style="height: 200px;">
-                <img src="{{ event.image }}" alt="{{ event.title }}" class="img-cover" style="transition: transform 0.5s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
-            </div>
-            <div style="padding: 1.5rem;">
-                <div class="event-date-badge">
-                    <i class="fas fa-calendar-day" style="margin-right: 0.3rem;"></i> {{ event.date }}
-                </div>
-                <h3 style="font-size: 1.15rem; margin-bottom: 0.5rem;">{{ event.title }}</h3>
-                <p style="color: #666; font-size: 0.9rem; line-height: 1.6;">{{ event.description }}</p>
+        <div class="event-card">
+            <img src="{{ event.image }}" alt="{{ event.title }}" loading="lazy">
+            <div class="event-card-body">
+                <h3>{{ event.title }}</h3>
+                <p>{{ event.description }}</p>
+                <div class="event-date"><i class="fas fa-calendar-alt"></i> {{ event.date }}</div>
             </div>
         </div>
         {% endfor %}
     </div>
 
-    <!-- CTA -->
-    <div class="rounded bg-gradient-cta text-white text-center" style="padding: 3rem 2rem;">
-        <h2 style="font-size: 2rem; margin-bottom: 1rem; color: white;">{{ events.cta_title }}</h2>
-        <p style="opacity: 0.9; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">{{ events.cta_text }}</p>
-        <div class="cta-actions">
-            <a href="/contact" class="btn" style="background: white; color: var(--primary);"><i class="fas fa-envelope"></i> Inquire Now</a>
-            <a href="tel:{{ restaurant.phone_link }}" class="btn btn-outline"><i class="fas fa-phone-alt"></i> Call Us</a>
-        </div>
+    <div style="text-align: center; margin-top: 4rem; padding: 3rem; background: var(--primary); color: white; border-radius: 20px;">
+        <h2 style="color: white; margin-bottom: 1rem;">{{ events.cta_title }}</h2>
+        <p style="opacity: 0.8; margin-bottom: 2rem;">{{ events.cta_text }}</p>
+        <a href="/contact" class="btn btn-gold btn-lg">Inquire Now</a>
     </div>
-</div>
-
+</section>
 {% endblock %}
