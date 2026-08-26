@@ -280,22 +280,41 @@ def create_app(config_name="production"):
             username, password = request.form.get('username', '').strip(), request.form.get('password', '').strip()
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password_hash, password):
-                session['user_id'] = user.id; return redirect(url_for('dashboard'))
+                session['user_id'] = user.id
+                session['username'] = user.username
+                return redirect(url_for('dashboard'))
             flash('Invalid username or password', 'error')
         return render_template('login.html')
 
     @app.route('/dashboard')
-    @app.route('/kitchen')
     def dashboard():
         if 'user_id' not in session:
-            flash("Please log in to view the dashboard. (Demo credentials: admin / admin123)", "info")
+            flash("Please log in to view the dashboard. (Demo: admin / admin123)", "info")
             return redirect(url_for('login'))
         data = load_data()
         return render_template('dashboard.html', theme=data['theme'], restaurant=data['restaurant'], analytics=data['analytics'], settings=data['settings'])
 
+    @app.route('/editor')
+    def editor():
+        if 'user_id' not in session:
+            flash("Please log in to view the editor.", "info")
+            return redirect(url_for('login'))
+        data = load_data()
+        return render_template('editor.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], data=data)
+
+    @app.route('/kitchen')
+    def kitchen():
+        if 'user_id' not in session:
+            flash("Please log in to view the kitchen display.", "info")
+            return redirect(url_for('login'))
+        data = load_data()
+        orders = Order.query.filter(Order.status.in_(['pending', 'preparing', 'ready'])).order_by(Order.created_at.asc()).all()
+        return render_template('kitchen.html', theme=data['theme'], restaurant=data['restaurant'], orders=orders, settings=data['settings'])
+
     @app.route('/logout')
     def logout():
-        session.clear(); return redirect(url_for('home'))
+        session.clear()
+        return redirect(url_for('home'))
 
     with app.app_context(): init_db()
     return app
