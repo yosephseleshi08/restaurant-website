@@ -20,124 +20,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --primary: {{ theme.primary_color }};
-            --secondary: {{ theme.secondary_color }};
-            --background: {{ theme.background_color }};
-            --text: {{ theme.text_color }};
-            --card-bg: {{ theme.card_bg }};
-            --accent: {{ theme.accent_color }};
-            --font-body: 'Inter', sans-serif;
-            --font-heading: 'Playfair Display', serif;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-md: 0 8px 30px rgba(0,0,0,0.08);
-            --radius: 20px;
-            --radius-sm: 12px;
+            --primary: {{ theme.primary_color }}; --secondary: {{ theme.secondary_color }}; --background: {{ theme.background_color }};
+            --text: {{ theme.text_color }}; --card-bg: {{ theme.card_bg }}; --accent: {{ theme.accent_color }};
+            --font-body: 'Inter', sans-serif; --font-heading: 'Playfair Display', serif;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 8px 30px rgba(0,0,0,0.08); --radius: 20px; --radius-sm: 12px;
         }
-        {% if theme.dark_mode %}
-        :root { --background: #0a0a0f; --text: #e8e8e8; --card-bg: #12121a; }
-        {% endif %}
+        {% if theme.dark_mode %} :root { --background: #0a0a0f; --text: #e8e8e8; --card-bg: #12121a; } {% endif %}
         {{ theme.custom_css | safe }}
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
-        body {
-            font-family: var(--font-body);
-            background: var(--background);
-            color: var(--text);
-            min-height: 100vh;
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
+        body { font-family: var(--font-body); background: var(--background); color: var(--text); min-height: 100vh; line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
         h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
 
-        /* ===== WARMUP SCREEN ===== */
-        #warmupScreen {
-            position: fixed; inset: 0;
-            background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%);
-            z-index: 99999; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; color: white;
-            font-family: 'Playfair Display', serif; transition: opacity 0.5s ease;
-        }
+        #warmupScreen { position: fixed; inset: 0; background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%); z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-family: 'Playfair Display', serif; transition: opacity 0.5s ease; }
         .warmup-icon { font-size: 4rem; margin-bottom: 1rem; animation: pulse 1.5s infinite; }
         .warmup-title { font-size: 1.8rem; margin-bottom: 0.5rem; font-weight: 600; }
         .warmup-subtitle { color: rgba(255,255,255,0.6); font-size: 1rem; font-family: var(--font-body); }
         .warmup-dots { margin-top: 2rem; display: flex; gap: 8px; }
-        .warmup-dots div {
-            width: 10px; height: 10px; background: var(--secondary); border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
+        .warmup-dots div { width: 10px; height: 10px; background: var(--secondary); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
         .warmup-dots div:nth-child(1) { animation-delay: -0.32s; }
         .warmup-dots div:nth-child(2) { animation-delay: -0.16s; }
         @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.7; } }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* ===== NAVBAR ===== */
-        .navbar {
-            background: rgba(255,255,255,0.95); backdrop-filter: blur(20px) saturate(180%);
-            padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-            border-bottom: 1px solid rgba(0,0,0,0.04); transition: all 0.4s ease;
-        }
+        .navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px) saturate(180%); padding: 0; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.04); transition: all 0.4s ease; }
         .navbar.scrolled { background: rgba(255,255,255,0.98); box-shadow: 0 4px 30px rgba(0,0,0,0.08); }
-        .demo-banner-inner {
-            background-color: #1e3a8a; color: #ffffff; text-align: center;
-            padding: 10px 15px; font-family: var(--font-body); font-size: 14px; font-weight: 500;
-            display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .demo-banner-inner { background-color: #1e3a8a; color: #ffffff; text-align: center; padding: 10px 15px; font-family: var(--font-body); font-size: 14px; font-weight: 500; display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .demo-banner-inner a { color: #fbbf24; text-decoration: underline; font-weight: bold; }
-        .admin-bar {
-            background: #0f172a; color: white; padding: 8px 2rem;
-            display: flex; align-items: center; justify-content: space-between;
-            font-size: 0.85rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
+        .admin-bar { background: #0f172a; color: white; padding: 8px 2rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .admin-bar a { color: rgba(255,255,255,0.7); text-decoration: none; margin-left: 1.2rem; font-size: 0.8rem; transition: color 0.2s; }
         .admin-bar a:hover { color: var(--secondary); }
         .nav-container { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2rem; }
-        .nav-brand {
-            font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700;
-            color: var(--primary); text-decoration: none; letter-spacing: -0.5px;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
+        .nav-brand { font-family: var(--font-heading); font-size: 1.7rem; font-weight: 700; color: var(--primary); text-decoration: none; letter-spacing: -0.5px; display: flex; align-items: center; gap: 0.5rem; }
         .nav-brand::before { content: ''; width: 8px; height: 8px; background: var(--secondary); border-radius: 50%; display: inline-block; }
         .nav-brand span { color: var(--secondary); font-weight: 400; }
         .nav-links { display: flex; gap: 0.15rem; list-style: none; align-items: center; }
-        .nav-links a {
-            color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.9rem;
-            padding: 0.5rem 1rem; border-radius: 10px; transition: all 0.3s ease; position: relative;
-        }
-        .nav-links a::after {
-            content: ''; position: absolute; bottom: 2px; left: 50%; width: 0; height: 2px;
-            background: var(--secondary); transition: all 0.3s ease; transform: translateX(-50%); border-radius: 2px;
-        }
+        .nav-links a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.9rem; padding: 0.5rem 1rem; border-radius: 10px; transition: all 0.3s ease; position: relative; }
+        .nav-links a::after { content: ''; position: absolute; bottom: 2px; left: 50%; width: 0; height: 2px; background: var(--secondary); transition: all 0.3s ease; transform: translateX(-50%); border-radius: 2px; }
         .nav-links a:hover::after, .nav-links a.active::after { width: 60%; }
         .nav-links a:hover { color: var(--primary); }
         .nav-links a.active { color: var(--primary); font-weight: 600; }
-        .nav-cta {
-            background: linear-gradient(135deg, var(--primary), #1a2332) !important; color: white !important;
-            margin-left: 0.75rem; padding: 0.6rem 1.4rem !important; border-radius: 50px !important;
-            font-size: 0.85rem !important; letter-spacing: 0.5px; text-transform: uppercase;
-        }
+        .nav-cta { background: linear-gradient(135deg, var(--primary), #1a2332) !important; color: white !important; margin-left: 0.75rem; padding: 0.6rem 1.4rem !important; border-radius: 50px !important; font-size: 0.85rem !important; letter-spacing: 0.5px; text-transform: uppercase; }
         .nav-cta::after { display: none !important; }
         .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(11,15,25,0.25); }
         .hamburger { display: none; background: none; border: none; font-size: 1.4rem; color: var(--text); cursor: pointer; padding: 0.5rem; width: 44px; height: 44px; border-radius: 12px; }
         .hamburger:hover { background: rgba(0,0,0,0.04); }
         .cart-icon { position: relative; margin-left: 0.5rem; }
-        .cart-badge {
-            position: absolute; top: -6px; right: -6px; background: var(--secondary); color: white;
-            font-size: 0.6rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .cart-badge { position: absolute; top: -6px; right: -6px; background: var(--secondary); color: white; font-size: 0.6rem; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
         .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
         main { padding-top: 115px; }
 
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
-            background: linear-gradient(135deg, var(--primary), #1a2332); color: white; border: none;
-            padding: 0.9rem 2rem; border-radius: 50px; font-weight: 600; font-size: 0.95rem;
-            cursor: pointer; font-family: var(--font-body); text-decoration: none; transition: all 0.35s ease;
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; background: linear-gradient(135deg, var(--primary), #1a2332); color: white; border: none; padding: 0.9rem 2rem; border-radius: 50px; font-weight: 600; font-size: 0.95rem; cursor: pointer; font-family: var(--font-body); text-decoration: none; transition: all 0.35s ease; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(11,15,25,0.25); }
         .btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
         .btn-secondary:hover { background: var(--primary); color: white; }
@@ -152,10 +86,7 @@
         .footer-brand { font-family: var(--font-heading); font-size: 1.6rem; color: white; margin-bottom: 1rem; }
         .footer-desc { font-size: 0.9rem; line-height: 1.8; margin-bottom: 1.5rem; color: rgba(255,255,255,0.5); }
         .footer-social { display: flex; gap: 0.75rem; }
-        .footer-social a {
-            width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.06);
-            display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease;
-        }
+        .footer-social a { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; transition: all 0.3s ease; }
         .footer-social a:hover { background: var(--secondary); transform: translateY(-3px); }
         .footer h4 { font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: white; margin-bottom: 1.5rem; }
         .footer-links { list-style: none; }
@@ -191,7 +122,7 @@
         <div class="demo-banner-inner">
             <span>🔹 This is a live demo of <strong>Restaurant CMS Pro</strong>.</span>
             <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
-                <a href="/dashboard">View Admin/Kitchen Dashboard</a>
+                <a href="/login">View Admin/Kitchen Dashboard (Demo: admin / admin123)</a>
                 <span style="color: #94a3b8;">|</span>
                 <a href="mailto:your-email@example.com">Get this for your restaurant</a>
             </div>
@@ -217,7 +148,7 @@
                 {% if settings.enable_events %}<li><a href="/events" {% if request.path == '/events' %}class="active"{% endif %}>Events</a></li>{% endif %}
                 <li><a href="/about" {% if request.path == '/about' %}class="active"{% endif %}>About</a></li>
                 <li><a href="/contact" {% if request.path == '/contact' %}class="active"{% endif %}>Contact</a></li>
-                {% if settings.enable_online_ordering %}<li><a href="/order/menu" {% if request.path == '/order/menu' %}class="active"{% endif %}>Order</a></li>{% endif %}
+                {% if settings.enable_online_ordering %}<li><a href="/order" {% if request.path == '/order' or request.path == '/order/menu' %}class="active"{% endif %}>Order</a></li>{% endif %}
                 <li><a href="/reservations" class="nav-cta"><i class="fas fa-calendar-check"></i> Book</a></li>
                 {% if settings.enable_online_ordering %}
                 <li class="cart-icon">
@@ -267,7 +198,7 @@
             <div>
                 <h4>Services</h4>
                 <ul class="footer-links">
-                    {% if settings.enable_online_ordering %}<li><a href="/order/menu">Order Online</a></li>{% endif %}
+                    {% if settings.enable_online_ordering %}<li><a href="/order">Order Online</a></li>{% endif %}
                     <li><a href="/reservations">Reservations</a></li>
                 </ul>
             </div>
