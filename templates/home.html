@@ -117,6 +117,50 @@
     60% { transform: translateX(-50%) translateY(-5px); }
 }
 
+/* ===== VALUE PROPOSITION (NEW) ===== */
+.value-prop-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid #bbf7d0;
+}
+.value-prop-section h3 {
+    color: #166534;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+.value-prop-section p {
+    color: #15803d;
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+.value-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+.value-stat-item {
+    text-align: center;
+}
+.value-stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #16a34a;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+.value-stat-label {
+    font-size: 0.9rem;
+    color: #166534;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 /* ===== FEATURED SECTION ===== */
 .featured-section {
     padding: 6rem 2rem;
@@ -473,6 +517,7 @@
     .hero-badges { gap: 1.5rem; }
     .featured-grid { grid-template-columns: 1fr; }
     .testimonials-grid { grid-template-columns: 1fr; }
+    .value-stats { gap: 1.5rem; }
 }
 </style>
 
@@ -496,6 +541,28 @@
     </div>
     <div class="hero-scroll">
         <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- VALUE PROPOSITION (NEW) -->
+<section class="value-prop-section">
+    <div class="container">
+        <h3>🛑 Stop Giving 30% of Your Revenue to Delivery Apps</h3>
+        <p>With <strong>Restaurant CMS Pro</strong>, your customers order directly from your website or QR code. The order goes straight to your kitchen display. <strong>You keep 100% of the profit.</strong></p>
+        <div class="value-stats">
+            <div class="value-stat-item">
+                <div class="value-stat-number">0%</div>
+                <div class="value-stat-label">Commission Fees</div>
+            </div>
+            <div class="value-stat-item">
+                <div class="value-stat-number">2 Min</div>
+                <div class="value-stat-label">Setup Time</div>
+            </div>
+            <div class="value-stat-item">
+                <div class="value-stat-number">100%</div>
+                <div class="value-stat-label">Customer Data Ownership</div>
+            </div>
+        </div>
     </div>
 </section>
 
