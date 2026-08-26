@@ -48,20 +48,20 @@ def create_app(config_name="production"):
     DEFAULT_DATA = {
         'theme': {'primary_color': '#0B0F19', 'secondary_color': '#C9A96E', 'background_color': '#FAF7F2', 'text_color': '#1A1A1A', 'card_bg': '#FFFFFF', 'accent_color': '#8B7355', 'font_family': "'Playfair Display', 'Georgia', serif", 'dark_mode': False, 'custom_css': ''},
         'seo': {'meta_title': 'Aurelia — Modern Coastal Mediterranean Dining', 'meta_description': 'Experience award-winning coastal Mediterranean cuisine at Aurelia.', 'meta_keywords': 'mediterranean restaurant, fine dining, seafood, reservations', 'og_image': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&h=630&fit=crop', 'google_analytics_id': '', 'facebook_pixel': ''},
-        'restaurant': {'name': "Aurelia", 'tagline': "Modern Coastal Mediterranean Dining", 'address': "47 Harbor View Boulevard, Marina District, CA 94123", 'phone': "(415) 555-0199", 'phone_link': "+14155550199", 'email': "reservations@aurelia.co", 'hours': {'monday': '5:00 PM - 10:00 PM', 'tuesday': '5:00 PM - 10:00 PM', 'wednesday': '5:00 PM - 10:00 PM', 'thursday': '5:00 PM - 10:00 PM', 'friday': '5:00 PM - 11:00 PM', 'saturday': '4:30 PM - 11:00 PM', 'sunday': '4:00 PM - 9:30 PM'}, 'social': {'instagram': 'aurelia.dining', 'facebook': 'AureliaDining', 'twitter': 'AureliaDining', 'yelp': 'aurelia-marina-district'}, 'google_maps_embed': 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d-122.4194!3d37.7749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ2JzI5LjYiTiAxMjLCsDI1JzEwLjAiVw!5e0!3m2!1sen!2us!4v1'},
+        'restaurant': {'name': "Aurelia", 'tagline': "Modern Coastal Mediterranean Dining", 'address': "47 Harbor View Boulevard, Marina District, CA 94123", 'phone': "(415) 555-0199", 'phone_link': "+14155550199", 'email': "reservations@aurelia.co", 'hours': {'monday': '5:00 PM - 10:00 PM', 'tuesday': '5:00 PM - 10:00 PM', 'wednesday': '5:00 PM - 10:00 PM', 'thursday': '5:00 PM - 10:00 PM', 'friday': '5:00 PM - 11:00 PM', 'saturday': '4:30 PM - 11:00 PM', 'sunday': '4:00 PM - 9:30 PM'}, 'social': {'instagram': 'aurelia.dining', 'facebook': 'AureliaDining', 'twitter': 'AureliaDining', 'yelp': 'aurelia-marina-district'}},
         'about': {'story': "Founded in 2019 by Chef Elena Marchetti, Aurelia was born from a simple belief: the Mediterranean diet is not just healthy — it is the purest expression of joy on a plate.", 'chef_name': "Chef Elena Marchetti", 'chef_bio': "A James Beard Award semifinalist, Chef Elena trained at El Celler de Can Roca. Her philosophy is simple: let the ingredient speak.", 'chef_image': "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=600&h=600&fit=crop&crop=faces", 'interior_image': "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&h=900&fit=crop", 'food_image': "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=900&fit=crop", 'values': [{'title': 'Ocean to Table', 'description': 'We source seafood daily from Monterey Bay.'}, {'title': 'Zero Waste Kitchen', 'description': 'Every herb stem becomes a sauce. Sustainability is our foundation.'}, {'title': 'Wine as Philosophy', 'description': 'Our sommelier curates 200+ labels from coastal vineyards.'}]},
-        'testimonials': [{'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini. Simply extraordinary.', 'rating': 5}, {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here — every detail was perfection.', 'rating': 5}, {'name': 'David R., SF Chronicle', 'text': 'Aurelia is doing what few restaurants dare: making fine dining feel like coming home.', 'rating': 5}, {'name': 'Isabella M.', 'text': 'The olive oil cake alone is worth the flight to San Francisco. A revelation.', 'rating': 5}],
+        'testimonials': [{'name': 'Marcus T.', 'text': 'The grilled octopus transported me straight to a taverna in Santorini. Simply extraordinary.', 'rating': 5}, {'name': 'Priya & James K.', 'text': 'We hosted our rehearsal dinner here — every detail was perfection.', 'rating': 5}],
         'menu': {
-            'raw bar': [{'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection, mignonette granita, lemon verbena', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop', 'dietary': ['gluten-free']}, {'name': 'Tuna Crudo', 'description': 'Bigeye tuna, Sicilian olive oil, Calabrian chili, preserved lemon', 'price': 28.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']}],
-            'small plates': [{'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush, pomegranate molasses, toasted pine nuts, warm pita', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}, {'name': 'Whipped Feta', 'description': "Whipped sheep's milk feta, honeycomb, toasted walnuts, warm sourdough", 'price': 18.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}, {'name': 'Grilled Spanish Octopus', 'description': 'Charred octopus, fingerling potatoes, smoked paprika, salsa verde', 'price': 26.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']}, {'name': 'Burrata & Heirloom Tomatoes', 'description': 'Pugliese burrata, San Marzano tomatoes, basil oil, aged balsamic', 'price': 22.00, 'popular': False, 'image': 'https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=600&h=400&fit=crop', 'dietary': ['vegetarian', 'gluten-free']}],
-            'mains': [{'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass, herb-stuffed, lemon, extra virgin olive oil', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']}, {'name': 'Truffle Paccheri', 'description': 'Hand-rolled paccheri, black truffle cream, aged Parmigiano-Reggiano', 'price': 38.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}, {'name': 'Dry-Aged Ribeye', 'description': '45-day dry-aged ribeye, bone marrow butter, charred spring onion', 'price': 65.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=600&h=400&fit=crop', 'dietary': ['gluten-free']}],
-            'desserts': [{'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge, blood orange curd, mascarpone chantilly', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}, {'name': 'Dark Chocolate Fondant', 'description': 'Valrhona dark chocolate, sea salt caramel core, vanilla bean ice cream', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}]
+            'raw bar': [{'name': 'Oysters on the Half Shell', 'description': 'Kumamoto & Miyagi selection', 'price': 24.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop', 'dietary': ['gluten-free']}],
+            'small plates': [{'name': 'Charred Eggplant Dip', 'description': 'Smoky baba ganoush', 'price': 16.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}],
+            'mains': [{'name': 'Whole Roasted Branzino', 'description': 'Mediterranean sea bass', 'price': 42.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=400&fit=crop', 'dietary': ['gluten-free', 'dairy-free']}],
+            'desserts': [{'name': 'Olive Oil Cake', 'description': 'Citrus-scented olive oil sponge', 'price': 14.00, 'popular': True, 'image': 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&h=400&fit=crop', 'dietary': ['vegetarian']}]
         },
         'reservations': {'hold_time': '15 minutes', 'large_party_note': 'Parties of 8+ please contact our events team directly', 'time_slots': ['17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30'], 'max_guests_per_slot': 24},
-        'online_ordering': {'enabled': True, 'page_title': 'Order Online', 'page_subtitle': "Enjoy Aurelia's coastal Mediterranean cuisine at home.", 'platforms': [{'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'}, {'name': 'UberEats', 'url': 'https://ubereats.com', 'icon': 'fa-utensils', 'active': True, 'color': '#06C167'}]},
-        'gallery': {'enabled': True, 'page_title': 'Gallery', 'page_subtitle': 'A glimpse into our kitchen, our craft, and the warm, sun-drenched atmosphere.', 'photos': [{'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'The main dining room at golden hour', 'category': 'interior'}, {'url': 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=800&h=600&fit=crop', 'caption': 'Fresh oysters from Monterey Bay', 'category': 'food'}, {'url': 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&h=600&fit=crop', 'caption': 'Whole roasted branzino, Ligurian style', 'category': 'food'}, {'url': 'https://images.unsplash.com/photo-1592861956120-e524fc739696?w=800&h=600&fit=crop', 'caption': 'Private dining room', 'category': 'interior'}]},
-        'events': {'enabled': True, 'page_title': 'Events & Private Dining', 'page_subtitle': 'Host your next celebration at Aurelia.', 'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop', 'cta_title': 'Plan Your Private Event', 'cta_text': 'Let our events team design a bespoke experience.', 'services': [{'title': 'The Terrace', 'description': 'Intimate space for up to 32 guests.', 'icon': 'fa-utensils'}, {'title': 'The Cellar', 'description': 'Underground wine cellar for up to 16 guests.', 'icon': 'fa-wine-glass'}], 'upcoming_events': [{'title': "Chef Elena's Sunday Supper", 'description': 'A rotating family-style menu. $85 per person.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'}, {'title': 'Wine & Waves', 'description': 'Monthly tasting series exploring coastal wine regions.', 'date': 'Last Thursday of each month', 'image': 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop'}, {'title': 'Pasta Masterclass', 'description': 'Learn to make paccheri, pappardelle, and squid ink fettuccine.', 'date': 'First Saturday of each month', 'image': 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&h=400&fit=crop'}]},
-        'analytics': {'daily_sales': [2850, 3200, 2950, 4100, 5200, 6800, 5900], 'monthly_revenue': [98000, 112000, 105000, 128000, 135000, 148000], 'popular_items': ['Whole Roasted Branzino', 'Grilled Spanish Octopus', 'Truffle Paccheri'], 'customer_satisfaction': 4.9, 'total_reservations': 342},
+        'online_ordering': {'enabled': True, 'page_title': 'Order Online', 'page_subtitle': "Enjoy Aurelia's coastal Mediterranean cuisine at home.", 'platforms': [{'name': 'DoorDash', 'url': 'https://doordash.com', 'icon': 'fa-motorcycle', 'active': True, 'color': '#FF3008'}]},
+        'gallery': {'enabled': True, 'page_title': 'Gallery', 'page_subtitle': 'A glimpse into our kitchen, our craft, and the warm, sun-drenched atmosphere.', 'photos': [{'url': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop', 'caption': 'The main dining room at golden hour', 'category': 'interior'}]},
+        'events': {'enabled': True, 'page_title': 'Events & Private Dining', 'page_subtitle': 'Host your next celebration at Aurelia.', 'hero_image': 'https://images.unsplash.com/photo-1519167758481-83f55049b3b3?w=1920&h=800&fit=crop', 'cta_title': 'Plan Your Private Event', 'cta_text': 'Let our events team design a bespoke experience.', 'services': [{'title': 'The Terrace', 'description': 'Intimate space for up to 32 guests.', 'icon': 'fa-utensils'}], 'upcoming_events': [{'title': "Chef Elena's Sunday Supper", 'description': 'A rotating family-style menu. $85 per person.', 'date': 'Every Sunday, 6:00 PM', 'image': 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&h=400&fit=crop'}]},
+        'analytics': {'daily_sales': [2850, 3200, 2950, 4100, 5200, 6800, 5900], 'monthly_revenue': [98000, 112000, 105000, 128000, 135000, 148000], 'popular_items': ['Whole Roasted Branzino'], 'customer_satisfaction': 4.9, 'total_reservations': 342},
         'settings': {'currency': '$', 'tax_rate': 8.75, 'delivery_fee': 6.0, 'min_order': 25.0, 'cookie_consent': True, 'enable_online_ordering': True, 'enable_reservations': True, 'enable_events': True, 'enable_gallery': True, 'enable_loyalty': True, 'enable_gift_cards': True, 'enable_waitlist': True, 'enable_table_management': True, 'enable_kitchen_display': True}
     }
 
@@ -255,25 +255,6 @@ def create_app(config_name="production"):
         data = load_data()
         return render_template('cart.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], seo=data['seo'])
 
-    @app.route('/checkout', methods=['GET', 'POST'])
-    def checkout():
-        data = load_data()
-        if request.method == 'POST':
-            name, email, phone, order_type, notes = request.form.get('name','').strip(), request.form.get('email','').strip(), request.form.get('phone','').strip(), request.form.get('order_type','pickup'), request.form.get('notes','').strip()
-            cart = session.get('cart', [])
-            if not cart:
-                flash('Your cart is empty', 'error'); return redirect(url_for('cart'))
-            if all([name, email, phone]):
-                total = sum(item['price'] * item['quantity'] for item in cart)
-                order = Order(customer_name=name[:100], customer_email=email[:120], customer_phone=phone[:50], order_type=order_type, total=total, notes=notes[:1000])
-                db.session.add(order); db.session.commit()
-                for item in cart: db.session.add(OrderItem(order_id=order.id, name=item['name'][:100], price=item['price'], quantity=item['quantity'], category=item.get('category', '')))
-                db.session.commit(); session.pop('cart', None)
-                flash(f'Order placed! Total: ${total:.2f}', 'success'); return redirect(url_for('home'))
-            flash('Please fill in all required fields', 'error')
-        track_page_view('checkout')
-        return render_template('checkout.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], seo=data['seo'])
-
     @app.route('/login', methods=['GET', 'POST'])
     def login():
         if request.method == 'POST':
@@ -315,6 +296,118 @@ def create_app(config_name="production"):
     def logout():
         session.clear()
         return redirect(url_for('home'))
+
+    # ─── EDITOR API ENDPOINTS ──────────────────────────────────────────
+
+    @app.route('/api/update_theme', methods=['POST'])
+    def update_theme():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['theme'].update(request.json)
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/update_restaurant', methods=['POST'])
+    def update_restaurant():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['restaurant'].update(request.json)
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/update_hours', methods=['POST'])
+    def update_hours():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['restaurant']['hours'] = request.json
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/update_about', methods=['POST'])
+    def update_about():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['about'].update(request.json)
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/update_seo', methods=['POST'])
+    def update_seo():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['seo'].update(request.json)
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/menu/add', methods=['POST'])
+    def add_menu_item():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        category = request.json.get('category')
+        if category not in data['menu']: data['menu'][category] = []
+        data['menu'][category].append(request.json.get('item'))
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/menu/update', methods=['POST'])
+    def update_menu_item():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        category = request.json.get('category')
+        index = int(request.json.get('index', -1))
+        if category in data['menu'] and 0 <= index < len(data['menu'][category]):
+            data['menu'][category][index] = request.json.get('item')
+            save_data(data)
+            return jsonify({'success': True})
+        return jsonify({'success': False})
+
+    @app.route('/api/menu/delete', methods=['POST'])
+    def delete_menu_item():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        category = request.json.get('category')
+        index = int(request.json.get('index', -1))
+        if category in data['menu'] and 0 <= index < len(data['menu'][category]):
+            data['menu'][category].pop(index)
+            save_data(data)
+            return jsonify({'success': True})
+        return jsonify({'success': False})
+
+    @app.route('/api/testimonials/update', methods=['POST'])
+    def update_testimonials():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['testimonials'] = request.json.get('testimonials', [])
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/gallery/update', methods=['POST'])
+    def update_gallery():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['gallery']['photos'] = request.json.get('photos', [])
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/events/update', methods=['POST'])
+    def update_events():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        data = load_data()
+        data['events'].update(request.json)
+        save_data(data)
+        return jsonify({'success': True})
+
+    @app.route('/api/upload_image', methods=['POST'])
+    def upload_image():
+        if 'user_id' not in session: return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+        if 'image' not in request.files: return jsonify({'success': False, 'message': 'No image provided'})
+        file = request.files['image']
+        if file.filename == '': return jsonify({'success': False, 'message': 'No image selected'})
+        try:
+            upload_result = cloudinary.uploader.upload(file, folder="restaurant")
+            return jsonify({'success': True, 'url': upload_result['secure_url']})
+        except Exception as e:
+            return jsonify({'success': False, 'message': str(e)})
 
     with app.app_context(): init_db()
     return app
