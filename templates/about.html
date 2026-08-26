@@ -1,48 +1,302 @@
 {% extends "base.html" %}
 {% block title %}About Us — {{ restaurant.name }}{% endblock %}
 {% block content %}
+
 <style>
-.about-hero { position: relative; height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; color: white; overflow: hidden; }
-.about-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
-.about-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,15,25,0.6) 0%, rgba(11,15,25,0.8) 100%); }
-.about-hero-content { position: relative; z-index: 2; max-width: 800px; padding: 2rem; }
-.about-section { padding: 5rem 2rem; }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1200px; margin: 0 auto; align-items: center; }
-.about-img { width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-.about-text h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 1.5rem; }
-.about-text p { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 1.5rem; }
-.values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1200px; margin: 4rem auto 0; }
-.value-card { background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-.value-card h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem; }
-.value-card p { color: #666; font-size: 0.95rem; line-height: 1.6; }
-@media (max-width: 768px) { .about-grid, .values-grid { grid-template-columns: 1fr; gap: 2rem; } }
+/* ===== ABOUT HERO ===== */
+.about-hero {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+.about-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('{{ about.interior_image }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.about-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(11,15,25,0.5) 0%, rgba(11,15,25,0.85) 100%);
+}
+.about-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 2rem;
+}
+.about-hero-content .label {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+    display: inline-block;
+}
+.about-hero-content h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+.about-hero-content p {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    opacity: 0.9;
+    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* ===== STORY SECTION ===== */
+.story-section {
+    padding: 6rem 2rem;
+    background: var(--background);
+}
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+.story-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+.story-text .label {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+    display: block;
+}
+.story-text h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+.story-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== CHEF SECTION ===== */
+.chef-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(180deg, #f5f1eb 0%, var(--background) 100%);
+}
+.chef-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+.chef-image {
+    width: 100%;
+    max-width: 450px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    margin: 0 auto;
+    display: block;
+}
+.chef-text .label {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+    display: block;
+}
+.chef-text h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+.chef-text .chef-title {
+    font-size: 1.1rem;
+    color: var(--secondary);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+.chef-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+}
+
+/* ===== VALUES SECTION ===== */
+.values-section {
+    padding: 6rem 2rem;
+    background: var(--background);
+    text-align: center;
+}
+.values-section .section-header {
+    margin-bottom: 4rem;
+}
+.values-section .label {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--secondary);
+    margin-bottom: 1rem;
+    display: block;
+}
+.values-section h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+.values-section .subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.value-card {
+    background: white;
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+.value-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+.value-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(201,169,110,0.15), rgba(201,169,110,0.05));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    color: var(--secondary);
+    font-size: 1.8rem;
+    border: 1px solid rgba(201,169,110,0.2);
+}
+.value-card h3 {
+    color: var(--primary);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+.value-card p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .story-grid, .chef-grid, .values-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .story-image { height: 350px; }
+    .chef-image { max-width: 300px; }
+    .about-hero { height: 60vh; min-height: 400px; }
+}
 </style>
 
+<!-- HERO -->
 <section class="about-hero">
-    <div class="about-hero-bg" style="background-image: url('{{ about.interior_image }}');"></div>
+    <div class="about-hero-bg"></div>
     <div class="about-hero-overlay"></div>
     <div class="about-hero-content">
-        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Our Story</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9;">{{ about.story }}</p>
+        <span class="label">Our Story</span>
+        <h1>The Heart of {{ restaurant.name }}</h1>
+        <p>{{ about.story }}</p>
     </div>
 </section>
 
-<section class="about-section">
-    <div class="about-grid">
-        <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" class="about-img">
-        <div class="about-text">
-            <div style="font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 4px; color: var(--secondary); margin-bottom: 1rem;">Meet The Chef</div>
+<!-- STORY -->
+<section class="story-section">
+    <div class="story-grid">
+        <img src="{{ about.food_image }}" alt="Our food" class="story-image">
+        <div class="story-text">
+            <span class="label">Our Philosophy</span>
+            <h2>Authentic Mediterranean Cuisine</h2>
+            <p>Every dish we serve carries the warmth of tradition and the passion of our kitchen. From hand-rolled pasta to wood-fired specialties, we believe that great food brings people together.</p>
+            <p>Located in the heart of {{ restaurant.address }}, we welcome you to experience authentic Mediterranean hospitality in every bite.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CHEF -->
+<section class="chef-section">
+    <div class="chef-grid">
+        <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" class="chef-image">
+        <div class="chef-text">
+            <span class="label">Meet The Chef</span>
             <h2>{{ about.chef_name }}</h2>
+            <p class="chef-title">Executive Chef & Founder</p>
             <p>{{ about.chef_bio }}</p>
         </div>
+    </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+    <div class="section-header">
+        <span class="label">What We Stand For</span>
+        <h2>Our Values</h2>
+        <p class="subtitle">The principles that guide everything we do in our kitchen.</p>
     </div>
     <div class="values-grid">
         {% for value in about.values %}
         <div class="value-card">
+            <div class="value-icon">
+                {% if loop.index == 1 %}<i class="fas fa-fish"></i>
+                {% elif loop.index == 2 %}<i class="fas fa-leaf"></i>
+                {% elif loop.index == 3 %}<i class="fas fa-wine-glass-alt"></i>
+                {% else %}<i class="fas fa-star"></i>{% endif %}
+            </div>
             <h3>{{ value.title }}</h3>
             <p>{{ value.description }}</p>
         </div>
         {% endfor %}
     </div>
 </section>
+
 {% endblock %}
