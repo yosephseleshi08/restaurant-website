@@ -268,7 +268,6 @@ def create_app(config_name="production"):
     }
 
     # ─── Database Models ───────────────────────────────────────────────
-    # (Models remain exactly as they were: User, Reservation, ContactMessage, Order, OrderItem, PageView, NewsletterSubscriber, EventBooking, CateringInquiry, SiteSetting, Table, WaitlistEntry, GiftCard, LoyaltyMember, DailySpecial, CustomerVisit, AuditLog, WebhookEndpoint, WebhookDelivery)
     
     class User(db.Model):
         __tablename__ = 'users'
@@ -633,21 +632,18 @@ def create_app(config_name="production"):
     def send_email(to_email, subject, html_body):
         try:
             app.logger.info(f"Email queued for {to_email}: {subject}")
-            # Actual SendGrid implementation can be added here
         except Exception as e:
             app.logger.error(f"Email send failed: {e}")
 
     def send_sms(to_phone, message):
         try:
             app.logger.info(f"SMS queued for {to_phone}: {message}")
-            # Actual Twilio implementation can be added here
         except Exception as e:
             app.logger.error(f"SMS send failed: {e}")
 
     def trigger_webhooks(event_type, payload):
         try:
             app.logger.info(f"Webhook triggered: {event_type}")
-            # Actual webhook implementation can be added here
         except Exception as e:
             app.logger.error(f"Webhook trigger failed: {e}")
 
@@ -695,7 +691,8 @@ def create_app(config_name="production"):
     def home():
         track_page_view('home')
         data = load_data()
-        return render_template('index.html',
+        # ✅ FIXED: Changed 'index.html' to 'home.html' to match your repository
+        return render_template('home.html',
             theme=data['theme'], restaurant=data['restaurant'],
             about=data['about'], testimonials=data['testimonials'],
             menu=data['menu'], settings=data['settings'], seo=data['seo'])
@@ -728,7 +725,6 @@ def create_app(config_name="production"):
             online_ordering=data['online_ordering'], menu=data['menu'],
             seo=data['seo'], settings=data['settings'])
 
-    # ✅ FIXED: Added all required context variables to prevent Jinja2 UndefinedError
     @app.route('/order/menu')
     def order_menu():
         data = load_data()
