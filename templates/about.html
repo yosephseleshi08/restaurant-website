@@ -18,7 +18,7 @@
 .about-hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('{{ about.interior_image }}');
+    background-image: url('{{ about["interior_image"] }}');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -246,14 +246,14 @@
     <div class="about-hero-content">
         <span class="label">Our Story</span>
         <h1>The Heart of {{ restaurant.name }}</h1>
-        <p>{{ about.story }}</p>
+        <p>{{ about["story"] }}</p>
     </div>
 </section>
 
 <!-- STORY -->
 <section class="story-section">
     <div class="story-grid">
-        <img src="{{ about.food_image }}" alt="Our food" class="story-image">
+        <img src="{{ about["food_image"] }}" alt="Our food" class="story-image">
         <div class="story-text">
             <span class="label">Our Philosophy</span>
             <h2>Authentic Mediterranean Cuisine</h2>
@@ -266,12 +266,12 @@
 <!-- CHEF -->
 <section class="chef-section">
     <div class="chef-grid">
-        <img src="{{ about.chef_image }}" alt="{{ about.chef_name }}" class="chef-image">
+        <img src="{{ about["chef_image"] }}" alt="{{ about["chef_name"] }}" class="chef-image">
         <div class="chef-text">
             <span class="label">Meet The Chef</span>
-            <h2>{{ about.chef_name }}</h2>
+            <h2>{{ about["chef_name"] }}</h2>
             <p class="chef-title">Executive Chef & Founder</p>
-            <p>{{ about.chef_bio }}</p>
+            <p>{{ about["chef_bio"] }}</p>
         </div>
     </div>
 </section>
@@ -284,7 +284,7 @@
         <p class="subtitle">The principles that guide everything we do in our kitchen.</p>
     </div>
     <div class="values-grid">
-        {% for value in about.values %}
+        {% for value in about["values"] %}
         <div class="value-card">
             <div class="value-icon">
                 {% if loop.index == 1 %}<i class="fas fa-fish"></i>
@@ -292,8 +292,8 @@
                 {% elif loop.index == 3 %}<i class="fas fa-wine-glass-alt"></i>
                 {% else %}<i class="fas fa-star"></i>{% endif %}
             </div>
-            <h3>{{ value.title }}</h3>
-            <p>{{ value.description }}</p>
+            <h3>{{ value["title"] }}</h3>
+            <p>{{ value["description"] }}</p>
         </div>
         {% endfor %}
     </div>
