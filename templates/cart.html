@@ -28,7 +28,41 @@
         <div class="cart-total">
             Total: ${{ "%.2f"|format(grand_total) }}
         </div>
-        <a href="/checkout" class="btn btn-block btn-lg"><i class="fas fa-credit-card"></i> Proceed to Checkout</a>
+        <button id="checkout-button" class="btn" style="width: 100%; justify-content: center; font-size: 1.1rem; border: none; cursor: pointer;">
+    <i class="fas fa-lock"></i> Proceed to Secure Checkout
+</button>
+
+<script>
+document.getElementById('checkout-button').addEventListener('click', async () => {
+    const cart = {{ cart | tojson }};
+    const btn = document.getElementById('checkout-button');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+    try {
+        const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ items: cart })
+        });
+        const session = await response.json();
+        if (session.url) {
+            window.location.href = session.url;
+        } else {
+            alert('Error: ' + session.error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Secure Checkout';
+        }
+    } catch (err) {
+        alert('Network error. Please try again.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Secure Checkout';
+    }
+});
+</script>
         <a href="/menu" class="btn btn-outline btn-block" style="margin-top: 0.75rem;"><i class="fas fa-utensils"></i> Continue Shopping</a>
     {% else %}
         <div class="empty-cart">
