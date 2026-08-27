@@ -55,7 +55,10 @@
 function addToCart(name, price, category, image) {
     fetch('/api/cart/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}' // ✅ FIX: Passes the CSRF token to Flask
+        },
         body: JSON.stringify({name: name, price: price, category: category, image: image, quantity: 1})
     }).then(r => r.json()).then(data => {
         if (data.success) {
@@ -65,7 +68,12 @@ function addToCart(name, price, category, image) {
                 badge.style.display = 'flex'; 
             }
             alert(name + ' added to cart!');
+        } else {
+            alert('Error: ' + (data.message || 'Failed to add item'));
         }
+    }).catch(err => { // ✅ FIX: Catches network/CSRF errors so you can see them
+        console.error('Cart Error:', err);
+        alert('Failed to add to cart. Please check the console for details.');
     });
 }
 </script>
