@@ -252,7 +252,6 @@ def create_app(config_name="production"):
         data = load_data()
         return render_template('order.html', theme=data['theme'], restaurant=data['restaurant'], menu=data['menu'], online_ordering=data['online_ordering'], settings=data['settings'], seo=data['seo'])
 
-    # ✅ FIX 2: Cart route now calculates math and passes it to the template
     @app.route('/cart')
     def cart():
         track_page_view('cart')
@@ -265,6 +264,25 @@ def create_app(config_name="production"):
         grand_total = subtotal + tax + delivery_fee
         return render_template('cart.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], seo=data['seo'], 
                                cart=cart_items, total=subtotal, tax=tax, delivery_fee=delivery_fee, grand_total=grand_total)
+
+    # ✅ ADDED: Cart API endpoints so the button actually works
+    @app.route('/api/cart/add', methods=['POST'])
+    def add_to_cart():
+        item = request.json
+        cart = session.get('cart', [])
+        for c in cart:
+            if c['name'] == item['name']:
+                c['quantity'] += item.get('quantity', 1)
+                break
+        else:
+            cart.append(item)
+        session['cart'] = cart
+        return jsonify({'success': True, 'count': len(cart)})
+
+    @app.route('/api/cart/clear', methods=['POST'])
+    def clear_cart():
+        session['cart'] = []
+        return jsonify({'success': True})
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
