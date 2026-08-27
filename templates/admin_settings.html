@@ -18,10 +18,13 @@
       {% endif %}
     {% endwith %}
 
+    <!-- FORM 1: SendGrid Settings -->
     <div class="card editor-card" style="background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
         <h3><i class="fas fa-envelope"></i> Email Notifications (SendGrid)</h3>
         <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <!-- ✅ CRITICAL FIX: CSRF Token -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            
             <div class="grid grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                 <div class="form-group">
                     <label>SendGrid API Key</label>
@@ -46,10 +49,13 @@
         </form>
     </div>
 
+    <!-- FORM 2: Change Password -->
     <div class="card editor-card" style="background: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
         <h3><i class="fas fa-lock"></i> Change Admin Password</h3>
         <form method="POST" action="/change_password">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <!-- ✅ CRITICAL FIX: CSRF Token -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            
             <div class="grid grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                 <div class="form-group">
                     <label>Current Password</label>
