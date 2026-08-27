@@ -26,14 +26,28 @@
         {% endfor %}
         
         <div class="cart-total">
-            Total: ${{ "%.2f"|format(grand_total) }}
+            Subtotal: ${{ "%.2f"|format(total) }}<br>
+            Tax: ${{ "%.2f"|format(tax) }}<br>
+            {% if delivery_fee > 0 %}Delivery: ${{ "%.2f"|format(delivery_fee) }}<br>{% endif %}
+            <strong>Total: ${{ "%.2f"|format(grand_total) }}</strong>
         </div>
+        
         <button id="checkout-button" class="btn" style="width: 100%; justify-content: center; font-size: 1.1rem; border: none; cursor: pointer;">
-    <i class="fas fa-lock"></i> Proceed to Secure Checkout
-</button>
+            <i class="fas fa-lock"></i> Proceed to Secure Checkout
+        </button>
+        <a href="/order/menu" class="btn btn-outline btn-block" style="margin-top: 0.75rem;"><i class="fas fa-utensils"></i> Continue Shopping</a>
+    {% else %}
+        <div class="empty-cart">
+            <i class="fas fa-shopping-bag"></i>
+            <h3>Your cart is empty</h3>
+            <p style="margin: 1rem 0 2rem;">Browse our menu and add some delicious items.</p>
+            <a href="/order/menu" class="btn"><i class="fas fa-utensils"></i> Browse Menu</a>
+        </div>
+    {% endif %}
+</section>
 
 <script>
-document.getElementById('checkout-button').addEventListener('click', async () => {
+document.getElementById('checkout-button')?.addEventListener('click', async () => {
     const cart = {{ cart | tojson }};
     const btn = document.getElementById('checkout-button');
     btn.disabled = true;
@@ -48,29 +62,31 @@ document.getElementById('checkout-button').addEventListener('click', async () =>
             },
             body: JSON.stringify({ items: cart })
         });
-        const session = await response.json();
-        if (session.url) {
-            window.location.href = session.url;
+        
+        // Check if server returned JSON or an HTML error page (like 404 or 500)
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const session = await response.json();
+            if (session.url) {
+                window.location.href = session.url;
+            } else {
+                alert('Error: ' + (session.error || 'Unknown error'));
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Secure Checkout';
+            }
         } else {
-            alert('Error: ' + session.error);
+            const errorText = await response.text();
+            console.error('Server returned HTML instead of JSON:', errorText);
+            alert('Server error. The checkout route might be missing or crashing. Please check the console (F12) for details.');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Secure Checkout';
         }
     } catch (err) {
-        alert('Network error. Please try again.');
+        console.error('Fetch failed:', err);
+        alert('Network error: ' + err.message);
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Secure Checkout';
     }
 });
 </script>
-        <a href="/menu" class="btn btn-outline btn-block" style="margin-top: 0.75rem;"><i class="fas fa-utensils"></i> Continue Shopping</a>
-    {% else %}
-        <div class="empty-cart">
-            <i class="fas fa-shopping-bag"></i>
-            <h3>Your cart is empty</h3>
-            <p style="margin: 1rem 0 2rem;">Browse our menu and add some delicious items.</p>
-            <a href="/menu" class="btn"><i class="fas fa-utensils"></i> Browse Menu</a>
-        </div>
-    {% endif %}
-</section>
 {% endblock %}
