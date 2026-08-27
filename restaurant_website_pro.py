@@ -363,6 +363,33 @@ def create_app(config_name="production"):
         session.clear()
         return redirect(url_for('home'))
 
+    # ─── CART API ENDPOINTS ────────────────────────────────────────────
+    @app.route('/api/cart/add', methods=['POST'])
+    def add_to_cart():
+        item = request.json
+        cart = session.get('cart', [])
+        for c in cart:
+            if c['name'] == item['name']:
+                c['quantity'] += item.get('quantity', 1)
+                break
+        else:
+            cart.append(item)
+        session['cart'] = cart
+        return jsonify({'success': True, 'count': len(cart)})
+
+    @app.route('/api/cart/clear', methods=['POST'])
+    def clear_cart():
+        session['cart'] = []
+        return jsonify({'success': True})
+
+    @app.route('/api/cart/remove', methods=['POST'])
+    def remove_from_cart():
+        item_name = request.json.get('name')
+        cart = session.get('cart', [])
+        cart = [c for c in cart if c['name'] != item_name]
+        session['cart'] = cart
+        return jsonify({'success': True, 'count': len(cart)})
+        
     # ─── EDITOR API ENDPOINTS ──────────────────────────────────────────
     @app.route('/api/update_theme', methods=['POST'])
     def update_theme():
