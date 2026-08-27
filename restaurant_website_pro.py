@@ -5,6 +5,7 @@ from flask import (
     Flask, render_template, request, jsonify, redirect, url_for,
     session, flash, send_file, Response, abort, g
 )
+from flask_wtf.csrf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
@@ -14,6 +15,8 @@ import json, os, csv, io, secrets, re, requests, cloudinary, cloudinary.uploader
 
 def create_app(config_name="production"):
     app = Flask(__name__, template_folder='templates', static_folder='static')
+    csrf = CSRFProtect(app)
+    
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
     app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
@@ -436,7 +439,7 @@ def create_app(config_name="production"):
     with app.app_context(): init_db()
     return app
 
-# ✅ FIXED: Proper indentation and syntax at the very bottom
+# ✅ FIX: Proper indentation and syntax at the very bottom
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
