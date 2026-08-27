@@ -2,26 +2,20 @@
 {% block title %}Contact — {{ restaurant.name }}{% endblock %}
 {% block content %}
 <style>
-.contact-section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
-.contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
-.contact-info-card { background: var(--primary); color: white; padding: 2.5rem; border-radius: 20px; }
-.contact-info-card h3 { color: white; margin-bottom: 1.5rem; font-size: 1.5rem; }
-.contact-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
-.contact-item i { color: var(--secondary); font-size: 1.2rem; margin-top: 0.2rem; }
-.contact-item p { margin: 0; font-size: 0.95rem; opacity: 0.9; }
-.contact-item a { color: white; text-decoration: none; opacity: 0.9; }
-.contact-item a:hover { opacity: 1; text-decoration: underline; }
-.contact-form-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
-.contact-form-card h3 { color: var(--primary); margin-bottom: 1.5rem; font-size: 1.5rem; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.form-group { margin-bottom: 1.25rem; }
-.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
-.form-group input, .form-group select, .form-group textarea {
-    width: 100%; padding: 0.85rem; border: 1px solid #ddd; border-radius: 10px;
-    font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.3s;
-}
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--secondary); }
-@media (max-width: 768px) { .contact-grid, .form-row { grid-template-columns: 1fr; } }
+    .contact-section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 3rem; }
+    .contact-info-card { background: var(--primary); color: white; padding: 2.5rem; border-radius: 20px; }
+    .contact-info-card h3 { color: white; margin-bottom: 1.5rem; }
+    .contact-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
+    .contact-item i { color: var(--secondary); font-size: 1.2rem; margin-top: 0.2rem; }
+    .contact-item a { color: white; text-decoration: none; opacity: 0.9; }
+    .contact-form-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .contact-form-card h3 { color: var(--primary); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333; font-size: 0.9rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.85rem; border: 1px solid #ddd; border-radius: 10px; font-family: var(--font-body); }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--secondary); }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
 </style>
 
 <section class="contact-section">
@@ -35,33 +29,27 @@
             <div class="contact-item"><i class="fas fa-map-marker-alt"></i><p>{{ restaurant.address }}</p></div>
             <div class="contact-item"><i class="fas fa-phone-alt"></i><p><a href="tel:{{ restaurant.phone_link }}">{{ restaurant.phone }}</a></p></div>
             <div class="contact-item"><i class="fas fa-envelope"></i><p><a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a></p></div>
-            <div class="contact-item">
-                <i class="fas fa-clock"></i>
-                <p>{% for day, hours in restaurant.hours.items() %}{{ day.capitalize() }}: {{ hours }}<br>{% endfor %}</p>
+            <div style="margin-top: 2rem;">
+                <a href="/reservations" class="btn btn-gold btn-block">Find Us & Book a Table</a>
             </div>
         </div>
         <div class="contact-form-card">
             <h3>Send us a Message</h3>
             <form method="POST">
-                <div class="form-row">
-                    <div class="form-group"><label>Name *</label><input type="text" name="name" placeholder="Your name" required></div>
-                    <div class="form-group"><label>Email *</label><input type="email" name="email" placeholder="your@email.com" required></div>
-                </div>
-                <div class="form-group">
-                    <label>Subject *</label>
+                <!-- ✅ CRITICAL FIX: CSRF Token -->
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                
+                <div class="form-group"><label>Name *</label><input type="text" name="name" required></div>
+                <div class="form-group"><label>Email *</label><input type="email" name="email" required></div>
+                <div class="form-group"><label>Subject *</label>
                     <select name="subject" required>
-                        <option value="">Select a topic</option>
                         <option value="general">General Inquiry</option>
                         <option value="reservation">Reservation Question</option>
                         <option value="private-event">Private Event / Catering</option>
-                        <option value="feedback">Feedback</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Message *</label>
-                    <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-block" style="font-size: 1.05rem;"><i class="fas fa-paper-plane"></i> Send Message</button>
+                <div class="form-group"><label>Message *</label><textarea name="message" rows="5" required></textarea></div>
+                <button type="submit" class="btn btn-block"><i class="fas fa-paper-plane"></i> Send Message</button>
             </form>
         </div>
     </div>
