@@ -1,17 +1,17 @@
 """
-La Bella Cucina — Restaurant CMS Pro Edition v2.0
+La Bella Cucina — Restaurant CMS Pro Edition v2.0 (Final Production Version)
 """
 from flask import (
     Flask, render_template, request, jsonify, redirect, url_for,
     session, flash, send_file, Response, abort, g
 )
-from flask_wtf.csrf import CSRFProtect  # ✅ FIX 1: Added CSRF Protect
+from flask_wtf.csrf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-import json, os, csv, io, secrets, re, requests, cloudinary, cloudinary.uploader, threading
+import json, os, csv, io, secrets, re, requests, cloudinary, cloudinary.uploader, threading, stripe
 
 def create_app(config_name="production"):
     app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -22,7 +22,7 @@ def create_app(config_name="production"):
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=12)
     
-    # ✅ FIX 1: Initialize CSRF Protection
+    # Initialize CSRF Protection
     csrf = CSRFProtect(app)
     
     cloudinary.config(
@@ -252,7 +252,6 @@ def create_app(config_name="production"):
         data = load_data()
         return render_template('order.html', theme=data['theme'], restaurant=data['restaurant'], menu=data['menu'], online_ordering=data['online_ordering'], settings=data['settings'], seo=data['seo'])
 
-    # ✅ FIX 2: Cart route now calculates math and passes it to the template
     @app.route('/cart')
     def cart():
         track_page_view('cart')
@@ -308,7 +307,7 @@ def create_app(config_name="production"):
         session.clear()
         return redirect(url_for('home'))
 
-    # ✅ FIX 3: Added Cart API endpoints (EXACTLY ONCE)
+    # ─── CART & STRIPE API ENDPOINTS ─────────────────────────────────────
     @app.route('/api/cart/add', methods=['POST'])
     def add_to_cart():
         item = request.json
@@ -327,14 +326,14 @@ def create_app(config_name="production"):
         session['cart'] = []
         return jsonify({'success': True})
 
-        # ─── STRIPE CHECKOUT ROUTE ────────────────────────────────────────
     @app.route('/api/create-checkout-session', methods=['POST'])
-    @csrf.exempt 
+    @csrf.exempt
     def create_checkout_session():
-        import stripe
-        # PASTE YOUR sk_test_... KEY INSIDE THE QUOTES BELOW
-        stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')  # ← KEEP THIS
-        
+        # Gets the key from Render Environment Variables (secure)
+        stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
+        if not stripe.api_key:
+            return jsonify({'error': 'Stripe key is missing. Please add STRIPE_SECRET_KEY to Render.'}), 500
+            
         try:
             req_data = request.json
             cart_items = req_data.get('items', [])
@@ -345,7 +344,7 @@ def create_app(config_name="production"):
                     'price_data': {
                         'currency': 'usd',
                         'product_data': {'name': item['name']},
-                        'unit_amount': int(item['price'] * 100), # Stripe requires cents
+                        'unit_amount': int(item['price'] * 100),
                     },
                     'quantity': item['quantity'],
                 })
@@ -359,7 +358,7 @@ def create_app(config_name="production"):
             return jsonify({'url': checkout_session.url})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
-            
+
     # ─── EDITOR API ENDPOINTS ──────────────────────────────────────────
     @app.route('/api/update_theme', methods=['POST'])
     def update_theme():
@@ -474,7 +473,7 @@ def create_app(config_name="production"):
     with app.app_context(): init_db()
     return app
 
-# ✅ FIX 4: Fixed the fatal syntax error at the bottom
+# ✅ CORRECT SYNTAX AT THE BOTTOM
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
