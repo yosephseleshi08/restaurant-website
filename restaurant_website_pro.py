@@ -307,19 +307,32 @@ def create_app(config_name="production"):
         data = load_data()
         return render_template('order.html', theme=data['theme'], restaurant=data['restaurant'], menu=data['menu'], online_ordering=data['online_ordering'], settings=data['settings'], seo=data['seo'])
 
-    # ✅ FIX 2: Cart route now calculates math and passes it to the template
-    @app.route('/cart')
-    def cart():
-        track_page_view('cart')
-        data = load_data()
-        cart_items = session.get('cart', [])
-        subtotal = sum(item['price'] * item['quantity'] for item in cart_items)
-        tax_rate = data['settings'].get('tax_rate', 8.75) / 100
-        tax = subtotal * tax_rate
-        delivery_fee = data['settings'].get('delivery_fee', 0.0)
-        grand_total = subtotal + tax + delivery_fee
-        return render_template('cart.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], seo=data['seo'], 
-                               cart=cart_items, total=subtotal, tax=tax, delivery_fee=delivery_fee, grand_total=grand_total)
+    # ─── CART API ENDPOINTS ────────────────────────────────────────────
+    @app.route('/api/cart/add', methods=['POST'])
+    def add_to_cart():
+        item = request.json
+        cart = session.get('cart', [])
+        for c in cart:
+            if c['name'] == item['name']:
+                c['quantity'] += item.get('quantity', 1)
+                break
+        else:
+            cart.append(item)
+        session['cart'] = cart
+        return jsonify({'success': True, 'count': len(cart)})
+
+    @app.route('/api/cart/clear', methods=['POST'])
+    def clear_cart():
+        session['cart'] = []
+        return jsonify({'success': True})
+
+    @app.route('/api/cart/remove', methods=['POST'])
+    def remove_from_cart():
+        item_name = request.json.get('name')
+        cart = session.get('cart', [])
+        cart = [c for c in cart if c['name'] != item_name]
+        session['cart'] = cart
+        return jsonify({'success': True, 'count': len(cart)})
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
