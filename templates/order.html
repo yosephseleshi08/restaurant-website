@@ -45,22 +45,4 @@
         </div>
     </div>
 <script>
-function addToCart(name, price, category, image) {
-    fetch('/api/cart/add', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name: name, price: price, category: category, image: image, quantity: 1})
-    }).then(r => r.json()).then(data => {
-        if (data.success) {
-            const badge = document.querySelector('.cart-badge');
-            if (badge) { 
-                badge.textContent = data.count; 
-                badge.style.display = 'flex'; 
-            }
-            alert(name + ' added to cart!');
-        }
-    });
-}
-</script></section>
-
 {% endblock %}
