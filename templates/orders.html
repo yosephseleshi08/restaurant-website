@@ -11,11 +11,20 @@
     {% for category, items in menu.items() %}
     <h2 style="text-transform: capitalize; color: var(--primary); margin-top: 2rem;">{{ category }}</h2>
     {% for item in items %}
-    <div class="card mb-2" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem;">
+    <div class="card mb-2" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
         <div>
-            <h4>{{ item.name }} {% if item.popular %}<span style="background: var(--secondary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem;">Popular</span>{% endif %}</h4>
-            <p style="color: #666; font-size: 0.9rem;">${{ "%.2f"|format(item.price) }} · {{ item.description }}</p>
+            <h4 style="color: var(--primary); margin-bottom: 0.25rem;">
+                {{ item.name }} 
+                {% if item.popular %}<span style="background: var(--secondary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; margin-left: 0.5rem;">Popular</span>{% endif %}
+            </h4>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 0.5rem;">${{ "%.2f"|format(item.price) }} · {{ item.description }}</p>
+            <div>
+                {% for tag in item.dietary %}
+                <span style="background: #f3f4f6; color: #4b5563; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 0.25rem;">{{ tag }}</span>
+                {% endfor %}
+            </div>
         </div>
+        <!-- ✅ THIS IS THE FIX: Added the onclick trigger -->
         <button class="btn" onclick="addToCart('{{ item.name }}', {{ item.price }}, '{{ category }}', '{{ item.image }}')">
             <i class="fas fa-plus"></i> Add to Cart
         </button>
@@ -24,6 +33,7 @@
     {% endfor %}
 </div>
 
+<!-- ✅ THIS IS THE FIX: Added the JavaScript function -->
 <script>
 function addToCart(name, price, category, image) {
     fetch('/api/cart/add', {
@@ -39,6 +49,9 @@ function addToCart(name, price, category, image) {
             }
             alert(name + ' added to cart!');
         }
+    }).catch(err => {
+        console.error('Error:', err);
+        alert('Failed to add to cart.');
     });
 }
 </script>
