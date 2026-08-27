@@ -327,6 +327,39 @@ def create_app(config_name="production"):
         session['cart'] = []
         return jsonify({'success': True})
 
+        # ─── STRIPE CHECKOUT ROUTE ────────────────────────────────────────
+    @app.route('/api/create-checkout-session', methods=['POST'])
+    @csrf.exempt 
+    def create_checkout_session():
+        import stripe
+        # PASTE YOUR sk_test_... KEY INSIDE THE QUOTES BELOW
+        stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')  # ← KEEP THIS
+        
+        try:
+            req_data = request.json
+            cart_items = req_data.get('items', [])
+            
+            line_items = []
+            for item in cart_items:
+                line_items.append({
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {'name': item['name']},
+                        'unit_amount': int(item['price'] * 100), # Stripe requires cents
+                    },
+                    'quantity': item['quantity'],
+                })
+
+            checkout_session = stripe.checkout.Session.create(
+                line_items=line_items,
+                mode='payment',
+                success_url=request.host_url + 'cart?success=true',
+                cancel_url=request.host_url + 'cart?canceled=true',
+            )
+            return jsonify({'url': checkout_session.url})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+            
     # ─── EDITOR API ENDPOINTS ──────────────────────────────────────────
     @app.route('/api/update_theme', methods=['POST'])
     def update_theme():
