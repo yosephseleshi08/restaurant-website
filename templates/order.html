@@ -2,47 +2,81 @@
 {% block title %}Order Online — {{ restaurant.name }}{% endblock %}
 {% block content %}
 <style>
-.order-section { padding: 4rem 2rem; max-width: 800px; margin: 0 auto; text-align: center; }
-.order-section h1 { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
-.order-section p { color: #666; font-size: 1.1rem; margin-bottom: 3rem; }
-.order-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
-.order-card { background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s; }
-.order-card:hover { transform: translateY(-5px); }
-.order-card i { font-size: 3rem; color: var(--secondary); margin-bottom: 1rem; }
-.order-card h3 { color: var(--primary); margin-bottom: 0.5rem; }
-.order-card p { color: #666; font-size: 0.95rem; margin-bottom: 1.5rem; }
-.platform-btn {
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    width: 100%; padding: 0.85rem; border-radius: 10px; color: white;
-    text-decoration: none; font-weight: 600; transition: opacity 0.3s;
-}
-.platform-btn:hover { opacity: 0.9; }
+    .order-hero { position: relative; padding: 5rem 2rem; text-align: center; color: white; overflow: hidden; background: linear-gradient(135deg, #0B0F19 0%, #1a2332 100%); }
+    .order-hero::before { content: ''; position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=1920&h=800&fit=crop') center/cover no-repeat; opacity: 0.25; }
+    .order-hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,15,25,0.85) 0%, rgba(11,15,25,0.9) 100%); }
+    .order-hero-content { position: relative; z-index: 2; max-width: 700px; margin: 0 auto; }
+    .order-hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); margin-bottom: 1rem; }
+    .order-hero p { font-size: 1.15rem; opacity: 0.75; font-weight: 300; }
+    .order-section { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .category-title { text-transform: capitalize; color: var(--primary); margin: 3rem 0 1.5rem; font-size: 1.8rem; border-bottom: 2px solid var(--secondary); padding-bottom: 0.5rem; display: inline-block; }
+    .menu-item-card { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1.5rem; border-radius: 16px; margin-bottom: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; }
+    .menu-item-card:hover { transform: translateY(-3px); }
+    .menu-item-info h4 { color: var(--primary); margin-bottom: 0.25rem; font-size: 1.1rem; }
+    .menu-item-info p { color: #666; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .popular-badge { background: var(--secondary); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-left: 0.5rem; }
+    .dietary-tags span { background: #f3f4f6; color: #4b5563; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 0.25rem; }
 </style>
 
-<section class="order-section">
-    <h1>{{ online_ordering.page_title or 'Order Online' }}</h1>
-    <p>{{ online_ordering.page_subtitle or 'Enjoy our delicious food from the comfort of your home.' }}</p>
-    <div class="order-options">
-        <div class="order-card">
-            <i class="fas fa-laptop"></i>
-            <h3>Order Direct</h3>
-            <p>Order directly through our website and save on delivery fees. 100% of your payment goes to us.</p>
-            <a href="/menu" class="btn btn-block">Browse Full Menu & Order</a>
-        </div>
-        <div class="order-card">
-            <i class="fas fa-motorcycle"></i>
-            <h3>Third-Party Delivery</h3>
-            <p>Prefer your favorite delivery app? Find us on these platforms:</p>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                {% for platform in online_ordering.platforms %}
-                {% if platform.active %}
-                <a href="{{ platform.url }}" target="_blank" rel="noopener" class="platform-btn" style="background: {{ platform.color }};">
-                    <i class="fas {{ platform.icon }}"></i> {{ platform.name }}
-                </a>
-                {% endif %}
-                {% endfor %}
-            </div>
-        </div>
+<!-- Hero Section -->
+<section class="order-hero">
+    <div class="order-hero-overlay"></div>
+    <div class="order-hero-content">
+        <h1>{{ online_ordering.page_title or 'Order Online' }}</h1>
+        <p>{{ online_ordering.page_subtitle or 'Skip the 30% delivery app fees. Order directly from us.' }}</p>
     </div>
+</section>
+
+<!-- Menu Items Section -->
+<section class="order-section">
+    {% for category, items in menu.items() %}
+        <h2 class="category-title">{{ category }}</h2>
+        {% for item in items %}
+        <div class="menu-item-card">
+            <div class="menu-item-info">
+                <h4>
+                    {{ item.name }}
+                    {% if item.popular %}<span class="popular-badge">Popular</span>{% endif %}
+                </h4>
+                <p>${{ "%.2f"|format(item.price) }} · {{ item.description }}</p>
+                <div class="dietary-tags">
+                    {% for tag in item.dietary %}
+                    <span>{{ tag }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="btn" onclick="addToCart('{{ item.name }}', {{ item.price }}, '{{ category }}', '{{ item.image }}')">
+                <i class="fas fa-plus"></i> Add to Cart
+            </button>
+        </div>
+        {% endfor %}
+    {% endfor %}
+</section>
+
+<!-- JavaScript to Handle Adding to Cart -->
 <script>
+function addToCart(name, price, category, image) {
+    fetch('/api/cart/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name, price: price, category: category, image: image, quantity: 1})
+    }).then(r => r.json()).then(data => {
+        if (data.success) {
+            // Update the cart badge in the navbar
+            const badge = document.querySelector('.cart-badge');
+            if (badge) { 
+                badge.textContent = data.count; 
+                badge.style.display = 'flex'; 
+            } else {
+                // If badge didn't exist, reload to show it
+                location.reload(); 
+            }
+            alert(name + ' added to cart!');
+        }
+    }).catch(err => {
+        console.error('Error adding to cart:', err);
+        alert('Failed to add to cart. Please try again.');
+    });
+}
+</script>
 {% endblock %}
