@@ -18,7 +18,6 @@
     .dietary-tags span { background: #f3f4f6; color: #4b5563; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 0.25rem; }
 </style>
 
-<!-- Hero Section -->
 <section class="order-hero">
     <div class="order-hero-overlay"></div>
     <div class="order-hero-content">
@@ -27,7 +26,6 @@
     </div>
 </section>
 
-<!-- Menu Items Section -->
 <section class="order-section">
     {% for category, items in menu.items() %}
         <h2 class="category-title">{{ category }}</h2>
@@ -53,7 +51,6 @@
     {% endfor %}
 </section>
 
-<!-- JavaScript to Handle Adding to Cart -->
 <script>
 function addToCart(name, price, category, image) {
     fetch('/api/cart/add', {
@@ -62,20 +59,13 @@ function addToCart(name, price, category, image) {
         body: JSON.stringify({name: name, price: price, category: category, image: image, quantity: 1})
     }).then(r => r.json()).then(data => {
         if (data.success) {
-            // Update the cart badge in the navbar
             const badge = document.querySelector('.cart-badge');
             if (badge) { 
                 badge.textContent = data.count; 
                 badge.style.display = 'flex'; 
-            } else {
-                // If badge didn't exist, reload to show it
-                location.reload(); 
             }
             alert(name + ' added to cart!');
         }
-    }).catch(err => {
-        console.error('Error adding to cart:', err);
-        alert('Failed to add to cart. Please try again.');
     });
 }
 </script>
