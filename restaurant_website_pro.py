@@ -363,7 +363,7 @@ def create_app(config_name="production"):
         session.clear()
         return redirect(url_for('home'))
 
-    # ─── CART API ENDPOINTS ────────────────────────────────────────────
+        # ─── CART API ENDPOINTS ────────────────────────────────────────────
     @app.route('/api/cart/add', methods=['POST'])
     def add_to_cart():
         item = request.json
