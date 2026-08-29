@@ -22,7 +22,6 @@ def create_app(config_name="production"):
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=12)
     
-    # Initialize CSRF Protection
     csrf = CSRFProtect(app)
     
     cloudinary.config(
