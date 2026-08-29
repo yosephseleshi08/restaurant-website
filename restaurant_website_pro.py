@@ -127,6 +127,21 @@ def create_app(config_name="production"):
         page = db.Column(db.String(100), nullable=False, index=True)
         created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
+    # --- ADDED: GIFT CARD MODEL ---
+    class GiftCard(db.Model):
+        __tablename__ = 'gift_cards'
+        id = db.Column(db.Integer, primary_key=True)
+        code = db.Column(db.String(20), unique=True, nullable=False, index=True)
+        amount = db.Column(db.Float, nullable=False)
+        balance = db.Column(db.Float, nullable=False)
+        purchaser_name = db.Column(db.String(100), nullable=False)
+        purchaser_email = db.Column(db.String(120), nullable=False)
+        recipient_name = db.Column(db.String(100), nullable=False)
+        recipient_email = db.Column(db.String(120), nullable=False)
+        message = db.Column(db.Text)
+        status = db.Column(db.String(20), default='active', index=True)
+        created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+
     def deep_merge(default, current):
         if isinstance(default, dict) and isinstance(current, dict):
             result = current.copy()
@@ -329,7 +344,6 @@ def create_app(config_name="production"):
     @app.route('/api/create-checkout-session', methods=['POST'])
     @csrf.exempt
     def create_checkout_session():
-        # Gets the key from Render Environment Variables (secure)
         stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
         if not stripe.api_key:
             return jsonify({'error': 'Stripe key is missing. Please add STRIPE_SECRET_KEY to Render.'}), 500
@@ -470,10 +484,58 @@ def create_app(config_name="production"):
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
 
+    # ─── ADDED: GIFT CARD ENDPOINTS ────────────────────────────────────
+    @app.route('/gift-cards', methods=['GET', 'POST'])
+    def gift_cards():
+        data = load_data()
+        if not data['settings'].get('enable_gift_cards', True):
+            abort(404)
+            
+        if request.method == 'POST':
+            amount = float(request.form.get('amount', 0))
+            purchaser_name = request.form.get('purchaser_name', '').strip()
+            purchaser_email = request.form.get('purchaser_email', '').strip()
+            recipient_name = request.form.get('recipient_name', '').strip()
+            recipient_email = request.form.get('recipient_email', '').strip()
+            message = request.form.get('message', '').strip()
+            
+            if amount < 10:
+                flash('Minimum gift card amount is $10', 'error')
+                return redirect(url_for('gift_cards'))
+                
+            code = 'GC-' + secrets.token_hex(6).upper()
+            
+            new_gc = GiftCard(
+                code=code,
+                amount=amount,
+                balance=amount,
+                purchaser_name=purchaser_name,
+                purchaser_email=purchaser_email,
+                recipient_name=recipient_name,
+                recipient_email=recipient_email,
+                message=message
+            )
+            db.session.add(new_gc)
+            db.session.commit()
+            
+            flash(f'🎉 Success! Gift card created. Code: {code}. (In production, this is emailed to {recipient_email})', 'success')
+            return redirect(url_for('gift_cards'))
+            
+        track_page_view('gift_cards')
+        return render_template('gift_cards.html', theme=data['theme'], restaurant=data['restaurant'], seo=data['seo'], settings=data['settings'])
+
+    @app.route('/admin/gift-cards')
+    def admin_gift_cards():
+        if 'user_id' not in session:
+            flash("Please log in to view this page.", "info")
+            return redirect(url_for('login'))
+        data = load_data()
+        all_gift_cards = GiftCard.query.order_by(GiftCard.created_at.desc()).all()
+        return render_template('admin_gift_cards.html', theme=data['theme'], restaurant=data['restaurant'], settings=data['settings'], gift_cards=all_gift_cards)
+
     with app.app_context(): init_db()
     return app
 
-# ✅ CORRECT SYNTAX AT THE BOTTOM
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
