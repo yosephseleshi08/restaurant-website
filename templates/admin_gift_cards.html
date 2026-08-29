@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="color: var(--primary);">🎁 Gift Card Management</h2>
+        <a href="{{ url_for('dashboard') }}" class="btn" style="background: #666; color: white;">← Back to Dashboard</a>
+    </div>
+
+    <div style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead style="background: var(--primary); color: white;">
+                <tr>
+                    <th style="padding: 1rem;">Code</th>
+                    <th style="padding: 1rem;">Amount</th>
+                    <th style="padding: 1rem;">Balance</th>
+                    <th style="padding: 1rem;">Recipient</th>
+                    <th style="padding: 1rem;">Purchaser</th>
+                    <th style="padding: 1rem;">Status</th>
+                    <th style="padding: 1rem;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gc in gift_cards %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem; font-family: monospace; font-weight: bold; color: var(--secondary);">{{ gc.code }}</td>
+                    <td style="padding: 1rem;">${{ "%.2f"|format(gc.amount) }}</td>
+                    <td style="padding: 1rem; font-weight: bold;">${{ "%.2f"|format(gc.balance) }}</td>
+                    <td style="padding: 1rem;">{{ gc.recipient_name }}<br><small style="color: #666;">{{ gc.recipient_email }}</small></td>
+                    <td style="padding: 1rem;">{{ gc.purchaser_name }}<br><small style="color: #666;">{{ gc.purchaser_email }}</small></td>
+                    <td style="padding: 1rem;">
+                        <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; background: {% if gc.status == 'active' %}#dcfce7{% else %}#fee2e2{% endif %}; color: {% if gc.status == 'active' %}#166534{% else %}#991b1b{% endif %};">
+                            {{ gc.status | capitalize }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; color: #666; font-size: 0.9rem;">{{ gc.created_at.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" style="padding: 2rem; text-align: center; color: #666;">No gift cards purchased yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
