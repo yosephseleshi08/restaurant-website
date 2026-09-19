@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "restaurant_website_pro.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "restaurant_website_pro.py"
+    }
+  ]
+}
