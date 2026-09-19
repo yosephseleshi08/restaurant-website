@@ -32,7 +32,7 @@ def create_app(config_name="production"):
     DATABASE_URL = os.environ.get('DATABASE_URL')
     if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
         DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL or 'sqlite:///restaurant.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL or 'sqlite:////tmp/restaurant.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     limiter = Limiter(
