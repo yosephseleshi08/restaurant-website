@@ -1,0 +1,2 @@
+[tool.vercel]
+entrypoint = "restaurant_website_pro:app"
