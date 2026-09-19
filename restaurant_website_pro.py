@@ -534,7 +534,8 @@ def create_app(config_name="production"):
 
     with app.app_context(): init_db()
     return app
+# Place 'app' at the top level so Vercel can find it
+app = create_app()
 
 if __name__ == '__main__':
-    app = create_app()
     app.run(debug=False, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
