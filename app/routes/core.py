@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from flask import Blueprint, jsonify, request
 from app.models import db, Reservation, ContactMessage
 
@@ -25,10 +26,11 @@ def handle_booking():
     data = request.json or {}
     try:
         new_booking = Reservation(
+            user_id=1,  # Temporary: Links to the first user in DB
             customer_name=data.get('name'),
             customer_email=data.get('email'),
             party_size=int(data.get('size', 1)),
-            booking_time=db.text(data.get('time'))  # Temporary wrapper for serialization compatibility
+            booking_time=datetime.strptime(data.get('time'), "%Y-%m-%d %H:%M:%S")
         )
         db.session.add(new_booking)
         db.session.commit()
