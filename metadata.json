@@ -1,0 +1,8 @@
+{
+  "name": "La Bella Cucina — Restaurant CMS Pro",
+  "description": "Complete digital toolkit for independent restaurants with online ordering, table reservations, kitchen display system (KDS), floor plan management, loyalty rewards, digital gift cards, and admin dashboard.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
